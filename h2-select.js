@@ -30,24 +30,20 @@ The following custom properties and mixins are available for styling:
 |`--h2-select-dropdown` | Mixin applied to the dropdown snippet of the select | {}
 
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
+import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
+import {html, PolymerElement} from "@polymer/polymer";
 import './behaviors/base-behavior.js';
-
 import './behaviors/h2-elements-shared-styles.js';
-import './h2-label.js';
+import {BaseBehavior} from "./behaviors/base-behavior";
 /**
  *
  * @customElement
  * @polymer
  * @demo demo/h2-select/index.html
  */
-class H2Select extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
+class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get template() {
-    return Polymer.html`
+    return html`
     <style include="h2-elements-shared-styles">
       :host {
         display: flex;
@@ -238,7 +234,7 @@ class H2Select extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
         line-height: inherit;
       }
     </style>
-    <h2-label value="[[label]]"></h2-label>
+    <div class="h2-label">[[label]]</div>
     <div id="select__container">
       <div class="select__container__viewer" on-click="_onInputClick">
         <div class="tags__container">

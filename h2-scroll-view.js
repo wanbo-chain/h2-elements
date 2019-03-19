@@ -8,19 +8,17 @@ Example:
 </h2-scroll-view>
 ```
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
+import {html, PolymerElement} from "@polymer/polymer";
+import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
+
 /**
  * @customElement
  * @polymer
  * @demo demo/h2-scroll-view/index.html
  */
-class H2ScrollView extends Polymer.mixinBehaviors([], Polymer.Element) {
+class H2ScrollView extends mixinBehaviors([], PolymerElement) {
   static get template() {
-    return Polymer.html`
+    return html`
     <style>
       :host {
         display: flex;

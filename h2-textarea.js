@@ -18,14 +18,9 @@ The following custom properties and mixins are available for styling:
 |`--h2-textarea-placeholder` | Mixin applied to placeholder of the textarea | {}
 
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-import './behaviors/h2-elements-shared-styles.js';
 
-import './h2-label.js';
+import {html, PolymerElement} from "@polymer/polymer";
+import './behaviors/h2-elements-shared-styles.js';
 /**
  * `h2-textarea`
  *
@@ -33,9 +28,9 @@ import './h2-label.js';
  * @polymer
  * @demo demo/h2-textarea/index.html
  */
-class H2Textarea extends Polymer.Element {
+class H2Textarea extends PolymerElement {
   static get template() {
-    return Polymer.html`
+    return html`
     <style include="h2-elements-shared-styles">
       :host {
         display: flex;
@@ -99,7 +94,7 @@ class H2Textarea extends Polymer.Element {
 
     </style>
 
-    <h2-label value="[[label]]"></h2-label>
+    <div class="h2-label">[[label]]</div>
     <div id="textarea-wrapper">
       <textarea id="textarea" value="{{value::input}}" aria-label\$="[[label]]" autocomplete\$="[[autocomplete]]" autofocus\$="[[autofocus]]" inputmode\$="[[inputmode]]" placeholder\$="[[placeholder]]" readonly\$="[[readonly]]" required\$="[[required]]" disabled\$="[[disabled]]" rows\$="[[rows]]" minlength\$="[[minlength]]" maxlength\$="[[maxlength]]"></textarea>
       <div class="mask"></div>
