@@ -15,11 +15,9 @@ The following custom properties and mixins are available for styling:
 |`--h2-image-upload-button` | Mixin applied to tool button of the viewer | {}
 
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
+
+import {html, PolymerElement} from "@polymer/polymer";
+import '@polymer/paper-dialog';
 import './h2-button.js';
 
 /**
@@ -27,9 +25,9 @@ import './h2-button.js';
  * @polymer
  * @demo demo/h2-image-view/index.html
  */
-class H2ImageView extends Polymer.mixinBehaviors([], Polymer.Element) {
+class H2ImageView extends PolymerElement {
   static get template() {
-    return Polymer.html`
+    return html`
     <style>
       :host {
         display: flex;

@@ -30,7 +30,7 @@
     "@polymer/iron-input": "^3.0.0",
     "@polymer/iron-overlay-behavior": "^3.0.0",
     "@polymer/iron-selector": "^3.0.0",
-    "@polymer/neon-animation": "^3.0.0",
+    "@polymer/neon-animation": "^3.0.1",
     "@polymer/paper-behaviors": "^3.0.1",
     "@polymer/paper-button": "^3.0.0",
     "@polymer/paper-checkbox": "^3.0.0",
