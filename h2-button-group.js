@@ -31,21 +31,19 @@ The following custom properties and mixins are available for styling:
 |`--h2-button-group-dropdown` | Mixin applied to the group dropdown | {}
 
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-import './behaviors/base-behavior.js';
-
+import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
+import {BaseBehavior} from "./behaviors/base-behavior";
+import {html, PolymerElement} from "@polymer/polymer";
+import '@polymer/paper-button';
+import '@polymer/iron-collapse';
 /**
  * @customElement
  * @polymer
  * @demo demo/h2-button-group/index.html
  */
-class H2ButtonGroup extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
+class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get template() {
-    return Polymer.html`
+    return html`
     <style>
       :host {
         position: relative;

@@ -4,18 +4,15 @@
 <h2-grid-header-cell></h2-grid-header-cell>
 ```
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
+import {html, PolymerElement} from "@polymer/polymer";
+
 /**
  * @customElement
  * @polymer
  */
-class H2GridHeaderCell extends Polymer.Element {
+class H2GridHeaderCell extends PolymerElement {
   static get template() {
-    return Polymer.html`
+    return html`
     <style>
       :host {
         display: table-cell;

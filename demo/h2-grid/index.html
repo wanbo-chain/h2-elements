@@ -5,30 +5,19 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
   <title>h2-grid demo</title>
-
-  <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
-
-  <link rel="import" href="../../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../../iron-demo-helpers/demo-snippet.html">
-  <link rel="import" href="../../../paper-button/paper-button.html">
-  <link rel="import" href="../../../paper-input/paper-input.html">
-  <script type="module" src="../../h2-grid.js"></script>
-  <script type="module" src="../../h2-grid-header.js"></script>
-  <script type="module" src="../../h2-grid-header-cell.js"></script>
-  <script type="module" src="../../h2-grid-body.js"></script>
-  <script type="module" src="../../h2-grid-row.js"></script>
-  <script type="module" src="../../h2-grid-cell.js"></script>
-  <script type="module" src="../../h2-button.js"></script>
-  <script type="module" src="../../h2-pagination.js"></script>
-
-  <!-- FIXME(polymer-modulizer):
-        These imperative modules that innerHTML your HTML are
-        a hacky way to be sure that any mixins in included style
-        modules are ready before any elements that reference them are
-        instantiated, otherwise the CSS @apply mixin polyfill won't be
-        able to expand the underlying CSS custom properties.
-        See: https://github.com/Polymer/polymer-modulizer/issues/154
-        -->
+  
+  <script type="module">
+    import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
+    import '../../h2-grid';
+    import '../../h2-grid-row';
+    import '../../h2-grid-body';
+    import '../../h2-grid-cell';
+    import '../../h2-grid-header';
+    import '../../h2-grid-header-cell';
+  </script>
+  
     <script type="module">
 const $_documentContainer = document.createElement('template');
 
@@ -51,10 +40,7 @@ document.body.appendChild($_documentContainer.content);
 </script>
 </head>
 <body>
-<script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
+<div class="vertical-section-container centered">
   <h3>Basic h2-grid with subItem demo</h3>
   <demo-snippet>
     <template>
@@ -86,131 +72,9 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
           </h2-grid-row>
         </h2-grid-body>
       </h2-grid>
-      <script>
-      &lt;/script>
-    </template>
-  </demo-snippet>
-</div>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>2-grid-header.js';
-import '../../h2-grid-header-cell.js';
-import '../../h2-grid-body.js';
-import '../../h2-grid-row.js';
-import '../../h2-grid-cell.js';
-import '../../h2-button.js';
-import '../../h2-pagination.js';
-</script>
     </template>
   </demo-snippet>
 </div>
-
-<script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
-  <h3>Basic h2-grid demo</h3>
-  <demo-snippet>
-    <template>
-      <custom-style>
-        <style>
-          #grid1 {
-            width: 100%;
-          }
-        </style>
-      </custom-style>
-      <h2-grid id="grid1">
-        <h2-grid-header>
-          <h2-grid-header-cell>Name</h2-grid-header-cell>
-          <h2-grid-header-cell>Age</h2-grid-header-cell>
-          <h2-grid-header-cell>Sex</h2-grid-header-cell>
-          <h2-grid-header-cell>操作</h2-grid-header-cell>
-        </h2-grid-header>
-        <h2-grid-body>
-          <h2-grid-row>
-            <h2-grid-cell>zhang san</h2-grid-cell>
-            <h2-grid-cell>25</h2-grid-cell>
-            <h2-grid-cell>Female</h2-grid-cell>
-            <h2-grid-cell>
-              <h2-button raised="">测试按钮1</h2-button>
-              <h2-button raised="">测试按钮2</h2-button>
-              <h2-button raised="">测试按钮3</h2-button>
-            </h2-grid-cell>
-          </h2-grid-row>
-          <h2-grid-row>
-            <h2-grid-cell>li si</h2-grid-cell>
-            <h2-grid-cell>26</h2-grid-cell>
-            <h2-grid-cell>Male</h2-grid-cell>
-            <h2-grid-cell>
-              <h2-button>测试按钮1</h2-button>
-              <h2-button>测试按钮2</h2-button>
-              <h2-button>测试按钮3</h2-button>
-            </h2-grid-cell>
-          </h2-grid-row>
-        </h2-grid-body>
-      </h2-grid>
-      <script>
-      &lt;/script>
-    </template>
-  </demo-snippet>
-</div>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>2-grid-header.js';
-import '../../h2-grid-header-cell.js';
-import '../../h2-grid-body.js';
-import '../../h2-grid-row.js';
-import '../../h2-grid-cell.js';
-import '../../h2-button.js';
-import '../../h2-pagination.js';
-</script>
-    </template>
-  </demo-snippet>
-</div>
-
-<script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
-  <h3>Basic h2-grid with paging demo</h3>
-  <demo-snippet>
-    <template>
-      <custom-style>
-        <style>
-          #grid2 {
-            width: 100%;
-          }
-          #page {
-            margin-top: 10px;
-          }
-        </style>
-      </custom-style>
-      <h2-grid id="grid2">
-        <h2-grid-header>
-          <h2-grid-header-cell>Name</h2-grid-header-cell>
-          <h2-grid-header-cell>Age</h2-grid-header-cell>
-          <h2-grid-header-cell>Sex</h2-grid-header-cell>
-        </h2-grid-header>
-        <h2-grid-body>
-          <h2-grid-row>
-            <h2-grid-cell>zhang san</h2-grid-cell>
-            <h2-grid-cell>25</h2-grid-cell>
-            <h2-grid-cell>Female</h2-grid-cell>
-          </h2-grid-row>
-          <h2-grid-row>
-            <h2-grid-cell>li si</h2-grid-cell>
-            <h2-grid-cell>26</h2-grid-cell>
-            <h2-grid-cell>Male</h2-grid-cell>
-          </h2-grid-row>
-        </h2-grid-body>
-      </h2-grid>
-      <h2-pagination id="page" total="2" limit="5"></h2-pagination>
-    </template>
-  </demo-snippet>
-</div>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>
 
 </body>
 </html>

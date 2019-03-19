@@ -3,27 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-
+  
   <title>h2-radio demo</title>
-
-  <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
-
-  <link rel="import" href="../../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../../iron-demo-helpers/demo-snippet.html">
-  <script type="module" src="../../h2-radio.js"></script>
-
-  <!-- FIXME(polymer-modulizer):
-        These imperative modules that innerHTML your HTML are
-        a hacky way to be sure that any mixins in included style
-        modules are ready before any elements that reference them are
-        instantiated, otherwise the CSS @apply mixin polyfill won't be
-        able to expand the underlying CSS custom properties.
-        See: https://github.com/Polymer/polymer-modulizer/issues/154
-        -->
-    <script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<custom-style>
+  
+  <script type="module">
+    import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
+    import '../../h2-radio';
+  </script>
+  
+  <script type="module">
+    const $_documentContainer = document.createElement('template');
+    
+    $_documentContainer.innerHTML = `<custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
       .centered {
         min-width: 800px;
@@ -36,52 +29,49 @@ $_documentContainer.innerHTML = `<custom-style>
       }
     </style>
   </custom-style>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>
+    
+    document.body.appendChild($_documentContainer.content);
+  </script>
 </head>
 <body>
-<script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
+<div class="vertical-section-container centered">
   <h3>h2-radio</h3>
   <demo-snippet>
     <template>
       <h2-radio id="radio" label="性别" value="1"></h2-radio>
       <script>
         radio.items = [{value: 1, label: "男"}, {value: 2, label: "女"}];
-      &lt;/script>
+      </script>
     </template>
   </demo-snippet>
-
+  
   <h3>自定义label、value字段</h3>
   <demo-snippet>
     <template>
       <h2-radio id="radio2" label="姓名" attr-for-value="id" attr-for-label="name" value="3"></h2-radio>
       <script>
         radio2.items = [{id: 1, name: "张三"}, {id: 2, name: "李四水电费"}, {id: 3, name: "王五"}]
-      &lt;/script>
+      </script>
     </template>
   </demo-snippet>
-
+  
   <h3>支持只读属性</h3>
   <demo-snippet>
     <template>
       <h2-radio id="radio4" label="姓名" attr-for-value="id" attr-for-label="name" value="1" readonly=""></h2-radio>
       <script>
         radio4.items = [{id: 1, name: "张三"}, {id: 2, name: "李四"}, {id: 3, name: "王五"}]
-      &lt;/script>
+      </script>
     </template>
   </demo-snippet>
-
+  
   <h3>支持必选, 必选时默认选中第一项</h3>
   <demo-snippet>
     <template>
       <h2-radio id="radio5" label="姓名" attr-for-value="id" attr-for-label="name" required=""></h2-radio>
       <script>
         radio5.items = [{id: 1, name: "张三"}, {id: 2, name: "李四"}, {id: 3, name: "王五"}]
-      &lt;/script>
+      </script>
     </template>
   </demo-snippet>
   <h3>自定义样式</h3>
@@ -91,22 +81,14 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
         <style>
           #radio6 {
             --h2-radio-selected-color: coral;
-
+            
           }
         </style>
       </custom-style>
       <h2-radio id="radio6" label="姓名" attr-for-value="id" attr-for-label="name" required=""></h2-radio>
       <script>
         radio6.items = [{id: 1, name: "张三"}, {id: 2, name: "李四"}, {id: 3, name: "王五"}]
-      &lt;/script>
-    </template>
-  </demo-snippet>
-</div>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>radio.js';
-radio6.items = [{id: 1, name: "张三"}, {id: 2, name: "李四"}, {id: 3, name: "王五"}]
-</script>
+      </script>
     </template>
   </demo-snippet>
 </div>

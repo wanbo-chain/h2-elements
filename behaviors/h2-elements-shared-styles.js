@@ -63,6 +63,11 @@ const template = html`
         border-right: 11px solid var(--h2-prompt-tip-background-color, #aeaeae);
         left: -20px;
       }
+      
+      .h2-label {
+        margin-right: 5px;
+        @apply --h2-label;
+      }
     </style>
   </template>
   </dom-module>

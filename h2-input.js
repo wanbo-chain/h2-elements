@@ -48,11 +48,6 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
         line-height: 34px;
       }
 
-      :host .input__label {
-        margin-right: 6px;
-        @apply --h2-input-label;
-      }
-
       :host .input__container {
         flex: 1;
 
@@ -175,7 +170,7 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
 
     </style>
-    <div class="input__label">[[label]]</div>
+    <div class="h2-label">[[label]]</div>
     <!--可编辑状态-->
     <div class="input__container">
       <template is="dom-if" if="[[prefixUnit]]">

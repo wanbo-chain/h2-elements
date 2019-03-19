@@ -73,10 +73,6 @@ class H2CheckboxGroup extends mixinBehaviors(BaseBehavior, PolymerElement) {
 `;
   }
   
-  handlerClickTest(e) {
-    console.log(e);
-  }
-  
   static get properties() {
     return {
       /**

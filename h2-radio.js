@@ -20,23 +20,20 @@ The following custom properties and mixins are available for styling:
 |----------------|-------------|----------|
 |`--h2-radio-selected-color` | Radio color when it is selected | #0099FF
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-import './behaviors/base-behavior.js';
 
+import {html, PolymerElement} from "@polymer/polymer";
+import {BaseBehavior} from "./behaviors/base-behavior";
+import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
+import '@polymer/iron-selector/iron-selector';
 import './behaviors/h2-elements-shared-styles.js';
-import './h2-label.js';
 /**
  * @customElement
  * @polymer
  * @demo demo/h2-radio/index.html
  */
-class H2Radio extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
+class H2Radio extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get template() {
-    return Polymer.html`
+    return html`
     <style include="h2-elements-shared-styles">
       :host {
         display: inline-block;
@@ -96,7 +93,7 @@ class H2Radio extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
 
     </style>
     <div class="radio-wrapper">
-      <h2-label value="[[label]]"></h2-label>
+      <div class="h2-label">[[label]]</div>
       <div class="candidate-wrapper">
         <iron-selector class="candidate-items" selected="{{value}}" attr-for-selected="radio-item">
           <template is="dom-repeat" items="[[items]]">

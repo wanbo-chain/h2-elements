@@ -6,19 +6,16 @@ Example:
 <h2-pagination total="30" limit="5" paging="{{paging}}"></h2-pagination>
 ```
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
+import {html, PolymerElement} from "@polymer/polymer";
+
 /**
  * @customElement
  * @polymer
  * @demo demo/h2-pagination/index.html
  */
-class H2Pagination extends Polymer.mixinBehaviors([], Polymer.Element) {
+class H2Pagination extends PolymerElement {
   static get template() {
-    return Polymer.html`
+    return html`
     <style>
       :host {
         display: inline-block;

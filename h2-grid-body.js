@@ -4,18 +4,16 @@
 <h2-grid-body></h2-grid-body>
 ```
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
+
+import {html, PolymerElement} from "@polymer/polymer";
+
 /**
  * @customElement
  * @polymer
  */
-class H2GridBody extends Polymer.Element {
+class H2GridBody extends PolymerElement {
   static get template() {
-    return Polymer.html`
+    return html`
     <style>
       :host {
         display: table-row-group;

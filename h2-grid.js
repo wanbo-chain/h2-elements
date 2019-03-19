@@ -27,12 +27,9 @@
 </h2-grid>
 ```
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
+
 import './h2-pagination.js';
+import {html, PolymerElement} from "@polymer/polymer";
 
 /**
  * `h2-grid`
@@ -41,9 +38,9 @@ import './h2-pagination.js';
  * @polymer
  * @demo demo/h2-grid/index.html
  */
-class H2Grid extends Polymer.Element {
+class H2Grid extends PolymerElement {
   static get template() {
-    return Polymer.html`
+    return html`
     <style>
       :host {
         display: table;
