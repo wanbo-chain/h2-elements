@@ -27,6 +27,7 @@
     "@polymer/iron-collapse": "^3.0.0",
     "@polymer/iron-icon": "^3.0.0",
     "@polymer/iron-icons": "^3.0.0",
+    "@polymer/iron-iconset-svg": "^3.0.1",
     "@polymer/iron-input": "^3.0.0",
     "@polymer/iron-overlay-behavior": "^3.0.0",
     "@polymer/iron-selector": "^3.0.0",

@@ -22,27 +22,29 @@ The following custom properties and mixins are available for styling:
   from HTML and may be out of place here. Review them and
   then delete this comment!
 */
-import './behaviors/base-behavior.js';
 
+import {html, PolymerElement} from "@polymer/polymer";
+import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
+
+import '@polymer/iron-icon/iron-icon';
+import '@polymer/iron-icons/iron-icons.js';
+
+import {BaseBehavior} from "./behaviors/base-behavior";
 import './h2-input.js';
 /**
  * @customElement
  * @polymer
  * @demo demo/h2-mask/index.html
  */
-class H2Mask extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
+class H2Mask extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get template() {
-    return Polymer.html`
-    <style>
+    return html`
+    <style include="h2-elements-shared-styles">
       :host {
         display: flex;
         width: 300px;
         height: 34px;
         line-height: 34px;
-      }
-
-      h2-label {
-        @apply --h2-mask-label;
       }
 
       :host .mask__container {
@@ -174,7 +176,7 @@ class H2Mask extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
 
     </style>
 
-    <h2-label value="[[label]]"></h2-label>
+    <div class="h2-label">[[label]]</div>
 
     <div class="mask__container">
       <div id="mask__editor">
@@ -193,7 +195,7 @@ class H2Mask extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
       <div id="mask__viewer">
         <div class="mask__viewer__container">[[_viewValue]]</div>
         <div id="editBtn" class="mask__viewer__editor" title="点击开始编辑">
-          <iron-icon icon="editor:mode-edit"></iron-icon>
+          <iron-icon icon="icons:create"></iron-icon>
         </div>
       </div>
     </div>
