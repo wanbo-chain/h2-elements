@@ -18,22 +18,20 @@ The following custom properties and mixins are available for styling:
 
 
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
 import './behaviors/format-behavior.js';
 
 import './h2-input.js';
+import {html, PolymerElement} from "@polymer/polymer";
+import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
+import {FormatBehavior} from "./behaviors/format-behavior";
 /**
  * @customElement
  * @polymer
  * @demo demo/h2-input-datetime/index.html
  */
-class H2InputDatetime extends Polymer.mixinBehaviors([FormatBehavior], Polymer.Element) {
+class H2InputDatetime extends mixinBehaviors([FormatBehavior], PolymerElement) {
   static get template() {
-    return Polymer.html`
+    return html`
     <style>
       :host {
         display: flex;
@@ -56,7 +54,7 @@ class H2InputDatetime extends Polymer.mixinBehaviors([FormatBehavior], Polymer.E
       }
 
     </style>
-    <h2-input id="input" value="{{value}}" label="[[label]]" placeholder="[[placeholder]]" required="[[required]]" min="[[min]]" max="[[max]]" readonly\$="[[readonly]]" type="datetime-local">
+    <h2-input id="input" value="{{value}}" label="[[label]]" placeholder="[[placeholder]]" required="[[required]]" min="[[min]]" max="[[max]]" readonly$="[[readonly]]" type="datetime-local">
     </h2-input>
 `;
   }

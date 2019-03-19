@@ -3,27 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-
+  
   <title>h2-input-datetime demo</title>
-
-  <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
-
-  <link rel="import" href="../../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../../iron-demo-helpers/demo-snippet.html">
-  <script type="module" src="../../h2-input-datetime.js"></script>
-
-  <!-- FIXME(polymer-modulizer):
-        These imperative modules that innerHTML your HTML are
-        a hacky way to be sure that any mixins in included style
-        modules are ready before any elements that reference them are
-        instantiated, otherwise the CSS @apply mixin polyfill won't be
-        able to expand the underlying CSS custom properties.
-        See: https://github.com/Polymer/polymer-modulizer/issues/154
-        -->
-    <script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<custom-style>
+  
+  <script type="module">
+    import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
+    import '../../h2-input-datetime'
+  </script>
+  
+  <script type="module">
+    const $_documentContainer = document.createElement('template');
+    
+    $_documentContainer.innerHTML = `<custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
       .centered {
         min-width: 800px;
@@ -41,15 +34,12 @@ $_documentContainer.innerHTML = `<custom-style>
 
     </style>
   </custom-style>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>
+    
+    document.body.appendChild($_documentContainer.content);
+  </script>
 </head>
 <body>
-<script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
+<div class="vertical-section-container centered">
   <h3>基本用法</h3>
   <demo-snippet>
     <template>
@@ -68,7 +58,7 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
       <h2-input-datetime class="datetime" label="默认time" timestamp="1509008130349"></h2-input-datetime>
     </template>
   </demo-snippet>
-
+  
   <h3>支持必填、只读</h3>
   <demo-snippet>
     <template>
@@ -76,7 +66,7 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
       <h2-input-datetime label="日期只读" value="2017-10-26T23:20" readonly=""></h2-input-datetime>
     </template>
   </demo-snippet>
-
+  
   <h3>支持最大最小日期范围</h3>
   <demo-snippet>
     <template>
@@ -85,9 +75,6 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
       <h2-input-datetime label="最大值和最小值" min="2017-10-10T12:20" max="2017-10-30T12:20"></h2-input-datetime>
     </template>
   </demo-snippet>
-</div>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>
+</div>
 </body>
 </html>

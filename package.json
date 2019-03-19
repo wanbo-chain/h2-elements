@@ -7,9 +7,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/isuwang/h2-elements.git"
+    "url": "git://github.com/wanbo/h2-elements.git"
   },
-  "homepage": "https://github.com/isuwang/h2-elements",
+  "homepage": "https://github.com/wanbo/h2-elements",
   "name": "@polymer/h2-elements",
   "version": "1.0.0",
   "resolutions": {

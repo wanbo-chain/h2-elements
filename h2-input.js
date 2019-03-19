@@ -22,23 +22,21 @@ The following custom properties and mixins are available for styling:
 |`--h2-input-unit` | Mixin applied to unit of the input value | {}
 
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-import './behaviors/base-behavior.js';
 
+import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
+import {html, PolymerElement} from "@polymer/polymer";
+import '@polymer/iron-input';
+import {BaseBehavior} from "./behaviors/base-behavior";
 import './behaviors/h2-elements-shared-styles.js';
-import './h2-label.js';
+
 /**
  * @customElement
  * @polymer
  * @demo demo/h2-input/index.html
  */
-class H2Input extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
+class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get template() {
-    return Polymer.html`
+    return html`
     <style include="h2-elements-shared-styles">
       :host {
         display: flex;
@@ -51,6 +49,7 @@ class H2Input extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
       }
 
       :host .input__label {
+        margin-right: 6px;
         @apply --h2-input-label;
       }
 
@@ -176,25 +175,28 @@ class H2Input extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
       }
 
     </style>
-    <h2-label class="input__label" value="[[label]]"></h2-label>
+    <div class="input__label">[[label]]</div>
     <!--可编辑状态-->
     <div class="input__container">
       <template is="dom-if" if="[[prefixUnit]]">
         <div class="prefix-unit input-unit">[[prefixUnit]]</div>
       </template>
       <iron-input bind-value="{{value}}" id="input">
-        <input id="innerInput" placeholder\$="[[placeholder]]" type\$="[[type]]" minlength\$="[[minlength]]" maxlength\$="[[maxlength]]" min\$="[[min]]" max\$="[[max]]" readonly\$="[[readonly]]" autocomplete="off" step="any" spellcheck="false">
+        <input id="innerInput" placeholder$="[[placeholder]]" type$="[[type]]" minlength$="[[minlength]]" maxlength$="[[maxlength]]" min$="[[min]]" max$="[[max]]" readonly$="[[readonly]]" autocomplete="off" step="any" spellcheck="false">
       </iron-input>
       <template is="dom-if" if="[[suffixUnit]]">
         <div class="suffix-unit input-unit">[[suffixUnit]]</div>
       </template>
     </div>
-    <div class="prompt-tip__container" data-prompt\$="[[prompt]]">
+    <div class="prompt-tip__container" data-prompt$="[[prompt]]">
       <div class="prompt-tip">[[prompt]]</div>
     </div>
+    
+    <!--add mask when the componet is disabled or readonly-->
+    <div class="mask"></div>
 `;
   }
-
+  
   static get properties() {
     return {
       /**
@@ -280,7 +282,7 @@ class H2Input extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
       maxlength: {
         type: Number
       },
-
+      
       /**
        * The minimum value user can input or choose.
        * @type {string}
@@ -295,7 +297,7 @@ class H2Input extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
       max: {
         type: String
       },
-
+      
       /**
        * The prompt tip to show when input is invalid.
        * @type {String}
@@ -305,11 +307,11 @@ class H2Input extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
       }
     };
   }
-
+  
   static get is() {
     return "h2-input";
   }
-
+  
   static get observers() {
     return [
       '__refreshUIState(required)',
@@ -317,14 +319,14 @@ class H2Input extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
       '__allowedPatternChanged(allowedPattern)'
     ];
   }
-
+  
   __allowedPatternChanged() {
     if (this.allowedPattern) {
       this._patternRegExp = new RegExp(this.allowedPattern, "g");
       this.__refreshUIState();
     }
   }
-
+  
   __refreshUIState() {
     if (!this.validate()) {
       this.setAttribute("data-invalid", "");
@@ -332,14 +334,14 @@ class H2Input extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
       this.removeAttribute("data-invalid");
     }
   }
-
+  
   /**
    * Set focus to input.
    */
   doFocus() {
     this.root.querySelector("#innerInput").focus();
   }
-
+  
   /**
    * Validates the input element.
    *
@@ -351,15 +353,15 @@ class H2Input extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
    */
   validate() {
     let valid = this.root.querySelector("#input").validate();
-
+    
     if (this.required) {
       valid = valid && (this.value != undefined && this.value !== '');
     }
-
+    
     if (this._patternRegExp) {
       valid = valid && this._patternRegExp.test(this.value);
     }
-
+    
     return valid;
   }
 }

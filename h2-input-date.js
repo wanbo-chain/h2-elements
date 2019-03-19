@@ -18,21 +18,17 @@ The following custom properties and mixins are available for styling:
 
 
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
 import './h2-input.js';
+import {html, PolymerElement} from "@polymer/polymer";
 
 /**
  * @customElement
  * @polymer
  * @demo demo/h2-input-date/index.html
  */
-class H2InputDate extends Polymer.mixinBehaviors([], Polymer.Element) {
+class H2InputDate extends PolymerElement {
   static get template() {
-    return Polymer.html`
+    return html`
     <style>
       :host {
         display: flex;
@@ -55,7 +51,7 @@ class H2InputDate extends Polymer.mixinBehaviors([], Polymer.Element) {
       }
 
     </style>
-    <h2-input id="input" value="{{value}}" label="[[label]]" placeholder="[[placeholder]]" required="[[required]]" min="[[min]]" max="[[max]]" readonly\$="[[readonly]]" type="date">
+    <h2-input id="input" value="{{value}}" label="[[label]]" placeholder="[[placeholder]]" required="[[required]]" min="[[min]]" max="[[max]]" readonly$="[[readonly]]" type="date">
     </h2-input>
 `;
   }

@@ -1,6 +1,8 @@
-const $_documentContainer = document.createElement('template');
+import '@polymer/polymer/polymer-legacy';
+import {html} from "@polymer/polymer";
 
-$_documentContainer.innerHTML = `<dom-module id="h2-elements-shared-styles">
+const template = html`
+  <dom-module id="h2-elements-shared-styles">
   <template>
     <style>
       :host([readonly]) .mask,
@@ -63,6 +65,8 @@ $_documentContainer.innerHTML = `<dom-module id="h2-elements-shared-styles">
       }
     </style>
   </template>
-</dom-module>`;
+  </dom-module>
+`;
+template.setAttribute("style", 'display: none;');
+document.head.appendChild(template.content);
 
-document.head.appendChild($_documentContainer.content);
