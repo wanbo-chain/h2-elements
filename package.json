@@ -11,7 +11,7 @@
   },
   "homepage": "https://github.com/wanbo-chain/h2-elements",
   "name": "@polymer/h2-elements",
-  "version": "0.1.0",
+  "version": "0.1.0.rc",
   "resolutions": {
     "inherits": "2.0.3",
     "samsam": "1.1.3",
