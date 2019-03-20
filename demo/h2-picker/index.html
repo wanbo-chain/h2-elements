@@ -6,31 +6,20 @@
 
   <title>h2-picker demo</title>
 
+
   <script type="module">
-import '../../h2-picker.js';
+    import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
+    import '../../h2-picker'
+  </script>
+  <script type="module">
 if (!window.location.href.endsWith("?mock=mockData.js")) {
   window.location.href = window.location.href + "?mock=mockData.js";
 }
 </script>
 
   <script type="text/javascript" src="../../utils/mock_setup.js"></script>
-
-
-  <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
-
-  <link rel="import" href="../../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../../iron-demo-helpers/demo-snippet.html">
-  <script type="module" src="../../h2-picker.js"></script>
-
-
-  <!-- FIXME(polymer-modulizer):
-        These imperative modules that innerHTML your HTML are
-        a hacky way to be sure that any mixins in included style
-        modules are ready before any elements that reference them are
-        instantiated, otherwise the CSS @apply mixin polyfill won't be
-        able to expand the underlying CSS custom properties.
-        See: https://github.com/Polymer/polymer-modulizer/issues/154
-        -->
     <script type="module">
 const $_documentContainer = document.createElement('template');
 
@@ -62,10 +51,7 @@ document.body.appendChild($_documentContainer.content);
 </script>
 </head>
 <body>
-<script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
+<div class="vertical-section-container centered">
   <h3>支持单选、多选、输入关键字过滤下拉选项</h3>
   <demo-snippet>
     <template>
@@ -86,7 +72,7 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
 
         picker1.pickerMeta = pickerMeta;
         picker1.items = items;
-      &lt;/script>
+      </script>
     </template>
   </demo-snippet>
 
@@ -102,7 +88,7 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
         
         picker4.pickerMeta = pickerMeta;
         picker4.items = items;
-      &lt;/script>
+      </script>
     </template>
   </demo-snippet>
 
@@ -123,7 +109,7 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
         picker5.pickerMeta = pickerMeta;
         picker5.items = items;
 
-      &lt;/script>
+      </script>
     </template>
   </demo-snippet>
 
@@ -150,7 +136,7 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
         picker7.pickerMeta = pickerMeta;
         picker7.fieldsForIndex = ["business"];
         picker7.items = items;
-      &lt;/script>
+      </script>
     </template>
   </demo-snippet>
 
@@ -160,7 +146,7 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
       <h2-picker id="picker8" src="/init.do" label="公司" attr-for-value="id"></h2-picker>
       <script>
         picker8.pickerMeta = pickerMeta;
-      &lt;/script>
+      </script>
     </template>
   </demo-snippet>
 
@@ -178,7 +164,7 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
       <h2-picker id="picker9" label="公司" src="/init.do" keyword-search-src="/more_banks.do?limit=10&amp;code=business&amp;keyword=" value="1,2,3" multi="" attr-for-value="id"></h2-picker>
       <script>
         picker9.pickerMeta = pickerMeta;
-      &lt;/script>
+      </script>
     </template>
   </demo-snippet>
 
@@ -204,13 +190,10 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
       <p></p>
       <script>
         picker10.pickerMeta = pickerMeta;
-      &lt;/script>
+      </script>
     </template>
   </demo-snippet>
-</div>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>template>
+</div>
   </demo-snippet>
 </div>
 </body>

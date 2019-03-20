@@ -13,13 +13,11 @@ Example:
 <h2-button id="btn3" onclick='tip3.open(5000);'>Error</h2-button>
 ```
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-import './behaviors/base-behavior.js';
 
+import {html, PolymerElement} from "@polymer/polymer";
+import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
+import '@polymer/paper-dialog';
+import {BaseBehavior} from "./behaviors/base-behavior";
 import './h2-button.js';
 import './h2-input.js';
 /**
@@ -27,9 +25,9 @@ import './h2-input.js';
  * @polymer
  * @demo demo/h2-tip/index.html
  */
-class H2Tip extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
+class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get template() {
-    return Polymer.html`
+    return html`
     <style>
 
       :host {
