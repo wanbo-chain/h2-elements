@@ -61,11 +61,8 @@ For example ``http://127.0.0.1:8000/components/h2-elements/demo/h2-fetch/index.h
 folder, it can be ``index.html?mock=mockData.js`` or ``index.html?mock=./mockData.js``
 
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
+import {PolymerElement} from "@polymer/polymer";
+
 /**
  * `h2-fetch`
  *
@@ -73,14 +70,7 @@ folder, it can be ``index.html?mock=mockData.js`` or ``index.html?mock=./mockDat
  * @polymer
  * @demo demo/h2-fetch/index.html
  */
-class H2Fetch extends Polymer.mixinBehaviors([], Polymer.Element) {
-  static get template() {
-    return Polymer.html`
-    <style>
-
-    </style>
-`;
-  }
+class H2Fetch extends PolymerElement {
 
   static get properties() {
     return {

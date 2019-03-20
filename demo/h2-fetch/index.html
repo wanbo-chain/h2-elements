@@ -6,30 +6,19 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
 
   <title>h2-fetch demo</title>
-
+  
+  <script type="text/javascript" src="../../utils/mock_setup.js"></script>
+  
   <script type="module">
-import '../../h2-fetch.js';
-if(!window.location.href.endsWith("?mock=mockData.js")) {
-  window.location.href = window.location.href + "?mock=mockData.js";
-}
+    import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
+    import '../../h2-fetch';
+    if(!window.location.href.endsWith("?mock=mockData.js")) {
+      window.location.href = window.location.href + "?mock=mockData.js";
+    }
 </script>
 
-  <script type="text/javascript" src="../../utils/mock_setup.js"></script>
-
-  <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
-
-  <script type="module" src="../../h2-fetch.js"></script>
-  <link rel="import" href="../../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../../iron-demo-helpers/demo-snippet.html">
-
-  <!-- FIXME(polymer-modulizer):
-        These imperative modules that innerHTML your HTML are
-        a hacky way to be sure that any mixins in included style
-        modules are ready before any elements that reference them are
-        instantiated, otherwise the CSS @apply mixin polyfill won't be
-        able to expand the underlying CSS custom properties.
-        See: https://github.com/Polymer/polymer-modulizer/issues/154
-        -->
     <script type="module">
 const $_documentContainer = document.createElement('template');
 
@@ -51,10 +40,7 @@ document.body.appendChild($_documentContainer.content);
 </script>
 </head>
 <body>
-<script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
+<div class="vertical-section-container centered">
   <h3>Basic h2-fetch demo</h3>
   <demo-snippet>
     <template>
@@ -72,7 +58,7 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
         fetchDemo.addEventListener("response-body-changed", (e) => {
           responseDiv.innerHTML = JSON.stringify(e.detail.value);
         });
-      &lt;/script>
+      </script>
     </template>
     
   </demo-snippet>
@@ -93,7 +79,7 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
         fetchDemo1.addEventListener("response-body-changed", (e) => {
           responseDiv1.innerHTML = JSON.stringify(e.detail.value);
         });
-      &lt;/script>
+      </script>
     </template>
   </demo-snippet>
 
@@ -114,7 +100,7 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
         fetchDemo2.addEventListener("response-body-changed", (e) => {
           responseDiv2.innerHTML = JSON.stringify(e.detail.value);
         });
-      &lt;/script>
+      </script>
     </template>
   </demo-snippet>
 
@@ -135,9 +121,9 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
         });
         fetchDemo3.addEventListener("response-changed", (e) => {
           const {type, status, statusText} = e.detail.value;
-          responseDiv3.innerHTML = \`\${type} \${status} \${statusText}\`;
+          responseDiv3.innerHTML = `${type} ${status} ${statusText}`;
         });
-      &lt;/script>
+      </script>
     </template>
   </demo-snippet>
 
@@ -148,6 +134,9 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
       <div id="responseDiv4_1"></div>
       <div id="responseDiv4_1_err"></div>
       <script>
+        
+        import {H2Fetch} from "../../h2-fetch";
+        
         const request = {
           url: "/path/to/index.do",
           method: "POST",
@@ -161,10 +150,8 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
           .then(data => responseDiv4_1.innerHTML = JSON.stringify(data))
           .catch(err => responseDiv4_1_err.innerHTML = err);
 
-      &lt;/script>
+      </script>
     </template>
   </demo-snippet>
-</div>`;
-
-document.body.appendChild($_documentContainer.content);
+</div>
 </script>

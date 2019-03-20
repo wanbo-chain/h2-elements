@@ -23,6 +23,13 @@
     "WahsonLeung  <hsliang1@163.com>"
   ],
   "license": "MIT",
+  "scripts": {
+    "start": "polymer serve",
+    "build": "polymer build",
+    "lint": "polymer lint",
+    "test": "polymer test",
+    "test:integration": "polymer build # test that psk builds without error with the CLI"
+  },
   "dependencies": {
     "@polymer/iron-collapse": "^3.0.0",
     "@polymer/iron-icon": "^3.0.0",
