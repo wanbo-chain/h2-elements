@@ -70,7 +70,7 @@ import {PolymerElement} from "@polymer/polymer";
  * @polymer
  * @demo demo/h2-fetch/index.html
  */
-class H2Fetch extends PolymerElement {
+export class H2Fetch extends PolymerElement {
 
   static get properties() {
     return {
