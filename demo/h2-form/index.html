@@ -3,38 +3,27 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-
+  
   <title>h2-form demo</title>
-  <script type="module">
-import '../../h2-form.js';
-import '../../h2-input.js';
-import '../../h2-button.js';
-if (!window.location.href.endsWith("?mock=formMockData.js")) {
-  window.location.href = window.location.href + "?mock=formMockData.js";
-}
-</script>
-
+  
   <script type="text/javascript" src="../../utils/mock_setup.js"></script>
-
-  <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
-
-  <link rel="import" href="../../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../../iron-demo-helpers/demo-snippet.html">
-  <script type="module" src="../../h2-form.js"></script>
-  <script type="module" src="../../h2-input.js"></script>
-  <script type="module" src="../../h2-button.js"></script>
-  <!-- FIXME(polymer-modulizer):
-        These imperative modules that innerHTML your HTML are
-        a hacky way to be sure that any mixins in included style
-        modules are ready before any elements that reference them are
-        instantiated, otherwise the CSS @apply mixin polyfill won't be
-        able to expand the underlying CSS custom properties.
-        See: https://github.com/Polymer/polymer-modulizer/issues/154
-        -->
-    <script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<custom-style>
+  
+  <script type="module">
+    import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
+    import '../../h2-form.js';
+    import '../../h2-input.js';
+    import '../../h2-button.js';
+    if (!window.location.href.endsWith("?mock=formMockData.js")) {
+      window.location.href = window.location.href + "?mock=formMockData.js";
+    }
+  </script>
+  
+  <script type="module">
+    const $_documentContainer = document.createElement('template');
+    
+    $_documentContainer.innerHTML = `<custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
       .centered {
         min-width: 800px;
@@ -53,15 +42,12 @@ $_documentContainer.innerHTML = `<custom-style>
       }
     </style>
   </custom-style>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>
+    
+    document.body.appendChild($_documentContainer.content);
+  </script>
 </head>
 <body>
-<script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
+<div class="vertical-section-container centered">
   <h3>Basic h2-form demo</h3>
   <demo-snippet>
     <template>
@@ -69,8 +55,9 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
         <style>
           .form-input {
             width: 350px;
-            --h2-input-label: {
-              width: 80px;
+            --h2-label: {
+              width: 60px;
+              text-align: right;
             }
           }
         </style>
@@ -80,67 +67,50 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
         <h2-input class="form-input" label="电话" name="tel" type="tel" maxlength="11"></h2-input>
         <h2-input class="form-input" label="地址" name="address"></h2-input>
         <h2-input class="form-input" label="姓名" name="name"></h2-input>
-        <h2-input class="form-input" label="年龄" name="age" type="number" required="" min="10" max="20" prompt="年龄介乎10到20之间"></h2-input>
+        <h2-input class="form-input" label="年龄" name="age" type="number" required="" min="10" max="20"
+                  prompt="年龄介乎10到20之间"></h2-input>
         <h2-button slot="form-btn" form-submit="">提交</h2-button>
       </h2-form>
-      <script>
-        form.addEventListener('submitted', e => console.log('submitted', e))
-        form.addEventListener('error', e => console.log('error', e))
-      &lt;/script>
+      <script type="module">
+        import {TipBehavior} from "../../behaviors/tip-behavior";
+        form.addEventListener('submitted', e => {
+          console.log('submitted', e);
+        });
+        form.addEventListener('error', e => {
+          console.log('error', e);
+          TipBehavior.h2Tip.error("保存失败");
+        });
+        form.addEventListener("response-body-changed", (e) => {
+          alert(JSON.stringify(e.detail.value));
+        });
+        TipBehavior.h2Tip.error("保存失败");
+      </script>
     </template>
-    <script>
-      form.addEventListener("response-body-changed", (e) => {
-        alert(JSON.stringify(e.detail.value));
-      });
-    &lt;/script>
-
-  </demo-snippet>
-</div>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>/h2-button.js';
-form.addEventListener("response-body-changed", (e) => {
-  alert(JSON.stringify(e.detail.value));
-});
-</script>
-
   </demo-snippet>
 </div>
-<script type="module">
-const $_documentContainer = document.createElement('template');
 
-$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
+<div class="vertical-section-container centered">
   <h3>Setting Enctype</h3>
   <demo-snippet>
     <template>
-      <h2-form title="demo" id="form1" action="/test1.do" enctype="application/x-www-form-urlencoded">
+      <h2-form title="demo" id="form1" action="/test.do" enctype="application/x-www-form-urlencoded">
         <h2-input class="form-input" label="公司名称" name="company"></h2-input>
         <h2-input class="form-input" label="电话" name="tel" type="tel" maxlength="11"></h2-input>
         <h2-input class="form-input" label="地址" name="address"></h2-input>
         <h2-input class="form-input" label="姓名" name="name"></h2-input>
         <h2-button slot="form-btn" form-submit="">提交</h2-button>
       </h2-form>
-
+      <script>
+        form1.addEventListener("response-body-changed", (e) => {
+          alert(e.detail.value.message);
+        });
+      </script>
     </template>
-    <script>
-      form1.addEventListener("response-body-changed", (e) => {
-        alert(e.detail.value.message);
-      });
-    &lt;/script>
-  </demo-snippet>
-</div>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>=> {
-  alert(e.detail.value.message);
-});
-</script>
+  
   </demo-snippet>
 </div>
-<script type="module">
-const $_documentContainer = document.createElement('template');
 
-$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
+<div class="vertical-section-container centered">
   <h3>Setting Enctype</h3>
   <demo-snippet>
     <template>
@@ -151,27 +121,16 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
         <h2-input class="form-input" label="姓名" name="name"></h2-input>
         <h2-button slot="form-btn" form-submit="">提交</h2-button>
       </h2-form>
-
+      <script>
+        form2.addEventListener("response-body-changed", (e) => {
+          alert(e.detail);
+        });
+      </script>
     </template>
-    <script>
-      form2.addEventListener("response-body-changed", (e) => {
-        alert(e.detail);
-      });
-    &lt;/script>
-  </demo-snippet>
-</div>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>changed", (e) => {
-  alert(e.detail);
-});
-</script>
   </demo-snippet>
 </div>
-<script type="module">
-const $_documentContainer = document.createElement('template');
 
-$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
+<div class="vertical-section-container centered">
   <h3>Setting method</h3>
   <demo-snippet>
     <template>
@@ -184,15 +143,9 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
       </h2-form>
     </template>
   </demo-snippet>
-</div>`;
+</div>
 
-document.body.appendChild($_documentContainer.content);
-</script>
-
-<script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
+<div class="vertical-section-container centered">
   <h3>Novalidate</h3>
   <demo-snippet>
     <template>
@@ -201,30 +154,22 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
         <h2-input class="form-input" label="电话" name="tel" type="tel" maxlength="11"></h2-input>
         <h2-input class="form-input" label="地址" name="address"></h2-input>
         <h2-input class="form-input" label="姓名" name="name"></h2-input>
-        <h2-input class="form-input" label="年龄" name="age" type="number" required="" min="10" max="20" prompt="年龄介乎10到20之间"></h2-input>
+        <h2-input class="form-input" label="年龄" name="age" type="number" required="" min="10" max="20"
+                  prompt="年龄介乎10到20之间"></h2-input>
         <h2-button slot="form-btn" form-submit="">提交</h2-button>
       </h2-form>
       <script>
         form3.bindSubmit = () => {
           alert("User-define Submit Function");
         }
-      &lt;/script>
-    </template>
-  </demo-snippet>
-</div>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>mit Function");
-}
-</script>
+      </script>
     </template>
   </demo-snippet>
 </div>
+</demo-snippet>
+</div>
 
-<script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
+<div class="vertical-section-container centered">
   <h3>Custom style</h3>
   <demo-snippet>
     <template>
@@ -243,9 +188,10 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
               justify-content: flex-start;
             };
           }
+          
           .form-input1 {
             width: 240px;
-
+            
             --h2-input-label: {
               width: 80px;
             };
@@ -257,14 +203,12 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
         <h2-input class="form-input1" label="电话" name="tel" type="tel" maxlength="11"></h2-input>
         <h2-input class="form-input1" label="地址" name="address"></h2-input>
         <h2-input class="form-input1" label="姓名" name="name"></h2-input>
-        <h2-input class="form-input1" label="年龄" name="age" type="number" required="" min="10" max="20" prompt="年龄介乎10到20之间"></h2-input>
+        <h2-input class="form-input1" label="年龄" name="age" type="number" required="" min="10" max="20"
+                  prompt="年龄介乎10到20之间"></h2-input>
         <h2-button slot="form-btn" form-submit="">提交</h2-button>
       </h2-form>
     </template>
   </demo-snippet>
-</div>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>
+</div>
 </body>
 </html>

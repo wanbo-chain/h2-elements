@@ -6,12 +6,4 @@ A series of container elements to quickly build web apps
 
 ## 构建方法
 ### 安装node.js 使用nodeJs默认的npm包管理
-### 安装bower
-```
-npm install bower -g
-```
-### 安装h2-elements
-```
-bower install h2-elements --save
-```
-### 项目地址：https://github.com/isuwang/h2-elements.git
+### 项目地址：https://github.com/wanbo-chain/h2-elements.git

@@ -3,7 +3,7 @@
   "ecmaVersion": 6,
   "rules": {
     "indent": ["error", 2],
-    "no-console": "error",
+    "no-console": "warn",
     "no-var": "error",
     "strict": "error",
     "no-case-declarations": "off",

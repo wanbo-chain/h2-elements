@@ -23,22 +23,24 @@ The following custom properties and mixins are available for styling:
 |`--h2-form-button` | Mixin applied to submit button of the form | {}
 
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-import './behaviors/base-behavior.js';
+
+import {html, PolymerElement} from "@polymer/polymer";
+import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
+import * as Gestures from '@polymer/polymer/lib/utils/gestures.js';
+
+import {BaseBehavior} from "./behaviors/base-behavior";
+import {dom} from '@polymer/polymer/lib/legacy/polymer.dom.js';
 
 import './h2-fetch.js';
+
 /**
  * @customElement
  * @polymer
  * @demo demo/h2-form/index.html
  */
-class H2Form extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
+class H2Form extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get template() {
-    return Polymer.html`
+    return html`
     <style>
       :host {
         display: block;
@@ -127,8 +129,8 @@ class H2Form extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
 
   connectedCallback() {
     super.connectedCallback();
-    this.addEventListener('tap', e => {
-      const path = Polymer.dom(e).path;
+    Gestures.addListener(this, 'tap', e => {
+      const path = dom(e).path;
       const submit = path.find(target => target.hasAttribute && (target.hasAttribute('form-submit')));
       submit && this.submit();
     });

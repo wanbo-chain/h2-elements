@@ -6,13 +6,8 @@ Example:
 <h2-loading opened></h2-loading>
 ```
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
-import {PolymerElement} from "@polymer/polymer";
+import {html, PolymerElement} from "@polymer/polymer";
 import {IronOverlayBehavior} from "@polymer/iron-overlay-behavior";
 
 /**
@@ -22,7 +17,7 @@ import {IronOverlayBehavior} from "@polymer/iron-overlay-behavior";
  */
 class H2Loading extends mixinBehaviors([IronOverlayBehavior], PolymerElement) {
   static get template() {
-    return Polymer.html`
+    return html`
     <style>
       :host {
         position: fixed;
@@ -31,7 +26,7 @@ class H2Loading extends mixinBehaviors([IronOverlayBehavior], PolymerElement) {
         width: 100%;
         height: 100%;
         background: black;
-        z-index: 999;
+        z-index: 9999;
         opacity: 0.5;
         display: flex;
       }

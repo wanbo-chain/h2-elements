@@ -40,6 +40,7 @@
           }
           
           const hash = calHash(method, url, headersArr);
+          console.log(`mock_setup matching hash: ${hash}`);
           return mockDatas[hash] && mockDatas[hash].response || null;
         },
         
