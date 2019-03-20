@@ -35,10 +35,10 @@
     "@polymer/paper-behaviors": "^3.0.1",
     "@polymer/paper-button": "^3.0.0",
     "@polymer/paper-checkbox": "^3.0.0",
-    "@polymer/paper-dialog": "^3.0.0",
+    "@polymer/paper-dialog": "^3.0.1",
     "@polymer/paper-dialog-scrollable": "^3.0.0",
     "@polymer/paper-input": "^3.0.0",
-    "@polymer/polymer": "^3.0.0",
+    "@polymer/polymer": "^3.1.0",
     "web-animations-js": "^2.3.1"
   },
   "devDependencies": {

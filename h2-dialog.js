@@ -21,21 +21,21 @@ The following custom properties and mixins are available for styling:
 
 
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-import './behaviors/base-behavior.js';
+import {html, PolymerElement} from "@polymer/polymer";
+import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
+import '@polymer/paper-dialog';
+import '@polymer/neon-animation/animations/scale-up-animation.js';
+import '@polymer/neon-animation/animations/fade-out-animation.js';
 
+import {BaseBehavior} from "./behaviors/base-behavior";
 /**
  * @customElement
  * @polymer
  * @demo demo/h2-dialog/index.html
  */
-class H2Dialog extends Polymer.mixinBehaviors([BaseBehavior], Polymer.Element) {
+class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get template() {
-    return Polymer.html`
+    return html`
     <style>
       :host {
         display: block;
