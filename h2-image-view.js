@@ -37,7 +37,7 @@ class H2ImageView extends PolymerElement {
         text-align: center;
         border: 1px dashed #ccc;
         font-size: 14px;
-        background: #f0f0f0;
+        background: #fafafa;
       }
 
       .img__container {
@@ -49,7 +49,7 @@ class H2ImageView extends PolymerElement {
 
       .toolbar {
         display: flex;
-        background: rgba(79, 79, 79, 0.33);
+        background: #f0f0f0;
         height: 36px;
         justify-content: center;
         align-items: center;

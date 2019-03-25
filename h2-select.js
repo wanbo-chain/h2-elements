@@ -32,6 +32,9 @@ The following custom properties and mixins are available for styling:
 */
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
 import {html, PolymerElement} from "@polymer/polymer";
+import '@polymer/iron-icon/iron-icon';
+import '@polymer/iron-icons/iron-icons';
+import '@polymer/iron-selector/iron-selector';
 import './behaviors/base-behavior.js';
 import './behaviors/h2-elements-shared-styles.js';
 import {BaseBehavior} from "./behaviors/base-behavior";
@@ -66,6 +69,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         border: 1px solid #CCC;
         border-radius: 4px;
         position: relative;
+        @apply --h2-select__container
       }
 
       .tags__container {
@@ -248,7 +252,9 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
                 </div>
                 <a class="tag-deleter" data-args="[[getValueByKey(item, attrForValue)]]" href="javascript:void(0);" title="删除该选项" on-click="_deleteTag">x</a>
               </div>
-              <input class="tag-cursor" id="tag-cursor__[[index]]" data-cursor-index\$="[[index]]" on-keydown="_updatePressed" autocomplete="off">
+              <template is="dom-if" if="[[ multi ]]">
+                <input class="tag-cursor" id="tag-cursor__[[index]]" data-cursor-index$="[[index]]" on-keydown="_updatePressed" autocomplete="off">
+              </template>
             </template>
           </div>
         </div>

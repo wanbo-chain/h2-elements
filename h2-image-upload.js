@@ -60,8 +60,9 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior], PolymerElement) {
         font-size: inherit;
         width: var(--h2-image-upload-width, 140px);
         height: var(--h2-image-upload-height, 180px);
-        background: #f0f0f0;
+        background: #fafafa;
         position: relative;
+        border-radius: 5px;
       }
 
       #img__container {
@@ -72,7 +73,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       .toolbar {
         display: flex;
-        background: rgba(79, 79, 79, 0.33);
+        background: #f0f0f0;
         height: 36px;
         justify-content: space-evenly;
         align-items: center;
@@ -140,6 +141,12 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior], PolymerElement) {
       :host(:not([data-has-src])) #img__container {
         cursor: default;
       }
+      
+      .red {
+        --h2-button: {
+          background: #E91E63;
+        }
+      }
 
     </style>
 
@@ -152,7 +159,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
         <div class="toolbar">
           <h2-button title="点击选择文件" on-click="_triggerChooseFile">选择</h2-button>
-          <h2-button id="cancel-btn" on-click="cancelSelection">取消</h2-button>
+          <h2-button class="red" id="cancel-btn" on-click="cancelSelection">取消</h2-button>
           <input type="file" on-change="_chooseFile" id="file-chooser" accept\$="[[accept]]">
         </div>
         <div class="mask"></div>

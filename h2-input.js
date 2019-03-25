@@ -50,7 +50,6 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       :host .input__container {
         flex: 1;
-
         display: flex;
         line-height: inherit;
         min-width: 0;
@@ -65,7 +64,7 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       #innerInput {
         flex: 1;
-        font-family: 'Roboto', 'Noto', sans-serif;
+        font-family: 'Microsoft Yahei', sans-serif;
         font-size: inherit;
         height: inherit;
         padding: 4px 8px;
@@ -91,8 +90,8 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
 
       :host .input-unit {
-        background-color: #eeeeee;
-        color: #2786F7;
+        background: var(--h2-ui-bg);
+        color: var(--h2-ui-wihte);
         white-space: nowrap;
 
         height: inherit;
@@ -168,6 +167,18 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
         border: solid 1px red;
         border-radius: 4px;
       }
+      
+      :host .prompt-tip {
+        background: var(--h2-ui-bg);
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+      }
+      
+      :host .prompt-tip::before {
+        border-right: 11px solid #3ba2f6;
+        left: -22px;
+      }
+      
 
     </style>
     <div class="h2-label">[[label]]</div>

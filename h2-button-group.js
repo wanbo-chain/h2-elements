@@ -36,6 +36,7 @@ import {BaseBehavior} from "./behaviors/base-behavior";
 import {html, PolymerElement} from "@polymer/polymer";
 import '@polymer/paper-button';
 import '@polymer/iron-collapse';
+import './behaviors/h2-elements-shared-styles';
 /**
  * @customElement
  * @polymer
@@ -44,7 +45,7 @@ import '@polymer/iron-collapse';
 class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get template() {
     return html`
-    <style>
+    <style include="h2-elements-shared-styles">
       :host {
         position: relative;
         font: inherit;

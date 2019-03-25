@@ -81,7 +81,7 @@ class H2Mask extends mixinBehaviors([BaseBehavior], PolymerElement) {
       :host .mask__viewer__editor {
         display: none;
 
-        background-color: #eeeeee;
+        background: var(--h2-ui-bg);
         justify-self: flex-end;
         padding: 0 4px;
         height: inherit;
@@ -136,7 +136,7 @@ class H2Mask extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
 
       :host .button-container > button {
-        background-color: #f0f0f0;
+        background: var(--h2-ui-bg);
         border: 1px solid #cccccc;
         cursor: pointer;
         border-radius: 4px;
@@ -153,6 +153,7 @@ class H2Mask extends mixinBehaviors([BaseBehavior], PolymerElement) {
       :host iron-icon {
         width: 20px;
         height: 20px;
+        color: var(--h2-ui-wihte);
       }
 
       :host .btn--cancel {

@@ -7,6 +7,8 @@ Example:
 ```
 */
 import {html, PolymerElement} from "@polymer/polymer";
+import './behaviors/h2-elements-shared-styles';
+import './h2-select';
 
 /**
  * @customElement
@@ -16,7 +18,7 @@ import {html, PolymerElement} from "@polymer/polymer";
 class H2Pagination extends PolymerElement {
   static get template() {
     return html`
-    <style>
+    <style include="h2-elements-shared-styles">
       :host {
         display: inline-block;
         height: 38px;
@@ -29,16 +31,18 @@ class H2Pagination extends PolymerElement {
         margin: 0;
         padding: 0;
         list-style: none;
+        height: 38px;
+        line-height: 38px;
       }
 
       li > div {
         padding: 0 8px;
-        color: #337ab7;
+        color: var(--h2-ui-highblue);
         background-color: #fff;
-        border: 1px solid #ddd;
+        border: 1px solid #f0f0f0;
         border-right: none;
         white-space: nowrap;
-        cursor: default;
+        cursor: pointer;
       }
 
       li:first-of-type > div {
@@ -49,14 +53,14 @@ class H2Pagination extends PolymerElement {
       li:last-of-type > div {
         border-top-right-radius: 4px;
         border-bottom-right-radius: 4px;
-        border-right: 1px solid #ddd;
+        border-right: 1px solid #f0f0f0;
       }
 
-      li > div:hover {
-        color: #23527c;
-        background-color: #eee;
-        border-color: #ddd;
-      }
+      /*li > div:hover {*/
+        /*color: #23527c;*/
+        /*background-color: #eee;*/
+        /*border-color: #ddd;*/
+      /*}*/
 
       #inner-input {
         width: 50px;
@@ -66,7 +70,39 @@ class H2Pagination extends PolymerElement {
         border-radius: 2px;
         border: 1px solid #6fa5d3;
       }
-
+      
+      input[type=number] {
+          -moz-appearance:textfield;
+      }
+      
+      input[type=number]::-webkit-inner-spin-button,
+      input[type=number]::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+      }
+      
+      h2-select {
+        width: 110px;
+        height: 38px;
+        line-height: 38px;
+        border: 1px solid #f0f0f0;
+        /*--h2-select-tag-cursor: {*/
+         /*color: transparent;*/
+        /*}*/
+        --h2-select__container: {
+          border: none;
+        }
+        --h2-select-tag: {
+          background-color: #fff;
+          border: none;
+          line-height: 27px;
+          color: var(--h2-ui-highblue);
+        }
+        --h2-select-tag-deleter: {
+          display: none;
+        }
+      }
+      
     </style>
     <ul class="pagination">
       <li>
@@ -76,8 +112,8 @@ class H2Pagination extends PolymerElement {
         <div on-click="prev" id="prev">上一页</div>
       </li>
       <li>
-        <div>第 <input id="inner-input" value="{{ __pageIndex::input }}" type="number" maxlength\$="10">
-          页/ 总共[[ totalPageSize ]]页 ，每页[[ limit ]]条
+        <div>第 <input id="inner-input" value="{{ __pageIndex::input }}" type="number" maxlength="10" min="1">
+          页/ 共[[ totalPageSize ]]页 ，每页[[ limit ]]条
         </div>
       </li>
       <li>
@@ -87,7 +123,10 @@ class H2Pagination extends PolymerElement {
         <div on-click="last" id="last">最后一页</div>
       </li>
       <li>
-        <div>共[[ total ]]条记录</div>
+        <div>共[[ total ]]条</div>
+      </li>
+      <li>
+        <h2-select placeholder="请选择" value="{{ limit }}" items="[[ pageSizes ]]"></h2-select>
       </li>
     </ul>
 `;
@@ -136,13 +175,22 @@ class H2Pagination extends PolymerElement {
         type: Number,
         value: 1
       },
+      pageSizes: {
+        type: Array,
+        value: [
+          {label: '5条/页', value: 5},
+          {label: '15条/页', value: 15},
+          {label: '25条/页', value: 25}
+        ]
+      }
     };
   }
 
   static get observers() {
     return [
       '_pageIndexChanged(__pageIndex)',
-      '_pageStartChanged(paging.start)'
+      '_pageStartChanged(paging.start)',
+      '_limitChanged(limit)'
     ];
   }
 
@@ -158,6 +206,10 @@ class H2Pagination extends PolymerElement {
     if(!this.paging || this.paging.start !== start) {
       this.paging = {start, limit: this.limit};
     }
+  }
+
+  _limitChanged(limit) {
+    console.log(limit)
   }
 
   _calTotalPageSize(total, limit) {
@@ -195,6 +247,7 @@ class H2Pagination extends PolymerElement {
   last() {
     this.__pageIndex = this.totalPageSize;
   }
+
 }
 
 window.customElements.define(H2Pagination.is, H2Pagination);

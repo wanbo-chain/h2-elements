@@ -24,6 +24,7 @@ import {html, PolymerElement} from "@polymer/polymer";
 import '@polymer/paper-button/paper-button'
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
 import {PaperButtonBehavior} from "@polymer/paper-behaviors/paper-button-behavior";
+import './behaviors/h2-elements-shared-styles.js';
 
 /**
  * @customElement
@@ -33,7 +34,7 @@ import {PaperButtonBehavior} from "@polymer/paper-behaviors/paper-button-behavio
 class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
   static get template() {
     return html`
-    <style>
+    <style include="h2-elements-shared-styles">
       :host {
         display: inline-block;
         font-size: 14px;
@@ -46,13 +47,9 @@ class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
         display: none;
       }
 
-      :host([disabled]) .btn {
-        background-color: #aeaeae;
-      }
-
       .btn {
         color: #fff;
-        background-color: #0099FF;
+        background: var(--h2-ui-bg);
         margin: 0;
         font-weight: normal;
         text-align: center;
@@ -68,6 +65,10 @@ class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
         font-size: inherit;
         text-transform: none;
         @apply --h2-button;
+      }
+      
+      :host([disabled]) .btn {
+        background: #aeaeae;
       }
       
     </style>

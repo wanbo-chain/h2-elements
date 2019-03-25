@@ -28,6 +28,7 @@ import '@polymer/neon-animation/animations/scale-up-animation.js';
 import '@polymer/neon-animation/animations/fade-out-animation.js';
 
 import {BaseBehavior} from "./behaviors/base-behavior";
+import './behaviors/h2-elements-shared-styles.js';
 /**
  * @customElement
  * @polymer
@@ -36,7 +37,7 @@ import {BaseBehavior} from "./behaviors/base-behavior";
 class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get template() {
     return html`
-    <style>
+    <style include="h2-elements-shared-styles">
       :host {
         display: block;
       }
@@ -55,12 +56,12 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
 
       :host .close-dialog {
-        width: 40px;
-        height: 40px;
+        width: 30px;
+        height: 30px;
         position: absolute;
-        font-size: 20px;
-        right: -16px;
-        top: -16px;
+        font-size: 18px;
+        right: 10px;
+        top: 10px;
         background: white;
         border: 1px solid #ededed;
         border-radius: 50%;
@@ -82,8 +83,8 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
     </style>
 
-    <paper-dialog id="dialog" modal="" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-      <div class="close-dialog" on-tap="close">X</div>
+    <paper-dialog id="dialog" modal entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <div class="close-dialog" on-tap="close">x</div>
       <template is="dom-if" if="[[ toBoolean(title) ]]">
         <h2 class="title">[[title]]</h2>
       </template>

@@ -5,6 +5,13 @@ const template = html`
   <dom-module id="h2-elements-shared-styles">
   <template>
     <style>
+      :host {
+        --h2-ui-bg: linear-gradient(315deg, var(--h2-ui-minbulue)  0%, var(--h2-ui-highblue) 100%);
+        --h2-ui-wihte: white;
+        --h2-ui-highblue: #2196F3;
+        --h2-ui-minbulue: #8FCDFF;
+        --h2-ui-red: #E91E63;
+      }
       :host([readonly]) .mask,
       :host([disabled]) .mask {
         position: absolute;

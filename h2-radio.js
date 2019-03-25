@@ -86,7 +86,7 @@ class H2Radio extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       .candidate__item:hover,
       .candidate__item.iron-selected {
-        background-color: var(--h2-radio-selected-color, #0099FF);
+        background: var(--h2-ui-bg);
         color: #fff;
         border-color: var(--h2-radio-selected-color, #0099FF);
       }
