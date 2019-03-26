@@ -20,6 +20,8 @@ The following custom properties and mixins are available for styling:
 */
 
 import {html, PolymerElement} from "@polymer/polymer";
+import '@polymer/iron-icon';
+import '@polymer/iron-icons/social-icons';
 import './behaviors/h2-elements-shared-styles.js';
 /**
  * `h2-textarea`
@@ -96,11 +98,14 @@ class H2Textarea extends PolymerElement {
 
     <div class="h2-label">[[label]]</div>
     <div id="textarea-wrapper">
-      <textarea id="textarea" value="{{value::input}}" aria-label\$="[[label]]" autocomplete\$="[[autocomplete]]" autofocus\$="[[autofocus]]" inputmode\$="[[inputmode]]" placeholder\$="[[placeholder]]" readonly\$="[[readonly]]" required\$="[[required]]" disabled\$="[[disabled]]" rows\$="[[rows]]" minlength\$="[[minlength]]" maxlength\$="[[maxlength]]"></textarea>
+      <textarea id="textarea" value="{{value::input}}" aria-label$="[[label]]" autocomplete$="[[autocomplete]]" autofocus$="[[autofocus]]" inputmode$="[[inputmode]]" placeholder$="[[placeholder]]" readonly$="[[readonly]]" required$="[[required]]" disabled$="[[disabled]]" rows$="[[rows]]" minlength$="[[minlength]]" maxlength$="[[maxlength]]"></textarea>
       <div class="mask"></div>
     </div>
-    <div class="prompt-tip__container" data-prompt\$="[[prompt]]">
-      <div class="prompt-tip">[[prompt]]</div>
+    <div class="prompt-tip__container" data-prompt$="[[prompt]]">
+      <div class="prompt-tip">
+        <iron-icon class="prompt-tip-icon" icon="social:sentiment-very-dissatisfied"></iron-icon>
+        [[prompt]]
+      </div>
     </div>
 `;
   }

@@ -1,5 +1,8 @@
 import {html, PolymerElement} from "@polymer/polymer";
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
+import '@polymer/iron-icon/iron-icon';
+import '@polymer/iron-icons/iron-icons';
+
 import {BaseBehavior} from "./behaviors/base-behavior";
 import './behaviors/h2-elements-shared-styles.js';
 import {H2Fetch} from './h2-fetch';
@@ -72,9 +75,8 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
 
       .tag {
-        color: #666;
-        background-color: #f0f0f0;
-        border: 1px solid #ccc;
+        color: #fff;
+        background: var(--h2-ui-bg);
         border-radius: 4px;
 
         margin: 2px 2px 3px 2px;
@@ -98,14 +100,14 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       .tag-deleter {
         margin-left: 6px;
-        font-weight: bold;
-        text-decoration: none;
-        color: #0099FF;
-        @apply --h2-picker-tag-deleter;
+        width: 18px;
+        color: #fff;
+        cursor: pointer;
+        @apply --h2-select-tag-deleter;
       }
 
       .tag-deleter:hover {
-        color: #f60;
+        color: var(--h2-ui-red);
       }
 
       #picker-collapse {
@@ -171,28 +173,26 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         font-size: 1.1em;
       }
 
-      tbody > tr:nth-last-of-type(even) {
-        background-color: #efefef;
-      }
-
       tbody > tr:hover {
-        background-color: #CAF1FF;
+        background: var(--h2-ui-bg);
+        color: #fff;
         cursor: pointer;
       }
 
       tr.candidate-item--focus {
-        background: #CAF1FF !important;
+        background: var(--h2-ui-bg) !important;
+        color: #fff;
       }
 
       .table-hotkey {
         width: 40px;
       }
 
-      :host([required])::after {
+      :host([required])::before {
         content: "*";
         color: red;
         position: absolute;
-        right: -15px;
+        left: -12px;
         line-height: inherit;
       }
     </style>
@@ -207,7 +207,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
                 <span class="tag-name" title="[[ getValueByKey(item, attrForLabel) ]]">
                   [[ getValueByKey(item, attrForLabel) ]]
                 </span>
-                <a class="tag-deleter" data-args="[[ getValueByKey(item, attrForValue) ]]" href="javascript:void(0);" title="删除选项" on-click="_deleteTag">x</a>
+                <iron-icon class="tag-deleter" icon="icons:clear" data-args="[[ getValueByKey(item, attrForValue) ]]" on-click="_deleteTag"></iron-icon>
             </span>
           </template>
           <input id="keywordInput" value="{{ _userInputKeyword::input }}" autocomplete="off">

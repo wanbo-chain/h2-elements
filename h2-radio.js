@@ -12,13 +12,6 @@ Example:
 </script>
 ```
 
-## Styling
-
-The following custom properties and mixins are available for styling:
-
-|Custom property | Description | Default|
-|----------------|-------------|----------|
-|`--h2-radio-selected-color` | Radio color when it is selected | #0099FF
 */
 
 import {html, PolymerElement} from "@polymer/polymer";
@@ -88,7 +81,6 @@ class H2Radio extends mixinBehaviors([BaseBehavior], PolymerElement) {
       .candidate__item.iron-selected {
         background: var(--h2-ui-bg);
         color: #fff;
-        border-color: var(--h2-radio-selected-color, #0099FF);
       }
 
     </style>

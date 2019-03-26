@@ -171,19 +171,7 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
         border-radius: 4px;
       }
       
-      :host .prompt-tip {
-        background: var(--h2-ui-minblue);
-      }
       
-      :host .prompt-tip::before {
-        border-right: 14px solid;
-        border-right-color: var(--h2-ui-minblue);
-        left: -18px;
-      }
-      
-      .prompt-tip-icon {
-        width: 20px;
-      }
 
     </style>
     <div class="h2-label">[[label]]</div>
