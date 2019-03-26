@@ -26,9 +26,12 @@ import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
 import '@polymer/paper-dialog';
 import '@polymer/neon-animation/animations/scale-up-animation.js';
 import '@polymer/neon-animation/animations/fade-out-animation.js';
-
+import '@polymer/iron-icon';
+import '@polymer/iron-icons';
 import {BaseBehavior} from "./behaviors/base-behavior";
 import './behaviors/h2-elements-shared-styles.js';
+
+
 /**
  * @customElement
  * @polymer
@@ -55,25 +58,16 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
         overflow: auto;
       }
 
-      :host .close-dialog {
-        width: 30px;
-        height: 30px;
+      .close-dialog {
         position: absolute;
-        font-size: 18px;
-        right: 10px;
-        top: 10px;
-        background: white;
-        border: 1px solid #ededed;
-        border-radius: 50%;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        right: 0;
         cursor: pointer;
-        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        z-index: 10;
       }
 
+      .close-dialog:hover {
+        color: var(--h2-ui-red);
+      }
       .title {
         margin: 20px 20px 0;
         text-align: center;
@@ -84,7 +78,10 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
     </style>
 
     <paper-dialog id="dialog" modal entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-      <div class="close-dialog" on-tap="close">x</div>
+      <div class="close-dialog" on-tap="close">
+        <iron-icon icon="icons:close"></iron-icon>
+      </div>
+      
       <template is="dom-if" if="[[ toBoolean(title) ]]">
         <h2 class="title">[[title]]</h2>
       </template>

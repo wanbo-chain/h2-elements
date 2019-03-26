@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+  
+  <title>h2-grid demo</title>
+  
+  <script type="module">
+    import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
+    import '../../h2-table';
+    import '../../h2-table-column';
+    import '../../h2-button';
+  </script>
+  
+  <script type="module">
+    const $_documentContainer = document.createElement('template');
+    
+    $_documentContainer.innerHTML = `<custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+      .centered {
+        min-width: 800px;
+      }
+
+      demo-snippet {
+        --demo-snippet-code: {
+          max-height: 500px;
+        }
+      }
+
+    </style>
+  </custom-style>`;
+    
+    document.body.appendChild($_documentContainer.content);
+  </script>
+</head>
+<body>
+<div class="vertical-section-container centered">
+  <h3>Basic h2-grid with subItem demo</h3>
+  <demo-snippet>
+    <template>
+      <style>
+        #table {
+          width: 100%;
+        }
+        
+      </style>
+      <h2-table id="table">
+        <h2-table-column prop="sex" label="性别" width="100" type="expand"  model-as="user">
+            <template>
+              <style>
+                .ext-container {
+                  display: flex;
+                }
+                .ext-container > div {
+                  width: 200px;
+                }
+              </style>
+              <div class="ext-container">
+                <div>姓名：[[user.name]]</div>
+                <div>sex: [[user.sex]]</div>
+                <div>phone: [[user.phone]]</div>
+              </div>
+            </template>
+        </h2-table-column>
+        <h2-table-column prop="name" label="名称" width="100"></h2-table-column>
+        <h2-table-column prop="phone" label="电话号码" width="300"></h2-table-column>
+        <h2-table-column prop="phone" label="操作" width="300" type="operate">
+          <template>
+            <h2-button class="action-bar">查看</h2-button>
+            <template is="dom-if" if="[[ item.modify ]]">
+              <h2-button class="action-bar">修改</h2-button>
+            </template>
+          </template>
+        </h2-table-column>
+      </h2-table>
+      <script>
+        table.data = [
+          {sex: '男', name: 'Wahson', phone: '1231231232', modify: true},
+          {sex: '女', name: 'Lucy', phone: '1231231233'},
+          {sex: '女', name: 'Rose', phone: '1231231234'},
+          {sex: '男', name: 'James', phone: '1231231235'}
+        ]
+      </script>
+    </template>
+  </demo-snippet>
+</div>
+
+</body>
+</html>

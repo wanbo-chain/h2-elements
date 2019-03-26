@@ -32,6 +32,11 @@ import './behaviors/h2-elements-shared-styles.js';
  * @demo demo/h2-button/index.html
  */
 class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
+  
+  constructor() {
+    super();
+    this.noink = true;
+  }
   static get template() {
     return html`
     <style include="h2-elements-shared-styles">
@@ -41,6 +46,7 @@ class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
         width: 80px;
         height: 34px;
         border-radius: 4px;
+        outline: none;
       }
 
       :host([hidden]) {
@@ -71,8 +77,12 @@ class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
         background: #aeaeae;
       }
       
+      :host(:hover) .btn {
+        opacity: 0.8;
+      }
+      
     </style>
-    <paper-button class="btn" disabled$="[[disabled]]">
+    <paper-button class="btn" disabled$="[[disabled]]" noink>
       <slot></slot>
     </paper-button>
 `;

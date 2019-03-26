@@ -1,4 +1,6 @@
 {
+  "name": "h2-elements",
+  "version": "0.1.0",
   "description": "Polymer components for building web apps.",
   "keywords": [
     "polymer",
@@ -10,8 +12,6 @@
     "url": "git://github.com/wanbo-chain/h2-elements.git"
   },
   "homepage": "https://github.com/wanbo-chain/h2-elements",
-  "name": "@polymer/h2-elements",
-  "version": "0.1.0",
   "resolutions": {
     "inherits": "2.0.3",
     "samsam": "1.1.3",

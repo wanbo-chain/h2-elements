@@ -34,9 +34,10 @@ The following custom properties and mixins are available for styling:
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
 import {BaseBehavior} from "./behaviors/base-behavior";
 import {html, PolymerElement} from "@polymer/polymer";
-import '@polymer/paper-button';
 import '@polymer/iron-collapse';
 import './behaviors/h2-elements-shared-styles';
+import './h2-button';
+
 /**
  * @customElement
  * @polymer
@@ -51,109 +52,100 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
         font: inherit;
         display: block;
         min-width: 80px;
+        outline: none;
       }
 
       .trigger {
-        min-width: 80px;
+        width: inherit;
         -moz-border-radius: 4px;
         -webkit-border-radius: 4px;
         border-radius: 4px;
         height: inherit;
         display: flex;
-      }
-
-      .trigger > .btn {
-        margin-left: 0;
-        width: 85%;
-        height: inherit;
-        @apply --h2-button-group-button;
-      }
-
-      .trigger > .icon {
-        min-width: 15px;
         padding: 0;
-        margin-left: -2px;
-        margin-right: 0;
-        width: 15%;
-        height: inherit;
         @apply --h2-button-group-button;
       }
 
-      .icon div iron-icon {
-        width: 100%;
-        height: inherit;
+      .trigger__label {
+        flex: 1;
       }
-
-      paper-button {
-        background: #fff;
-      }
-
+      
       /*下拉列表*/
       :host .dropdown-menu {
         position: absolute;
         display: flex;
+        background: #fff;
+        color: #fff;
         flex-flow: column nowrap;
+        box-sizing: border-box;
         top: 100%;
         left: 0;
         z-index: 99;
         width: 100%;
-        margin: 2px 0 0;
+        margin-top: 1px;
         list-style: none;
         font-size: 1em;
         text-align: center;
-        background: #fff;
         -moz-border-radius: 4px;
         -webkit-border-radius: 4px;
         border-radius: 4px;
-        -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-        -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
-                    0 1px 5px 0 rgba(0, 0, 0, 0.12),
-                    0 3px 1px -2px rgba(0, 0, 0, 0.2);
         background-clip: padding-box;
 
         @apply --h2-button-group-dropdown;
       }
 
-      .dropdown-menu .item,
-      ::slotted(*) {
+      .item, ::slotted(*) {
+        background: var(--h2-ui-bg);
         cursor: pointer;
         line-height: 30px;
-        margin: 1px 0;
         white-space: nowrap;
         font-size: 0.9em;
         text-align: center;
-        box-shadow: 0 2px 0 rgba(0, 0, 0, 0.175);
+        border: none;
+        outline: none;
+        border-bottom: 1px solid #fff;
+        margin-top: 1px;
       }
-
+      .item:first-of-type {
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+      }
+      .item:last-of-type {
+        border-bottom: none;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+      }
+      
       /*hover*/
-      .dropdown-menu .item:hover,
-      ::slotted(:hover) {
-        color: #0099FF;
+      .item:hover {
+        opacity: 0.8;
       }
-
+      
+      .trigger__icon {
+        transition: transform .2s ease-in-out
+      }
+      
+      :host([opened]) .trigger__icon {
+        transform: rotate(180deg);
+        transition: transform .2s ease-in-out
+      }
+      
     </style>
 
-    <div class="trigger" on-tap="toggle">
-      <paper-button class="btn" raised="">
-        [[ label ]]
-      </paper-button>
-      <paper-button class="icon" raised="">
-        <div>
-          <iron-icon icon="[[ __getIcon(opened) ]]"></iron-icon>
-        </div>
-      </paper-button>
-    </div>
+    <h2-button class="trigger" on-tap="toggle">
+      <div class="trigger__label">[[ label ]]</div>
+        <iron-icon class="trigger__icon" icon="icons:expand-more"></iron-icon>
+    </h2-button>
 
     <iron-collapse id="collapse" class="dropdown-menu" opened="[[ opened ]]" on-click="_onButtonDropdownClick">
       <template is="dom-repeat" items="[[ items ]]">
-        <span class="item" bind-item="[[ item ]]">[[ getValueByKey(item, attrForLabel, 'Unknown') ]]</span>
+        <div class="item" bind-item="[[ item ]]">[[ getValueByKey(item, attrForLabel, 'Unknown') ]]</div>
       </template>
       <slot></slot>
     </iron-collapse>
 `;
   }
-
+  
   static get properties() {
     return {
       /**
@@ -169,26 +161,10 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
        */
       opened: {
         type: Boolean,
-        value: false
+        value: false,
+        reflectToAttribute: true
       },
-      /**
-       * The icon to show when expanded.
-       * @type {string}
-       * @default 'arrow-drop-up'
-       */
-      expandIcon: {
-        type: String,
-        value: 'arrow-drop-up'
-      },
-      /**
-       * The icon to show when collapsed.
-       * @type {string}
-       * @default 'arrow-drop-down'
-       */
-      collapseIcon: {
-        type: String,
-        value: 'arrow-drop-down'
-      },
+      
       /**
        * The dropdown items.
        * @type Array
@@ -196,7 +172,7 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       items: {
         type: Array
       },
-
+      
       /**
        * Attribute name for label.
        * @type {string}
@@ -214,11 +190,11 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
     };
   }
-
+  
   static get is() {
     return "h2-button-group";
   }
-
+  
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('blur', e => {
@@ -226,32 +202,28 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       setTimeout(this.close.bind(this), 100);
     });
   }
-
+  
   /**
    * Expand the group.
    */
   open() {
     this.opened = true;
   }
-
+  
   /**
    * Collpase the group.
    */
   close() {
     this.opened = false;
   }
-
+  
   /**
    * Toggle the group.
    */
   toggle() {
     this.opened = !this.opened;
   }
-
-  __getIcon(opened) {
-    return opened ? this.expandIcon : this.collapseIcon;
-  }
-
+  
   _onButtonDropdownClick(e) {
     const target = e.target,
       bindItem = e.target.bindItem || e.target.getAttribute('bind-item');

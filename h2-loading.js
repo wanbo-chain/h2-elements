@@ -25,18 +25,29 @@ class H2Loading extends mixinBehaviors([IronOverlayBehavior], PolymerElement) {
         left: 0;
         width: 100%;
         height: 100%;
-        background: black;
         z-index: 9999;
-        opacity: 0.5;
         display: flex;
       }
 
+      .loading-container {
+        width: 80px;
+        height: 80px;
+        margin: auto;
+        background: black;
+        opacity: 0.5;
+        border-radius: 6px;
+        display: flex;
+      }
+      
       img {
         width: 40px;
         margin: auto;
       }
     </style>
-    <img src="[[importPath]]/img/loading-4.gif">
+    <div class="loading-container">
+      <img src="[[importPath]]/img/loading-4.gif">
+    </div>
+    
 `;
   }
 

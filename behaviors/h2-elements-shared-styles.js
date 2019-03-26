@@ -6,11 +6,12 @@ const template = html`
   <template>
     <style>
       :host {
-        --h2-ui-bg: linear-gradient(315deg, var(--h2-ui-minbulue)  0%, var(--h2-ui-highblue) 100%);
+        --h2-ui-bg: linear-gradient(315deg, var(--h2-ui-minblue)  0%, var(--h2-ui-highblue) 100%);
         --h2-ui-wihte: white;
         --h2-ui-highblue: #2196F3;
-        --h2-ui-minbulue: #8FCDFF;
+        --h2-ui-minblue: #8FCDFF;
         --h2-ui-red: #E91E63;
+        --h2-ui-border-radius: 4px;
       }
       :host([readonly]) .mask,
       :host([disabled]) .mask {
@@ -42,7 +43,7 @@ const template = html`
 
         position: absolute;
         left: 100%;
-        margin-left: 24px;
+        margin-left: 16px;
         height: 100%;
 
         opacity: 0;

@@ -58,7 +58,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         background: white;
       }
 
-      h2-label {
+      .h2-label {
         @apply --h2-select-label;
       }
 
@@ -85,8 +85,14 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         flex-wrap: nowrap;
       }
 
+      :host([opened]) #caret {
+        transform: rotate(180deg);
+        transition: transform .2s ease-in-out
+      }
+      
       #caret {
         height: inherit;
+        transition: transform .2s ease-in-out
       }
 
       #tag-content {
@@ -205,7 +211,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
 
       .iron-selected {
-        background-color: #0099FF;
+        background: var(--h2-ui-bg);
         color: #fff;
       }
 
@@ -258,7 +264,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
             </template>
           </div>
         </div>
-        <iron-icon id="caret" icon="icons:arrow-drop-down"></iron-icon>
+        <iron-icon id="caret" icon="icons:expand-more"></iron-icon>
       </div>
 
       <div id="select-collapse" on-click="__focusOnLast">
@@ -337,6 +343,11 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         value: false
       },
 
+      opened: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
       /**
        * Set to true, if the selection is required.
        * @type {boolean}
@@ -488,7 +499,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
    */
   openCollapse() {
     this.$["select-collapse"].setAttribute('data-collapse-open', '');
-    this.$['caret'].icon = 'icons:arrow-drop-up';
+    this.opened = true;
   }
 
   /**
@@ -496,7 +507,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
    */
   closeCollapse() {
     this.$["select-collapse"].removeAttribute('data-collapse-open');
-    this.$['caret'].icon = 'icons:arrow-drop-down';
+    this.opened = false;
   }
 
   /**
@@ -508,6 +519,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
     } else {
       this.$["select-collapse"].setAttribute('data-collapse-open', '');
     }
+    this.opened = !this.opened;
     this.__focusOnLast();
   }
 

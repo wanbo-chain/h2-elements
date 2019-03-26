@@ -43,16 +43,18 @@ class H2Pagination extends PolymerElement {
         border-right: none;
         white-space: nowrap;
         cursor: pointer;
+        text-decoration: none;
+        user-select: none;
       }
-
+      
       li:first-of-type > div {
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
+        border-top-left-radius: var(--h2-ui-border-radius);
+        border-bottom-left-radius: var(--h2-ui-border-radius);
       }
 
       li:last-of-type > div {
-        border-top-right-radius: 4px;
-        border-bottom-right-radius: 4px;
+        border-top-right-radius: var(--h2-ui-border-radius);
+        border-bottom-right-radius: var(--h2-ui-border-radius);
         border-right: 1px solid #f0f0f0;
       }
 
@@ -65,7 +67,7 @@ class H2Pagination extends PolymerElement {
       #inner-input {
         width: 50px;
         font-size: inherit;
-        padding: 4px;
+        padding: var(--h2-ui-border-radius);
         outline: none;
         border-radius: 2px;
         border: 1px solid #6fa5d3;
@@ -82,13 +84,14 @@ class H2Pagination extends PolymerElement {
       }
       
       h2-select {
-        width: 110px;
+        width: 90px;
         height: 38px;
         line-height: 38px;
         border: 1px solid #f0f0f0;
-        /*--h2-select-tag-cursor: {*/
-         /*color: transparent;*/
-        /*}*/
+        
+        border-top-right-radius: var(--h2-ui-border-radius);
+        border-bottom-right-radius: var(--h2-ui-border-radius);
+        
         --h2-select__container: {
           border: none;
         }
@@ -97,9 +100,19 @@ class H2Pagination extends PolymerElement {
           border: none;
           line-height: 27px;
           color: var(--h2-ui-highblue);
+          padding: 0;
         }
         --h2-select-tag-deleter: {
           display: none;
+        }
+        
+        --h2-select-label: {
+          display: none;
+        }
+        
+        .page-count {
+          display: inline-block;
+          width: 40px;
         }
       }
       
@@ -112,21 +125,21 @@ class H2Pagination extends PolymerElement {
         <div on-click="prev" id="prev">上一页</div>
       </li>
       <li>
-        <div>第 <input id="inner-input" value="{{ __pageIndex::input }}" type="number" maxlength="10" min="1">
-          页/ 共[[ totalPageSize ]]页 ，每页[[ limit ]]条
-        </div>
-      </li>
-      <li>
         <div on-click="next" id="next">下一页</div>
       </li>
       <li>
-        <div on-click="last" id="last">最后一页</div>
+        <div>第 <input id="inner-input" value="{{ __pageIndex::input }}" type="number" maxlength="10" min="1">
+          页  共 <span class="page-count"> [[ totalPageSize ]] </span>页
+        </div>
       </li>
+      <!--<li>-->
+        <!--<div on-click="last" id="last">最后一页</div>-->
+      <!--</li>-->
       <li>
         <div>共[[ total ]]条</div>
       </li>
       <li>
-        <h2-select placeholder="请选择" value="{{ limit }}" items="[[ pageSizes ]]"></h2-select>
+        <h2-select value="{{ limit }}" items="[[ pageSizes ]]"></h2-select>
       </li>
     </ul>
 `;
@@ -152,7 +165,7 @@ class H2Pagination extends PolymerElement {
        */
       limit: {
         type: Number,
-        value: 10
+        value: 20
       },
       /**
        * Total count.
@@ -178,9 +191,9 @@ class H2Pagination extends PolymerElement {
       pageSizes: {
         type: Array,
         value: [
-          {label: '5条/页', value: 5},
-          {label: '15条/页', value: 15},
-          {label: '25条/页', value: 25}
+          {label: '20条/页', value: 20},
+          {label: '40条/页', value: 40},
+          {label: '60条/页', value: 60}
         ]
       }
     };

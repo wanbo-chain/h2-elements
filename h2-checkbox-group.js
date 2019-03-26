@@ -32,7 +32,6 @@ import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
 import {BaseBehavior} from "./behaviors/base-behavior";
 import './behaviors/h2-elements-shared-styles.js';
 import '@polymer/paper-checkbox';
-import './h2-button';
 
 /**
  * @customElement
@@ -63,11 +62,10 @@ class H2CheckboxGroup extends mixinBehaviors(BaseBehavior, PolymerElement) {
     [[label]]
     <div id="checkbox-container">
       <template is="dom-repeat" items="[[ _items ]]">
-        <paper-checkbox class="checkbox-item" checked="{{ item.checked }}" on-change="__checkedChangeHandler" value="[[ getValueByKey(item, attrForValue) ]]">
+        <paper-checkbox noink class="checkbox-item" checked="{{ item.checked }}" on-change="__checkedChangeHandler" value="[[ getValueByKey(item, attrForValue) ]]">
           [[ getValueByKey(item, attrForLabel) ]]
         </paper-checkbox>
       </template>
-      <h2-button on-click="handlerClickTest" disabled>button</h2-button>
       <div class="mask"></div>
     </div>
 `;

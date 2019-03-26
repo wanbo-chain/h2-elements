@@ -28,6 +28,8 @@ import {html, PolymerElement} from "@polymer/polymer";
 import '@polymer/iron-input';
 import {BaseBehavior} from "./behaviors/base-behavior";
 import './behaviors/h2-elements-shared-styles.js';
+import '@polymer/iron-icon';
+import '@polymer/iron-icons/social-icons';
 
 /**
  * @customElement
@@ -41,7 +43,6 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
       :host {
         display: flex;
         position: relative;
-
         width: 300px;
         height: 34px;
         font-size: 14px;
@@ -117,13 +118,15 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
 
       :host([prefix-unit]) input {
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
+        border-left: none !important;
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
       }
 
       :host([suffix-unit]) input {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
+        border-right: none !important;
+        border-top-right-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
       }
 
       /*隐藏输入框的上下小箭头Chrome*/
@@ -155,11 +158,11 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
         cursor: default;
       }
 
-      :host([required])::after {
+      :host([required])::before {
         content: "*";
         color: red;
         position: absolute;
-        right: -15px;
+        left: -10px;
         line-height: inherit;
       }
 
@@ -169,16 +172,18 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
       :host .prompt-tip {
-        background: var(--h2-ui-bg);
-        border-bottom-left-radius: 0;
-        border-top-left-radius: 0;
+        background: var(--h2-ui-minblue);
       }
       
       :host .prompt-tip::before {
-        border-right: 11px solid #3ba2f6;
-        left: -22px;
+        border-right: 14px solid;
+        border-right-color: var(--h2-ui-minblue);
+        left: -18px;
       }
       
+      .prompt-tip-icon {
+        width: 20px;
+      }
 
     </style>
     <div class="h2-label">[[label]]</div>
@@ -195,11 +200,14 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
       </template>
     </div>
     <div class="prompt-tip__container" data-prompt$="[[prompt]]">
-      <div class="prompt-tip">[[prompt]]</div>
+      <div class="prompt-tip">
+        <iron-icon class="prompt-tip-icon" icon="social:sentiment-very-dissatisfied"></iron-icon>
+        [[prompt]]
+      </div>
     </div>
-    
     <!--add mask when the componet is disabled or readonly-->
     <div class="mask"></div>
+    
 `;
   }
   
