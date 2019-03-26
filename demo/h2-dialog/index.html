@@ -51,8 +51,8 @@ document.body.appendChild($_documentContainer.content);
         }
       </style>
       <h2-dialog id="dialog" stop-auto-dismiss>
-        <div slot="container">
-          Put your Content here inside an element which with [slot=container]
+        <div>
+          Put your Content here inside an element which with
         </div>
       </h2-dialog>
       <button id="btn">Click to open the Dialog</button>
@@ -69,15 +69,13 @@ document.body.appendChild($_documentContainer.content);
   <demo-snippet>
     <template>
       <style is="custom-style">
-        div[slot=container] {
-          font-size: 20px;
-        }
-        [slot=container] > p {
+        p {
           margin: 0 0 10px;
+          font-size: 14px;
         }
       </style>
-      <h2-dialog id="dialog2" stop-auto-dismiss="" title="Dialog demo">
-        <div slot="container">
+      <h2-dialog id="dialog2" stop-auto-dismiss title="Dialog demo">
+        <div>
           <p>It was all very well to say 'Drink me,' but the wise little
             Alice was not going to do <i>that</i> in a hurry. 'No, I'll look
             first,' she said, 'and see whether it's marked "<i>poison</i>" or

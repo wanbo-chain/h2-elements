@@ -32,19 +32,27 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get template() {
     return html`
     <style include="h2-elements-shared-styles">
-
       :host {
+        min-width: 330px;
         min-height: 100px;
-        min-width: 300px;
         overflow: hidden;
       }
+      
       #dialog {
        border-radius: var(--h2-ui-border-radius);
+       padding: 20px;
       }
       
+      #dialog * {
+        margin: 0;
+        padding: 0;
+      }
       :host #tip {
         vertical-align: middle;
         box-sizing: border-box;
+        height: 80px;
+        width: 330px;
+        font-size: 16px;
       }
 
       :host([type=warn]) #tip {
@@ -59,10 +67,16 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
         color: #f60;
       }
 
+      .tip-content {
+        display: inline-block;
+        word-wrap: break-word;
+        color: black;
+      }
+      
       :host([type=prompt]) #tip,
       :host([type=confirm]) #tip {
-        margin-top: 10px;
-        width: 250px;
+        height: 60px;
+        width: 330px;
       }
 
       :host([type=success]) #operate-panel,
@@ -75,54 +89,38 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
         display: none;
       }
 
-      #tip {
-        /*text-align: center;*/
-        vertical-align: middle;
-        padding: 20px 8px;
-        font-size: 16px;
-        min-height: 100px;
-        min-width: 300px;
-        margin: auto;
-        word-wrap: break-word;
-      }
-      
       .icon-success {
         width: 40px;
         height: 40px;
-        padding: 10px;
       }
 
       #remark-input {
-        width: 300px;
-        margin: auto auto 15px;
+        display: inline;
         --h2-input: {
           text-align: center;
         }
       }
 
       #operate-panel {
-        /*float: right;*/
-        width: 300px;
         text-align: right;
-        height: 50px;
-        margin: 0;
-        justify-content: space-evenly;
+        margin-top: 20px;
       }
-
     </style>
 
     <paper-dialog id="dialog" modal="[[ isOneOf(type, 'confirm', 'prompt') ]]">
       <div id="tip">
-      <template is="dom-if" if="[[ isEqual(type, 'success') ]]">
-        <iron-icon class="icon-success" icon="icons:check-circle"></iron-icon>
-      </template>
-      <template is="dom-if" if="[[ isEqual(type, 'warn') ]]">
-        <iron-icon class="icon-success" icon="icons:error"></iron-icon>
-      </template>
-      <template is="dom-if" if="[[ isEqual(type, 'error') ]]">
-        <iron-icon class="icon-success" icon="icons:cancel"></iron-icon>
-      </template>
-        [[message]]
+        <div>
+          <template is="dom-if" if="[[ isEqual(type, 'success') ]]">
+            <iron-icon class="icon-success" icon="icons:check-circle"></iron-icon>
+          </template>
+          <template is="dom-if" if="[[ isEqual(type, 'warn') ]]">
+            <iron-icon class="icon-success" icon="icons:error"></iron-icon>
+          </template>
+          <template is="dom-if" if="[[ isEqual(type, 'error') ]]">
+            <iron-icon class="icon-success" icon="icons:cancel"></iron-icon>
+          </template>
+          <div class="tip-content">[[message]]</div>
+        </div>
       </div>
       <h2-input id="remark-input" value="{{ remark }}"></h2-input>
       <div id="operate-panel">

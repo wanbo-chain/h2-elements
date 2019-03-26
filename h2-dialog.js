@@ -4,9 +4,7 @@
 Example:
 ```html
 <h2-dialog id="dialog">
-  <div slot="container">
-    Put your Content here inside an element which with [slot=container]
-  </div>
+   Put your Content here inside an element which with [slot=container]
 </h2-dialog>
 <button id="btn" onclick="javascript:dialog.open();">Click to open the Dialog</button>
 ```
@@ -18,6 +16,7 @@ The following custom properties and mixins are available for styling:
 |----------------|-------------|----------|
 |`--h2-dialog-width` | Mixin applied to the width of dialog | 85%
 |`--h2-dialog-height` | Mixin applied to the height of dialog | 90%
+|`--h2-dialog-title` |  Mixin applied to the style of dialog title | {}
 
 
 */
@@ -51,6 +50,7 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
         align-content: stretch;
         width: var(--h2-dialog-width, 85%);
         height: var(--h2-dialog-height, 90%);
+        border-radius: var(--h2-ui-border-radius);
       }
 
       .scrollable-container {
@@ -60,7 +60,8 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       .close-dialog {
         position: absolute;
-        right: 0;
+        top: -10px;
+        right: -10px;
         cursor: pointer;
         z-index: 10;
       }
@@ -68,11 +69,12 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
       .close-dialog:hover {
         color: var(--h2-ui-red);
       }
+      
       .title {
-        margin: 20px 20px 0;
-        text-align: center;
+        margin-top: 24px;
+        text-align: left;
         padding-bottom: 10px;
-        border-bottom: 1px dashed #000;
+        @apply --h2-dialog-title;
       }
 
     </style>
@@ -83,10 +85,10 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
       </div>
       
       <template is="dom-if" if="[[ toBoolean(title) ]]">
-        <h2 class="title">[[title]]</h2>
+        <h1 class="title">[[title]]</h1>
       </template>
       <div class="scrollable-container">
-        <slot name="container"></slot>
+        <slot></slot>
       </div>
     </paper-dialog>
 `;
