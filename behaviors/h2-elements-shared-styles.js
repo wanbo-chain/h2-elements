@@ -11,6 +11,7 @@ const template = html`
         --h2-ui-highblue: #2196F3;
         --h2-ui-minblue: #8FCDFF;
         --h2-ui-red: #E91E63;
+        --h2-ui-origan: #fdb03d;
         --h2-ui-border-radius: 4px;
       }
       :host([readonly]) .mask,

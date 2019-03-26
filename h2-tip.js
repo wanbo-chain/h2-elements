@@ -36,6 +36,7 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
       :host {
         min-height: 100px;
         min-width: 300px;
+        overflow: hidden;
       }
       #dialog {
        border-radius: var(--h2-ui-border-radius);
@@ -100,10 +101,10 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
 
       #operate-panel {
-        text-align: center;
-        height: 50px;
+        /*float: right;*/
         width: 300px;
-        display: flex;
+        text-align: right;
+        height: 50px;
         margin: 0;
         justify-content: space-evenly;
       }
@@ -125,8 +126,8 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
       </div>
       <h2-input id="remark-input" value="{{ remark }}"></h2-input>
       <div id="operate-panel">
-        <h2-button on-click="_confirm">确定</h2-button>
-        <h2-button on-click="_cancel">取消</h2-button>
+        <h2-button on-click="_cancel" type="warning" size="small">取消</h2-button>
+        <h2-button on-click="_confirm" size="small">确定</h2-button>
       </div>
     </paper-dialog>
 `;

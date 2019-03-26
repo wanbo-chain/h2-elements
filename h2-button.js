@@ -37,14 +37,28 @@ class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
     super();
     this.noink = true;
   }
+
+  static get properties() {
+    return {
+      type: {
+        type: String,
+        value: 'primary',
+        reflectToAttribute: true
+      },
+      size: {
+        type: String,
+        value: 'normal',
+        reflectToAttribute: true
+      }
+    }
+  }
+
   static get template() {
     return html`
     <style include="h2-elements-shared-styles">
       :host {
         display: inline-block;
         font-size: 14px;
-        width: 80px;
-        height: 34px;
         border-radius: 4px;
         outline: none;
       }
@@ -54,6 +68,8 @@ class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
       }
 
       .btn {
+        width: 80px;
+        height: 34px;
         color: #fff;
         background: var(--h2-ui-bg);
         margin: 0;
@@ -65,8 +81,6 @@ class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
         white-space: nowrap;
         line-height: 1.42857143;
         border-radius: inherit;
-        width: inherit;
-        height: inherit;
         min-width: 0;
         font-size: inherit;
         text-transform: none;
@@ -81,6 +95,23 @@ class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
         opacity: 0.8;
       }
       
+      :host([type=danger]) .btn {
+        background: var(--h2-ui-red);
+      }
+      
+     :host([type=warning]) .btn {
+        background: var(--h2-ui-origan);
+      }
+      
+     :host([size=small]) .btn {
+        width: 50px;
+        height: 30px;
+     }
+     
+     :host([size=large]) .btn {
+        width: 100px;
+        height: 40px;
+     }
     </style>
     <paper-button class="btn" disabled$="[[disabled]]" noink>
       <slot></slot>
