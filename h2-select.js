@@ -106,9 +106,8 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
 
       .tag {
-        color: #666;
-        background-color: #f0f0f0;
-        border: 1px solid #ccc;
+        color: #fff;
+        background: var(--h2-ui-bg);
         border-radius: 4px;
 
         margin: 2px 2px 3px 2px;
@@ -132,14 +131,14 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       .tag-deleter {
         margin-left: 6px;
-        font-weight: bold;
-        text-decoration: none;
-        color: #0099FF;
+        width: 18px;
+        color: #fff;
+        cursor: pointer;
         @apply --h2-select-tag-deleter;
       }
 
       .tag-deleter:hover {
-        color: #f60;
+        color: var(--h2-ui-red);
       }
 
       .tag-cursor {
@@ -207,7 +206,8 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
 
       .candidate-item:not([class*='iron-selected']):hover {
-        color: #0099FF;
+        background: var(--h2-ui-bg);
+        color: #fff
       }
 
       .iron-selected {
@@ -256,7 +256,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
                 <div class="tag-name" title="[[getValueByKey(item, attrForLabel)]]">
                   [[getValueByKey(item, attrForLabel)]]
                 </div>
-                <a class="tag-deleter" data-args="[[getValueByKey(item, attrForValue)]]" href="javascript:void(0);" title="删除该选项" on-click="_deleteTag">x</a>
+                <iron-icon class="tag-deleter" icon="icons:clear" data-args="[[getValueByKey(item, attrForValue)]]" on-click="_deleteTag"></iron-icon>
               </div>
               <template is="dom-if" if="[[ multi ]]">
                 <input class="tag-cursor" id="tag-cursor__[[index]]" data-cursor-index$="[[index]]" on-keydown="_updatePressed" autocomplete="off">

@@ -64,12 +64,21 @@ const template = html`
         white-space: nowrap;
       }
 
-      .prompt-tip::before {
+      :host .prompt-tip {
+        background: var(--h2-ui-minblue);
+      }
+      
+      :host .prompt-tip::before {
         position: absolute;
         content: '';
         border: 11px solid transparent;
-        border-right: 11px solid var(--h2-prompt-tip-background-color, #aeaeae);
-        left: -20px;
+        border-right: 14px solid;
+        border-right-color: var(--h2-ui-minblue);
+        left: -18px;
+      }
+      
+      :host .prompt-tip-icon {
+        width: 20px;
       }
       
       .h2-label {
