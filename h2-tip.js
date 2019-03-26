@@ -18,8 +18,11 @@ import {html, PolymerElement} from "@polymer/polymer";
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
 import '@polymer/paper-dialog';
 import {BaseBehavior} from "./behaviors/base-behavior";
+import '@polymer/iron-icons';
+import '@polymer/iron-icon';
 import './h2-button.js';
 import './h2-input.js';
+import './behaviors/h2-elements-shared-styles';
 /**
  * @customElement
  * @polymer
@@ -28,32 +31,31 @@ import './h2-input.js';
 class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get template() {
     return html`
-    <style>
+    <style include="h2-elements-shared-styles">
 
       :host {
-        min-height: 25px;
-        min-width: 125px;
+        min-height: 100px;
+        min-width: 300px;
       }
-
+      #dialog {
+       border-radius: var(--h2-ui-border-radius);
+      }
+      
       :host #tip {
-        text-align: center;
         vertical-align: middle;
         box-sizing: border-box;
       }
 
       :host([type=warn]) #tip {
-        background: #ffff00;
-        color: red;
+        color: #ffd165;
       }
 
       :host([type=success]) #tip {
-        background: #00b300;
-        color: #fff;
+        color: #00b300;
       }
 
       :host([type=error]) #tip {
-        background: #f60;
-        color: #fff;
+        color: #f60;
       }
 
       :host([type=prompt]) #tip,
@@ -73,18 +75,24 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
 
       #tip {
-        text-align: center;
+        /*text-align: center;*/
         vertical-align: middle;
         padding: 20px 8px;
         font-size: 16px;
-        min-height: 60px;
-        min-width: 200px;
+        min-height: 100px;
+        min-width: 300px;
         margin: auto;
         word-wrap: break-word;
       }
+      
+      .icon-success {
+        width: 40px;
+        height: 40px;
+        padding: 10px;
+      }
 
       #remark-input {
-        width: 250px;
+        width: 300px;
         margin: auto auto 15px;
         --h2-input: {
           text-align: center;
@@ -92,8 +100,9 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
 
       #operate-panel {
+        text-align: center;
         height: 50px;
-        width: 250px;
+        width: 300px;
         display: flex;
         margin: 0;
         justify-content: space-evenly;
@@ -102,7 +111,18 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
     </style>
 
     <paper-dialog id="dialog" modal="[[ isOneOf(type, 'confirm', 'prompt') ]]">
-      <div id="tip">[[message]]</div>
+      <div id="tip">
+      <template is="dom-if" if="[[ isEqual(type, 'success') ]]">
+        <iron-icon class="icon-success" icon="icons:check-circle"></iron-icon>
+      </template>
+      <template is="dom-if" if="[[ isEqual(type, 'warn') ]]">
+        <iron-icon class="icon-success" icon="icons:error"></iron-icon>
+      </template>
+      <template is="dom-if" if="[[ isEqual(type, 'error') ]]">
+        <iron-icon class="icon-success" icon="icons:cancel"></iron-icon>
+      </template>
+        [[message]]
+      </div>
       <h2-input id="remark-input" value="{{ remark }}"></h2-input>
       <div id="operate-panel">
         <h2-button on-click="_confirm">确定</h2-button>
