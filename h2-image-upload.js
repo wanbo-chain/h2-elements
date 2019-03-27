@@ -42,10 +42,9 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior], PolymerElement) {
         font-size: 14px;
       }
 
-      h2-label {
-        --h2-label: {
-          @apply --h2-image-upload-label;
-        }
+      .h2-label {
+        margin-right: 6px;
+        @apply --h2-image-upload-label;
       }
 
       #main-container {
@@ -89,12 +88,6 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior], PolymerElement) {
         };
       }
 
-      #cancel-btn {
-        --h2-button: {
-          background-color: #d9534f;
-        }
-      }
-
       #viewer-dialog {
         display: flex;
         overflow: hidden;
@@ -118,7 +111,6 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       #paste-panel {
         flex: 1;
-
         outline: 1px dashed #aeaeae;
         outline-offset: -10px;
         text-align: center;
@@ -142,16 +134,13 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior], PolymerElement) {
         cursor: default;
       }
       
-      .red {
-        --h2-button: {
-          background: #E91E63;
-        }
-      }
-
     </style>
 
     <div id="main-container">
-      <div class="h2-input"> [[label]]</div>
+      <template is="dom-if" if="[[ toBoolean(label) ]]">
+        <div class="h2-label">[[label]]</div>
+      </template>
+      
       <div id="inner-container">
         <div id="img__container" on-click="openViewZoom">
           <div id="paste-panel">拖拽或者粘贴图片到这里</div>
@@ -159,8 +148,8 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
         <div class="toolbar">
           <h2-button title="点击选择文件" on-click="_triggerChooseFile">选择</h2-button>
-          <h2-button class="red" id="cancel-btn" on-click="cancelSelection">取消</h2-button>
-          <input type="file" on-change="_chooseFile" id="file-chooser" accept\$="[[accept]]">
+          <h2-button id="cancel-btn" type="warning" on-click="cancelSelection">取消</h2-button>
+          <input type="file" on-change="_chooseFile" id="file-chooser" accept$="[[accept]]">
         </div>
         <div class="mask"></div>
       </div>

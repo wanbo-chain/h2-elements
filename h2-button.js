@@ -61,6 +61,8 @@ class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
         font-size: 14px;
         border-radius: 4px;
         outline: none;
+        width: 80px;
+        height: 34px;
       }
 
       :host([hidden]) {
@@ -68,8 +70,8 @@ class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
       }
 
       .btn {
-        width: 80px;
-        height: 34px;
+        width: 100%;
+        height: 100%;
         color: #fff;
         background: var(--h2-ui-bg);
         margin: 0;
@@ -89,6 +91,7 @@ class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
       
       :host([disabled]) .btn {
         background: #aeaeae;
+        cursor: not-allowed;
       }
       
       :host(:hover) .btn {
@@ -103,17 +106,17 @@ class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
         background: var(--h2-ui-orange);
       }
       
-     :host([size=small]) .btn {
+     :host([size=small]) {
         width: 50px;
         height: 30px;
      }
      
-     :host([size=large]) .btn {
+     :host([size=large]) {
         width: 100px;
         height: 40px;
      }
     </style>
-    <paper-button class="btn" disabled$="[[disabled]]" noink>
+    <paper-button class="btn" disabled="[[disabled]]" noink>
       <slot></slot>
     </paper-button>
 `;

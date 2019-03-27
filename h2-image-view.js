@@ -88,7 +88,7 @@ class H2ImageView extends PolymerElement {
     <div class="toolbar">
       <h2-button on-click="openViewZoom">查看大图</h2-button>
     </div>
-    <paper-dialog class="img__viewer" id="dialog" on-click="closeViewZoom" with-backdrop="">
+    <paper-dialog class="img__viewer" id="dialog" on-click="closeViewZoom" with-backdrop>
       <div id="viewer-img"></div>
     </paper-dialog>
 `;

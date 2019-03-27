@@ -7,8 +7,8 @@ const template = html`
     <style>
       :host {
         --h2-ui-bg: linear-gradient(315deg, var(--h2-ui-color_lightblue)  0%, var(--h2-ui-color_skyblue) 100%);
-        --h2-ui-red: linear-gradient(315deg, #fbb8cf 0%, var(--h2-ui-color_pink) 100%);;
-        --h2-ui-orange: linear-gradient(315deg, #ffdead  0%, #fdb03d 100%);
+        --h2-ui-red: linear-gradient(315deg, #f9a7c3 0%, var(--h2-ui-color_pink) 100%);;
+        --h2-ui-orange: linear-gradient(315deg, #f9daac  0%, #fdb03d 100%);
         --h2-ui-border-radius: 4px;
         --h2-ui-color_pink: #e91d62;
         --h2-ui-color_white: white;
