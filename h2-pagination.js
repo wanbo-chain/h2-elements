@@ -7,6 +7,9 @@ Example:
 ```
 */
 import {html, PolymerElement} from "@polymer/polymer";
+import '@polymer/iron-icon';
+import '@polymer/iron-icons';
+
 import './behaviors/h2-elements-shared-styles';
 import './h2-select';
 
@@ -21,8 +24,9 @@ class H2Pagination extends PolymerElement {
     <style include="h2-elements-shared-styles">
       :host {
         display: inline-block;
-        height: 38px;
-        line-height: 38px;
+        --page_height: 38px;
+        height: var(--page_height);
+        line-height: var(--page_height);
         font-size: 14px;
       }
 
@@ -31,16 +35,17 @@ class H2Pagination extends PolymerElement {
         margin: 0;
         padding: 0;
         list-style: none;
-        height: 38px;
+        height: var(--page_height);
         line-height: 38px;
       }
 
       li > div {
         padding: 0 8px;
-        color: var(--h2-ui-highblue);
+        color: var(--h2-ui-color_skyblue);
         background-color: #fff;
         border: 1px solid #f0f0f0;
         border-right: none;
+        line-height: var(--page_height);
         white-space: nowrap;
         cursor: pointer;
         text-decoration: none;
@@ -57,12 +62,6 @@ class H2Pagination extends PolymerElement {
         border-bottom-right-radius: var(--h2-ui-border-radius);
         border-right: 1px solid #f0f0f0;
       }
-
-      /*li > div:hover {*/
-        /*color: #23527c;*/
-        /*background-color: #eee;*/
-        /*border-color: #ddd;*/
-      /*}*/
 
       #inner-input {
         width: 50px;
@@ -83,10 +82,10 @@ class H2Pagination extends PolymerElement {
           margin: 0;
       }
       
-      h2-select {
-        width: 90px;
-        height: 38px;
-        line-height: 38px;
+      .size-selector {
+        width: 120px;
+        height: var(--page_height);
+        line-height: var(--page_height);
         border: 1px solid #f0f0f0;
         
         border-top-right-radius: var(--h2-ui-border-radius);
@@ -96,40 +95,38 @@ class H2Pagination extends PolymerElement {
           border: none;
         }
         --h2-select-tag: {
-          background-color: #fff;
+          background: #fff;
           border: none;
           line-height: 27px;
-          color: var(--h2-ui-highblue);
           padding: 0;
+          color: var(--h2-ui-color_skyblue);
         }
+        
         --h2-select-tag-deleter: {
           display: none;
         }
-        
-        --h2-select-label: {
-          display: none;
-        }
-        
-        .page-count {
-          display: inline-block;
-          width: 40px;
-        }
+      }
+      
+      .page-count {
+        display: inline-block;
+        width: 30px;
+        text-align: center;
       }
       
     </style>
     <ul class="pagination">
       <li>
-        <div on-click="first" id="first">第一页</div>
+        <div on-click="first" id="first"><iron-icon icon="icons:first-page"></iron-icon>第一页</div>
       </li>
       <li>
-        <div on-click="prev" id="prev">上一页</div>
+        <div on-click="prev" id="prev"><iron-icon icon="icons:chevron-left"></iron-icon>上一页</div>
       </li>
       <li>
-        <div on-click="next" id="next">下一页</div>
+        <div on-click="next" id="next">下一页<iron-icon icon="icons:chevron-right"></iron-icon></div>
       </li>
       <li>
         <div>第 <input id="inner-input" value="{{ __pageIndex::input }}" type="number" maxlength="10" min="1">
-          页  共 <span class="page-count"> [[ totalPageSize ]] </span>页
+          页&nbsp;&nbsp;&nbsp;&nbsp;共 <div class="page-count">[[ totalPageSize ]]</div>页
         </div>
       </li>
       <!--<li>-->
@@ -139,7 +136,7 @@ class H2Pagination extends PolymerElement {
         <div>共[[ total ]]条</div>
       </li>
       <li>
-        <h2-select value="{{ limit }}" items="[[ pageSizes ]]"></h2-select>
+        <h2-select class="size-selector" value="{{ limit }}" items="[[ __pageSize ]]"></h2-select>
       </li>
     </ul>
 `;
@@ -184,21 +181,28 @@ class H2Pagination extends PolymerElement {
         type: Number,
         computed: '_calTotalPageSize(total, limit)'
       },
+  
+      pageSizes: {
+        type: Array,
+        value: [20, 40, 60,]
+      },
+      
       __pageIndex: {
         type: Number,
         value: 1
       },
-      pageSizes: {
+      
+      __pageSize: {
         type: Array,
-        value: [
-          {label: '20条/页', value: 20},
-          {label: '40条/页', value: 40},
-          {label: '60条/页', value: 60}
-        ]
+        computed: '__computedPageSize(pageSizes)'
       }
     };
   }
 
+  __computedPageSize(pageSizes = []) {
+    return pageSizes.map(ps => ({value: ps, label: `${ps}条/页`}))
+  }
+  
   static get observers() {
     return [
       '_pageIndexChanged(__pageIndex)',

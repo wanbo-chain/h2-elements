@@ -43,13 +43,13 @@ document.body.appendChild($_documentContainer.content);
   <h3>H2-tip success demo</h3>
   <demo-snippet>
     <template>
-      <h2-tip type="success" message="这是一条成功的提示消息" id="tip" duration="30000"></h2-tip>
+      <h2-tip type="success" message="新建成功" id="tip" duration="5000"></h2-tip>
       <h2-button id="btn" onclick="tip.open();">Success</h2-button>
 
-      <h2-tip type="warn" message="warn" id="tip2"></h2-tip>
+      <h2-tip type="warn" message="警告：warning,warning,warning,warning,warning,warning,warning" id="tip2"></h2-tip>
       <h2-button id="btn2" onclick="tip2.open(2000);">Warn</h2-button>
 
-      <h2-tip type="error" message="alert" id="tip3"></h2-tip>
+      <h2-tip type="error" message="出错了：这是一条出错的提示消息, 这是一条出错的提示消息" id="tip3"></h2-tip>
       <h2-button id="btn3" onclick="tip3.open(5000);">Error</h2-button>
     </template>
   </demo-snippet>
@@ -60,7 +60,11 @@ document.body.appendChild($_documentContainer.content);
   <demo-snippet>
     <template>
       <h2-button id="btn4">Confirm</h2-button>
-      <h2-tip type="confirm" message="Are you sure?" id="tip4"></h2-tip>
+      <h2-tip type="confirm" title="提示" message="Are you sure? Are you sure? Are you sure? Are you sure? Are you sure? Are you sure?
+
+
+
+" id="tip4"></h2-tip>
       <script>
         btn4.onclick = () => {
           tip4.open(() => {
@@ -79,7 +83,7 @@ document.body.appendChild($_documentContainer.content);
   <demo-snippet>
     <template>
       <h2-button id="btn5">Prompt</h2-button>
-      <h2-tip type="prompt" message="Are you sure?" id="tip5"></h2-tip>
+      <h2-tip type="prompt" title="提示" message="Are you sure?" id="tip5"></h2-tip>
       <script>
         btn5.onclick = () => {
           tip5.open((e) => {
