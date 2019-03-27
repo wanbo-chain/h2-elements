@@ -13,12 +13,13 @@ class H2Layout extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       .h2-layout {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         grid-gap: 20px;
+        @apply --h2-layout;
       }
       
     </style>
-    <div class="h2-layout">
+    <div class="h2-layout" id="h2-layout">
       <slot></slot>
     </div>
     `
@@ -29,9 +30,38 @@ class H2Layout extends mixinBehaviors([BaseBehavior], PolymerElement) {
       columns: {
         type: Number
       },
-      rows: {
+      gap: {
         type: Number
+      },
+      templateColumns: {
+        type: String
       }
+
+    }
+  }
+
+  static get observers() {
+    return [
+      '__columnsChange(columns)',
+      '__gapChange(gap)',
+      '__templateColumnsChange(templateColumns)'
+    ]
+  }
+
+  __columnsChange(columns) {
+    if (!this.templateColumns) {
+      this.$['h2-layout'].style['grid-template-columns'] = `repeat(${columns}, 1fr)`;
+    }
+  }
+
+  __gapChange(gap) {
+    this.$['h2-layout'].style['grid-gap'] = `${gap}px`;
+  }
+
+  __templateColumnsChange(templateColumns) {
+    if (this.templateColumns) {
+      console.log(templateColumns);
+      this.$['h2-layout'].style['grid-template-columns'] = templateColumns;
     }
   }
 
