@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>h2-layout demo</title>
+
+  <script type="module">
+    import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
+    import '../../h2-layout';
+  </script>
+
+  <script type="module">
+    const $_documentContainer = document.createElement('template');
+
+    $_documentContainer.innerHTML = `<custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+      demo-snippet {
+        --demo-snippet-code: {
+          max-height: 500px;
+        }
+      }
+    </style>
+  </custom-style>`;
+
+    document.body.appendChild($_documentContainer.content);
+  </script>
+</head>
+<body>
+<h3>基本用法</h3>
+<demo-snippet>
+  <template>
+    <custom-style>
+      <style is="custom-style">
+         .lay {
+          background: #EDE7F6;
+          padding: 30px;
+          border-radius: 10px;
+        }
+      </style>
+    </custom-style>
+    <h2-layout>
+      <div class="lay">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Esse aliquid laboriosam minima ex praesentium recusandae reprehenderit unde sit tempore atque aut commodi quae expedita corrupti, dignissimos architecto. Eius, maiores ad?</div>
+      <div class="lay">Quibusdam, eos esse dolorum facere voluptatem eius, dolore quas totam aspernatur obcaecati harum? Nihil eligendi eos minus odit minima earum incidunt rem fugit reprehenderit, molestiae possimus eveniet itaque laudantium excepturi.</div>
+      <div class="lay">Ducimus quibusdam inventore delectus doloribus dignissimos. Dignissimos quos officia minus exercitationem perspiciatis harum iusto molestiae deleniti quod sunt amet recusandae autem, neque doloremque ad alias eaque consequuntur nesciunt quis eius!</div>
+      <div class="lay">Cumque aspernatur ex ipsum dolorum eius, tempore omnis minus sequi architecto totam sunt maxime nemo, ab repellendus. Aut voluptatem saepe voluptatibus nisi ipsum. Debitis corporis culpa ipsa error nemo doloribus.</div>
+      <div class="lay">Consequatur dolore, architecto quos saepe consequuntur libero minus totam? Enim optio provident commodi corporis officiis, sunt maiores? Cupiditate consequuntur, cumque natus corporis velit sunt ad magni aliquid facere deleniti molestiae.</div>
+      <div class="lay">Voluptatibus similique modi voluptatum voluptatem quo quod minima ducimus facere, sequi libero accusamus nisi nobis? Minima error tempore quo esse quod odit, deleniti labore nulla ullam velit nemo neque sint!</div>
+      <div class="lay">Qui, corporis delectus? Pariatur vel autem commodi, accusantium, voluptate obcaecati iste, a debitis facilis repellendus mollitia. Dolore dicta totam, quaerat omnis accusantium magni alias voluptates eligendi ex id aut dolorem?</div>
+      <div class="lay">Recusandae tempora ab error omnis exercitationem illo accusamus esse sit ipsa accusantium iure, possimus ducimus quis consequuntur qui corporis nobis culpa repudiandae! Suscipit, debitis. Omnis delectus at vitae laborum quos?</div>
+      <div class="lay">Dolorem saepe accusamus sed placeat porro ex, ab, vel eaque libero incidunt facilis delectus, iure odio dicta error consequuntur perspiciatis quasi? Corrupti incidunt quia asperiores quo magnam at minima laudantium?</div>
+      <div class="lay">Dolor ad saepe, nemo fugit tempora autem est fugiat quis porro atque nam repellendus maxime neque voluptatem rerum amet odit aspernatur voluptates iusto eos laboriosam enim vel. Eius, debitis beatae!</div>
+    </h2-layout>
+  </template>
+</demo-snippet>
+
+</div>
+
+</body>
+</html>
