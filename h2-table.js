@@ -61,17 +61,6 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         background: #ecf5ff;
       }
       
-      .table__cell {
-        box-sizing: border-box;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: normal;
-        word-break: break-all;
-        line-height: 23px;
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-      
       .expand-icon {
         cursor:pointer;
         color: grey;

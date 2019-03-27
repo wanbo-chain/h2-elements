@@ -26,10 +26,11 @@ The following custom properties and mixins are available for styling:
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
 import {html, PolymerElement} from "@polymer/polymer";
 import '@polymer/iron-input';
-import {BaseBehavior} from "./behaviors/base-behavior";
-import './behaviors/h2-elements-shared-styles.js';
 import '@polymer/iron-icon';
 import '@polymer/iron-icons/social-icons';
+
+import {BaseBehavior} from "./behaviors/base-behavior";
+import './behaviors/h2-elements-shared-styles.js';
 
 /**
  * @customElement
@@ -42,7 +43,6 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
     <style include="h2-elements-shared-styles">
       :host {
         display: flex;
-        position: relative;
         width: 300px;
         height: 34px;
         font-size: 14px;
@@ -54,6 +54,7 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
         display: flex;
         line-height: inherit;
         min-width: 0;
+        position: relative;
       }
 
       #input {
@@ -158,7 +159,7 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
         cursor: default;
       }
 
-      :host([required])::before {
+      :host([required]) .input__container::before {
         content: "*";
         color: red;
         position: absolute;
@@ -166,9 +167,8 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
         line-height: inherit;
       }
 
-      :host([data-invalid]) input {
-        border: solid 1px red;
-        border-radius: 4px;
+      :host([data-invalid]) #innerInput {
+        border-color: var(--h2-ui-color_pink);
       }
 
     </style>
@@ -187,8 +187,8 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
       <template is="dom-if" if="[[suffixUnit]]">
         <div class="suffix-unit input-unit">[[suffixUnit]]</div>
       </template>
-    </div>
-    <div class="prompt-tip__container" data-prompt$="[[prompt]]">
+      
+      <div class="prompt-tip__container" data-prompt$="[[prompt]]">
       <div class="prompt-tip">
         <iron-icon class="prompt-tip-icon" icon="social:sentiment-very-dissatisfied"></iron-icon>
         [[prompt]]
@@ -196,6 +196,9 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
     </div>
     <!--add mask when the componet is disabled or readonly-->
     <div class="mask"></div>
+    
+    </div>
+    
     
 `;
   }

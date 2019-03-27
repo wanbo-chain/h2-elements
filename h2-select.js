@@ -23,7 +23,7 @@ The following custom properties and mixins are available for styling:
 
 |Custom property | Description | Default|
 |----------------|-------------|----------|
-|`--h2-select-label` | Mixin applied to the select label | {}
+|`--h2-label` | Mixin applied to the select label | {}
 |`--h2-select-tag` | Mixin applied to the selected tag | {}
 |`--h2-select-tag-deleter` | Mixin applied to the deleter of each tag| {}
 |`--h2-select-tag-cursor` | Mixin applied to the cursor of the select | {}
@@ -58,10 +58,6 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         background: white;
       }
 
-      .h2-label {
-        @apply --h2-select-label;
-      }
-
       #select__container {
         flex: 1;
         display: flex;
@@ -69,7 +65,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         border: 1px solid #CCC;
         border-radius: 4px;
         position: relative;
-        @apply --h2-select__container
+        @apply --h2-select__container;
       }
 
       .tags__container {

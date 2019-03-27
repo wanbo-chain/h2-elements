@@ -85,7 +85,7 @@ const template = html`
       }
       
       .h2-label {
-        margin-right: 5px;
+        margin-right: 13px;
         @apply --h2-label;
       }
     </style>

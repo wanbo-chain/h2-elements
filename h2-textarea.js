@@ -23,6 +23,8 @@ import {html, PolymerElement} from "@polymer/polymer";
 import '@polymer/iron-icon';
 import '@polymer/iron-icons/social-icons';
 import './behaviors/h2-elements-shared-styles.js';
+import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
+import {BaseBehavior} from "./behaviors/base-behavior";
 /**
  * `h2-textarea`
  *
@@ -30,7 +32,7 @@ import './behaviors/h2-elements-shared-styles.js';
  * @polymer
  * @demo demo/h2-textarea/index.html
  */
-class H2Textarea extends PolymerElement {
+class H2Textarea extends mixinBehaviors(BaseBehavior, PolymerElement) {
   static get template() {
     return html`
     <style include="h2-elements-shared-styles">
@@ -69,8 +71,7 @@ class H2Textarea extends PolymerElement {
       }
 
       :host([data-invalid]) #textarea {
-        border: solid 1px red;
-        border-radius: 4px;
+        border-color: var(--h2-ui-color_pink);
       }
 
 
@@ -95,8 +96,10 @@ class H2Textarea extends PolymerElement {
       }
 
     </style>
-
-    <div class="h2-label">[[label]]</div>
+    <template is="dom-if" if="[[ toBoolean(label) ]]">
+      <div class="h2-label">[[label]]</div>
+    </template>
+    
     <div id="textarea-wrapper">
       <textarea id="textarea" value="{{value::input}}" aria-label$="[[label]]" autocomplete$="[[autocomplete]]" autofocus$="[[autofocus]]" inputmode$="[[inputmode]]" placeholder$="[[placeholder]]" readonly$="[[readonly]]" required$="[[required]]" disabled$="[[disabled]]" rows$="[[rows]]" minlength$="[[minlength]]" maxlength$="[[maxlength]]"></textarea>
       <div class="mask"></div>

@@ -50,7 +50,7 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       :host {
         position: relative;
         font: inherit;
-        display: block;
+        display: inline-block;
         min-width: 80px;
         outline: none;
       }
