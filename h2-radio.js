@@ -85,7 +85,10 @@ class H2Radio extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
     </style>
     <div class="radio-wrapper">
-      <div class="h2-label">[[label]]</div>
+      <template is="dom-if" if="[[ toBoolean(label) ]]">
+        <div class="h2-label">[[label]]</div>
+      </template>
+      
       <div class="candidate-wrapper">
         <iron-selector class="candidate-items" selected="{{value}}" attr-for-selected="radio-item">
           <template is="dom-repeat" items="[[items]]">

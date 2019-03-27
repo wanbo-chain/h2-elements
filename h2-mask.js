@@ -176,8 +176,10 @@ class H2Mask extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
 
     </style>
-
-    <div class="h2-label">[[label]]</div>
+    
+    <template is="dom-if" if="[[ toBoolean(label) ]]">
+      <div class="h2-label">[[label]]</div>
+    </template>
 
     <div class="mask__container">
       <div id="mask__editor">

@@ -28,10 +28,6 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         box-sizing: border-box;
       }
 
-      h2-label {
-        @apply --h2-picker-label;
-      }
-
       .input-wrap {
         flex: 1;
         position: relative;
@@ -196,8 +192,10 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         line-height: inherit;
       }
     </style>
-
-    <div class="h2-label">[[label]]</div>
+    <template is="dom-if" if="[[ toBoolean(label) ]]">
+       <div class="h2-label">[[label]]</div>
+    </template>
+    
     <div class="input-wrap">
       <div class="input-container">
 

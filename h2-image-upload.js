@@ -42,11 +42,6 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior], PolymerElement) {
         font-size: 14px;
       }
 
-      .h2-label {
-        margin-right: 6px;
-        @apply --h2-image-upload-label;
-      }
-
       #main-container {
         display: flex;
         height: inherit;
