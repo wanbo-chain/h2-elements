@@ -100,7 +100,7 @@ class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
       }
       
      :host([type=warning]) .btn {
-        background: var(--h2-ui-origan);
+        background: var(--h2-ui-orange);
       }
       
      :host([size=small]) .btn {

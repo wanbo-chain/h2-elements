@@ -10,8 +10,8 @@ const template = html`
         --h2-ui-wihte: white;
         --h2-ui-highblue: #2196F3;
         --h2-ui-minblue: #8FCDFF;
-        --h2-ui-red: #E91E63;
-        --h2-ui-origan: #fdb03d;
+        --h2-ui-red: linear-gradient(315deg, #fbb8cf 0%, #e91d62 100%);;
+        --h2-ui-orange:  linear-gradient(315deg, #ffdead  0%, #fdb03d 100%);
         --h2-ui-border-radius: 4px;
       }
       :host([readonly]) .mask,
