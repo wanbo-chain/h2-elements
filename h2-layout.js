@@ -20,7 +20,7 @@ class H2Layout extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
     </style>
     <div class="h2-layout" id="h2-layout">
-      <slot></slot>
+      <slot id="layout"></slot>
     </div>
     `
   }
@@ -60,9 +60,21 @@ class H2Layout extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   __templateColumnsChange(templateColumns) {
     if (this.templateColumns) {
-      console.log(templateColumns);
       this.$['h2-layout'].style['grid-template-columns'] = templateColumns;
     }
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.$.layout.addEventListener('slotchange', e => {
+      const assignedElements = e.target.assignedElements();
+      assignedElements.filter(_ => _.hasAttribute('layout-colspan')).forEach( item => {
+        item.style['grid-column-end'] = `span ${item.getAttribute('layout-colspan')}`
+      });
+      assignedElements.filter(_ => _.hasAttribute('layout-rowspan')).forEach( item => {
+        item.style['grid-row-end'] = `span ${item.getAttribute('layout-rowspan')}`
+      });
+    });
   }
 
   static get is() {
