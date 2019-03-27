@@ -87,12 +87,13 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       :host([opened]) #caret {
         transform: rotate(180deg);
-        transition: transform .2s ease-in-out
+        transition: transform .2s ease-in-out;
       }
       
       #caret {
         height: inherit;
-        transition: transform .2s ease-in-out
+        transition: transform .2s ease-in-out;
+        color: var(--h2-ui-color_skyblue);
       }
 
       #tag-content {
@@ -244,7 +245,11 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         line-height: inherit;
       }
     </style>
-    <div class="h2-label">[[label]]</div>
+    
+    <template is="dom-if" if="[[ toBoolean(label) ]]">
+      <div class="h2-label">[[label]]</div>
+    </template>
+    
     <div id="select__container">
       <div class="select__container__viewer" on-click="_onInputClick">
         <div class="tags__container">

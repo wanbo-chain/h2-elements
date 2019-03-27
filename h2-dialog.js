@@ -30,7 +30,6 @@ import '@polymer/iron-icons';
 import {BaseBehavior} from "./behaviors/base-behavior";
 import './behaviors/h2-elements-shared-styles.js';
 
-
 /**
  * @customElement
  * @polymer
@@ -40,30 +39,33 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get template() {
     return html`
     <style include="h2-elements-shared-styles">
-      :host {
-        display: block;
-      }
+      :host {}
 
-      paper-dialog {
+      #dialog {
         display: flex;
         flex-flow: column nowrap;
         align-content: stretch;
         width: var(--h2-dialog-width, 85%);
         height: var(--h2-dialog-height, 90%);
-        border-radius: var(--h2-ui-border-radius);
+        border-radius: 6px;
       }
 
       .scrollable-container {
         flex: 1;
-        overflow: auto;
+        overflow-x: hidden;
+        overflow-y: auto;
+        margin: 0;
+        padding: 16px;
+        @apply --h2-dialog-content;
       }
 
       .close-dialog {
         position: absolute;
-        top: -10px;
-        right: -10px;
+        top: -14px;
+        right: -14px;
         cursor: pointer;
         z-index: 10;
+        color: #797979;
       }
 
       .close-dialog:hover {
@@ -71,21 +73,27 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
       .title {
-        margin-top: 24px;
+        font-size: 26px;
+        font-weight: bold;
+        margin: 24px 0 10px 0;
         text-align: left;
-        padding-bottom: 10px;
+        padding: 0 16px;
         @apply --h2-dialog-title;
       }
 
     </style>
 
-    <paper-dialog id="dialog" modal entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+    <paper-dialog id="dialog" modal="[[modal]]"
+      entry-animation="scale-up-animation"
+      exit-animation="fade-out-animation"
+      no-cancel-on-outside-click="[[noCancelOnOutsideClick]]">
+      
       <div class="close-dialog" on-tap="close">
         <iron-icon icon="icons:close"></iron-icon>
       </div>
       
       <template is="dom-if" if="[[ toBoolean(title) ]]">
-        <h1 class="title">[[title]]</h1>
+        <div class="title">[[title]]</div>
       </template>
       <div class="scrollable-container">
         <slot></slot>
@@ -110,6 +118,26 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
       stopAutoDismiss: {
         type: Boolean,
         value: false
+      },
+  
+      /**
+       * @type {boolean}
+       * @default false
+       */
+      modal: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+  
+      /**
+       * @type {boolean}
+       * @default false
+       */
+      noCancelOnOutsideClick: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
       }
     };
   }
@@ -136,9 +164,10 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
         composed: true,
         bubbles: true
       });
+      
       if (!this.stopAutoDismiss) {
         setTimeout(() => {
-          this.parentElement.removeChild(this);
+          this.parentElement && this.parentElement.removeChild(this);
         }, 100);
       }
     });
@@ -147,6 +176,9 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
      * @listens h2-dialog-dismiss
      */
     this.addEventListener('h2-dialog-dismiss', this.close);
+  
+    
+    // this.$.dialog.noCancelOnOutsideClick = true;
   }
 
   /**

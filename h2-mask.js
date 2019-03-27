@@ -153,7 +153,7 @@ class H2Mask extends mixinBehaviors([BaseBehavior], PolymerElement) {
       :host iron-icon {
         width: 20px;
         height: 20px;
-        color: var(--h2-ui-wihte);
+        color: var(--h2-ui-color_white);
       }
 
       :host .btn--cancel {

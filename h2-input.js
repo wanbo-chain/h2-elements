@@ -92,7 +92,7 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       :host .input-unit {
         background: var(--h2-ui-bg);
-        color: var(--h2-ui-wihte);
+        color: var(--h2-ui-color_white);
         white-space: nowrap;
 
         height: inherit;
@@ -170,11 +170,12 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
         border: solid 1px red;
         border-radius: 4px;
       }
-      
-      
 
     </style>
-    <div class="h2-label">[[label]]</div>
+    <template is="dom-if" if="[[ toBoolean(label) ]]">
+       <div class="h2-label">[[label]]</div>
+    </template>
+    
     <!--可编辑状态-->
     <div class="input__container">
       <template is="dom-if" if="[[prefixUnit]]">

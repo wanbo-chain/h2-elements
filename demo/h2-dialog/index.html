@@ -47,7 +47,7 @@ document.body.appendChild($_documentContainer.content);
 
         #dialog {
           --h2-dialog-width: 400px;
-          --h2-dialog-height: 500px;
+          --h2-dialog-height: 80px;
         }
       </style>
       <h2-dialog id="dialog" stop-auto-dismiss>
@@ -65,7 +65,35 @@ document.body.appendChild($_documentContainer.content);
 </div>
 
 <div class="vertical-section-container centered">
-  <h3>One more</h3>
+  <h3>禁用点击弹窗外部关闭</h3>
+  <demo-snippet>
+    <template>
+      <style is="custom-style">
+        div[slot=container] {
+          font-size: 20px;
+        }
+        
+        #dialog1 {
+          --h2-dialog-width: 400px;
+          --h2-dialog-height: 100px;
+        }
+      </style>
+      <h2-dialog id="dialog1" stop-auto-dismiss no-cancel-on-outside-click>
+        <div>
+          Put your Content here inside an element which with
+        </div>
+      </h2-dialog>
+      <button id="btn1">Click to open the Dialog</button>
+      <script>
+        btn1.onclick = () => dialog1.open();
+      </script>
+    
+    </template>
+  </demo-snippet>
+</div>
+
+<div class="vertical-section-container centered">
+  <h3>模态弹窗</h3>
   <demo-snippet>
     <template>
       <style is="custom-style">
@@ -74,7 +102,7 @@ document.body.appendChild($_documentContainer.content);
           font-size: 14px;
         }
       </style>
-      <h2-dialog id="dialog2" stop-auto-dismiss title="Dialog demo">
+      <h2-dialog id="dialog2" stop-auto-dismiss title="Dialog demo" modal>
         <div>
           <p>It was all very well to say 'Drink me,' but the wise little
             Alice was not going to do <i>that</i> in a hurry. 'No, I'll look

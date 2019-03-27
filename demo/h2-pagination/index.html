@@ -38,7 +38,7 @@ document.body.appendChild($_documentContainer.content);
   <h3>Basic h2-pagination demo</h3>
   <demo-snippet>
     <template>
-      <h2-pagination id="page" total="500"></h2-pagination>
+      <h2-pagination id="page" total="5000"></h2-pagination>
       <script>
         page.addEventListener("paging-changed", e => {
           console.log(e.detail);
@@ -46,8 +46,21 @@ document.body.appendChild($_documentContainer.content);
       </script>
     </template>
   </demo-snippet>
-</div>`;
-
 </div>
+
+<div class="vertical-section-container centered">
+  <h3>自定义分页条数</h3>
+  <demo-snippet>
+    <template>
+      <h2-pagination id="page1" total="5000" page-sizes='[10,20]' limit="10"></h2-pagination>
+      <script>
+        page1.addEventListener("paging-changed", e => {
+          console.log(e.detail);
+        });
+      </script>
+    </template>
+  </demo-snippet>
+</div>
+
 </body>
 </html>

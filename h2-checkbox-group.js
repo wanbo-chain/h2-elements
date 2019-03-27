@@ -55,7 +55,7 @@ class H2CheckboxGroup extends mixinBehaviors(BaseBehavior, PolymerElement) {
 
       .checkbox-item {
         margin-left: 6px;
-        --paper-checkbox-checked-color: var(--h2-ui-highblue);
+        --paper-checkbox-checked-color: var(--h2-ui-color_skyblue);
       }
 
     </style>

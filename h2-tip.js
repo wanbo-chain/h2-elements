@@ -16,13 +16,14 @@ Example:
 
 import {html, PolymerElement} from "@polymer/polymer";
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
-import '@polymer/paper-dialog';
 import {BaseBehavior} from "./behaviors/base-behavior";
 import '@polymer/iron-icons';
 import '@polymer/iron-icon';
+import './behaviors/h2-elements-shared-styles';
 import './h2-button.js';
 import './h2-input.js';
-import './behaviors/h2-elements-shared-styles';
+import './h2-dialog.js'
+
 /**
  * @customElement
  * @polymer
@@ -39,46 +40,62 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
       #dialog {
-       border-radius: var(--h2-ui-border-radius);
-       padding: 20px;
+        --h2-dialog-content: {
+          display: flex;
+          flex-flow: column nowrap;
+        }
+        
+        --h2-dialog-title: {
+          font-size: 18px;
+        }
       }
       
-      #dialog * {
-        margin: 0;
-        padding: 0;
-      }
       :host #tip {
         vertical-align: middle;
         box-sizing: border-box;
-        height: 80px;
-        width: 330px;
-        font-size: 16px;
+        font-size: 14px;
+        display: flex;
+        flex-flow: row nowrap;
+        flex: 1;
       }
 
       :host([type=warn]) #tip {
-        color: #ffd165;
+        color: var(--h2-ui-orange);
       }
 
       :host([type=success]) #tip {
-        color: #00b300;
+        color: #46d23a;
       }
 
       :host([type=error]) #tip {
-        color: #f60;
+        color: var(--h2-ui-red);
       }
 
       .tip-content {
-        display: inline-block;
-        word-wrap: break-word;
-        color: black;
+        color: #848484;
+        flex: 1;
+        word-break: break-all;
       }
       
-      :host([type=prompt]) #tip,
-      :host([type=confirm]) #tip {
-        height: 60px;
-        width: 330px;
+      :host([type=success]) #dialog,
+      :host([type=warn]) #dialog,
+      :host([type=error]) #dialog {
+        --h2-dialog-width: 400px;
+        --h2-dialog-height: 86px;
       }
-
+      
+      :host([type=success]) .tip-content,
+      :host([type=warn]) .tip-content,
+      :host([type=error]) .tip-content {
+        padding: 5px 12px;
+      }
+      
+      :host([type=prompt]) #dialog,
+      :host([type=confirm]) #dialog {
+        --h2-dialog-width: 440px;
+        --h2-dialog-height: 200px;
+      }
+      
       :host([type=success]) #operate-panel,
       :host([type=warn]) #operate-panel,
       :host([type=error]) #operate-panel,
@@ -89,52 +106,48 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
         display: none;
       }
 
-      .icon-success {
-        width: 40px;
-        height: 40px;
+      .tip-icon {
+        width: 36px;
+        height: 36px;
       }
 
       #remark-input {
-        display: inline;
-        --h2-input: {
-          text-align: center;
-        }
+        width: inherit;
       }
 
       #operate-panel {
         text-align: right;
-        margin-top: 20px;
+        margin-top: 10px;
       }
     </style>
 
-    <paper-dialog id="dialog" modal="[[ isOneOf(type, 'confirm', 'prompt') ]]">
+    <h2-dialog id="dialog" modal="[[ isOneOf(type, 'confirm', 'prompt') ]]" no-cancel-on-outside-click title="[[title]]">
+      
       <div id="tip">
-        <div>
           <template is="dom-if" if="[[ isEqual(type, 'success') ]]">
-            <iron-icon class="icon-success" icon="icons:check-circle"></iron-icon>
+            <iron-icon class="tip-icon" icon="icons:check-circle"></iron-icon>
           </template>
           <template is="dom-if" if="[[ isEqual(type, 'warn') ]]">
-            <iron-icon class="icon-success" icon="icons:error"></iron-icon>
+            <iron-icon class="tip-icon" icon="icons:error"></iron-icon>
           </template>
           <template is="dom-if" if="[[ isEqual(type, 'error') ]]">
-            <iron-icon class="icon-success" icon="icons:cancel"></iron-icon>
+            <iron-icon class="tip-icon" icon="icons:cancel"></iron-icon>
           </template>
           <div class="tip-content">[[message]]</div>
-        </div>
       </div>
       <h2-input id="remark-input" value="{{ remark }}"></h2-input>
       <div id="operate-panel">
         <h2-button on-click="_cancel" type="warning" size="small">取消</h2-button>
         <h2-button on-click="_confirm" size="small">确定</h2-button>
       </div>
-    </paper-dialog>
+    </h2-dialog>
 `;
   }
-
+  
   static get is() {
     return "h2-tip";
   }
-
+  
   static get properties() {
     return {
       /**
@@ -170,7 +183,7 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
       _cancelCallback: {
         type: Object
       },
-
+      
       /**
        * When `type` is `success`, `warn` or `error`, the tip will disappear after [duration] ms.
        * @type {number}
@@ -187,10 +200,12 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
       autoDetach: {
         type: Boolean,
         value: false
-      }
+      },
+      
+      title: String
     };
   }
-
+  
   /**
    * Cancel handler
    */
@@ -198,7 +213,7 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.close();
     this.isFunction(this._cancelCallback) && this._cancelCallback();
   }
-
+  
   /**
    * Confirm handler
    */
@@ -207,7 +222,7 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
     const cbParam = this.type === 'prompt' ? {remark: this.remark} : null;
     this.isFunction(this._confirmCallback) && this._confirmCallback(cbParam);
   }
-
+  
   /**
    * Open the tip dialog.
    *
@@ -223,32 +238,33 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
     if (args.length > 0 && typeof args[0] === 'function') {
       confirmCallback = args.shift();
     }
-
+    
     if (args.length > 0 && typeof args[0] === 'function') {
       cancelCallback = args.shift();
     }
-
+    
     if (args.length > 0 && (typeof args[0] === 'number' || typeof args[0] === 'string')) {
       duration = Number(args[0]);
     }
-
+    
     this._confirmCallback = confirmCallback;
     this._cancelCallback = cancelCallback;
-
+    
     this.$.dialog.open();
+    
     if (this.type !== 'confirm' && this.type !== 'prompt') {
       setTimeout(() => {
         this.close();
       }, duration);
     }
   }
-
+  
   /**
    * Hide the tip.
    */
   close() {
     this.$.dialog.close();
-    if(this.autoDetach && this.parentElement && this.parentElement.removeChild) {
+    if (this.autoDetach && this.parentElement && this.parentElement.removeChild) {
       this.parentElement.removeChild(this);
     }
   }

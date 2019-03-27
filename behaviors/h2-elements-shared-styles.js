@@ -6,14 +6,16 @@ const template = html`
   <template>
     <style>
       :host {
-        --h2-ui-bg: linear-gradient(315deg, var(--h2-ui-minblue)  0%, var(--h2-ui-highblue) 100%);
-        --h2-ui-wihte: white;
-        --h2-ui-highblue: #2196F3;
-        --h2-ui-minblue: #8FCDFF;
-        --h2-ui-red: linear-gradient(315deg, #fbb8cf 0%, #e91d62 100%);;
-        --h2-ui-orange:  linear-gradient(315deg, #ffdead  0%, #fdb03d 100%);
+        --h2-ui-bg: linear-gradient(315deg, var(--h2-ui-color_lightblue)  0%, var(--h2-ui-color_skyblue) 100%);
+        --h2-ui-red: linear-gradient(315deg, #fbb8cf 0%, var(--h2-ui-color_pink) 100%);;
+        --h2-ui-orange: linear-gradient(315deg, #ffdead  0%, #fdb03d 100%);
         --h2-ui-border-radius: 4px;
+        --h2-ui-color_pink: #e91d62;
+        --h2-ui-color_white: white;
+        --h2-ui-color_skyblue: #2196F3;
+        --h2-ui-color_lightblue: #8FCDFF;
       }
+      
       :host([readonly]) .mask,
       :host([disabled]) .mask {
         position: absolute;
@@ -66,7 +68,7 @@ const template = html`
       }
 
       :host .prompt-tip {
-        background: var(--h2-ui-minblue);
+        background: var(--h2-ui-color_lightblue);
       }
       
       :host .prompt-tip::before {
@@ -74,7 +76,7 @@ const template = html`
         content: '';
         border: 11px solid transparent;
         border-right: 14px solid;
-        border-right-color: var(--h2-ui-minblue);
+        border-right-color: var(--h2-ui-color_lightblue);
         left: -18px;
       }
       
