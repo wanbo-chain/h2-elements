@@ -49,8 +49,12 @@ class H2TableColumn extends mixinBehaviors([Templatizer], PolymerElement) {
       modelAs: {
         type: String,
         value: 'item'
-      }
+      },
       
+      sortable: {
+        type: Boolean,
+        value: false
+      }
     };
   }
   
@@ -70,7 +74,6 @@ class H2TableColumn extends mixinBehaviors([Templatizer], PolymerElement) {
   }
   
   stampTemplate(instanceProps, key = this.modelAs) {
-    
     if (this.tmpl) return this.stamp({[key]: instanceProps});
     return null;
   }
