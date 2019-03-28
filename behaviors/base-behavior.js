@@ -142,6 +142,25 @@ export const BaseBehavior = {
     }, 100);
   },
   
+  compute(first, op,  ...nums) {
+    switch (op) {
+    case '+':
+      return nums.reduce((res, num) => res + num, first);
+    case '-':
+      return nums.reduce((res, num) => res - num, first);
+    case '*':
+      return nums.reduce((res, num) => res * num, first);
+    case '/':
+      return nums.reduce((res, num) => res / num, first);
+    case '%':
+      return nums.reduce((res, num) => res % num, first);
+    default:
+      return '';
+    }
+  },
+  
+  
+  
   /**
    * 消除loading
    */

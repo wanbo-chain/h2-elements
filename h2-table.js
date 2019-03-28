@@ -10,6 +10,7 @@ import {html, PolymerElement} from "@polymer/polymer";
 import './h2-table-column'
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
 import {BaseBehavior} from "./behaviors/base-behavior";
+import './behaviors/h2-elements-shared-styles.js';
 import '@polymer/iron-icon';
 import '@polymer/iron-icons';
 
@@ -23,13 +24,23 @@ import '@polymer/iron-icons';
 class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get template() {
     return html`
-    <style>
+    <style include="h2-elements-shared-styles">
       :host {
       
       }
       
+      .h2-table {
+        overflow-x: auto;
+      }
+      
+      .table__header__container {
+      }
+      
+      .table__body__container {
+      }
+      
       .h2-table td, .h2-table th {
-        padding: 12px 0;
+        padding: 10px;
         min-width: 0;
         box-sizing: border-box;
         text-overflow: ellipsis;
@@ -39,6 +50,9 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         border-bottom: 1px solid #ebeef5;
       }
       
+      .table__head, .table__body {
+        width: 100%;
+      }
       .table__head {
         color: #909399;
         font-weight: 500;
@@ -53,11 +67,12 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
       .table__body {
+        color: #606266;
         table-layout: fixed;
         border-collapse: separate;
       }
       
-      .table__row:hover {
+      .table__row:hover, .table__summary {
         background: #ecf5ff;
       }
       
@@ -84,70 +99,200 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         visibility: collapse;
       }
       
+      :host([border]) .h2-table {
+        border: 1px solid #ebeef5;
+      }
+      
+      :host([border]) td,
+      :host([border]) th {
+        border-right: 1px solid #ebeef5;
+      }
+      
+      :host([border]) td:last-of-type,
+      :host([border]) th:last-of-type {
+        border-right: none;
+      }
+      
+      .table__sort__icons {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        height: 46px;
+        width: 20px;
+        vertical-align: middle;
+        cursor: pointer;
+        overflow: initial;
+        position: relative;
+        
+      }
+      
+      .table__sort__icon.ascending {
+        top: 7px;
+      }
+      
+      .table__sort__icon.descending {
+        bottom: 9px;
+      }
+      
+      th div.header__cell {
+        display: flex;
+        align-items: center;
+      }
+      
+      .table__sort__icons.ascending .table__sort__icon.ascending,
+      .table__sort__icons.descending .table__sort__icon.descending {
+        color: var(--h2-ui-color_skyblue)
+      }
+      
     </style>
     <slot id="columnSlot"></slot>
     
     <div class="h2-table">
-      <table class="table__head" cellpadding="0" cellspacing="0" border="0">
-        <colgroup>
-          <template is="dom-repeat" items="[[columnInfos]]">
-              <template is="dom-if" if="[[ isEqual(item.type, 'expand') ]]">
-                 <col width="48">
-              </template>
-              <col width="[[item.width]]">
-          </template>
-        </colgroup>
-        <thead>
-          <tr>
+      <div class="table__header__container">
+        <table class="table__head" cellpadding="0" cellspacing="0" border="0">
+          <colgroup>
+            <template is="dom-if" if="[[ __showExpansion ]]">
+              <col width="48">
+            </template>
+            <template is="dom-if" if="[[ showIndex ]]">
+              <col width="52">
+            </template>
             <template is="dom-repeat" items="[[columnInfos]]">
-              <template is="dom-if" if="[[ isEqual(item.type, 'expand') ]]">
+                <col width="[[item.width]]">
+            </template>
+          </colgroup>
+          <thead>
+            <tr id="headerRow">
+              <template is="dom-if" if="[[ __showExpansion ]]">
                  <th></th>
               </template>
+              <template is="dom-if" if="[[ showIndex ]]">
+                 <th>序号</th>
+              </template>
+              <template is="dom-repeat" items="[[columnInfos]]" as="column">
                 <th>
-                  <div class="table__cell">[[item.label]]</div>
+                  <div class="header__cell">
+                    <div class="table__cell">[[column.label]]</div>
+                    <template is="dom-if" if="[[ column.sortable ]]">
+                      <div class="table__sort__icons" on-click="__sortTheColumn">
+                        <iron-icon class="table__sort__icon ascending" icon="icons:arrow-drop-up"></iron-icon>
+                        <iron-icon class="table__sort__icon descending" icon="icons:arrow-drop-down"></iron-icon>
+                      </div>
+                    </template>
+                  </div>
                 </th>
-            </template>
-          </tr>
-        </thead>
-      </table>
-      
-      <table id="tableBody" class="table__body" cellpadding="0" cellspacing="0" border="0">
-        <colgroup>
-          <template is="dom-repeat" items="[[columnInfos]]">
-          <template is="dom-if" if="[[ isEqual(item.type, 'expand') ]]">
-             <col width="48">
-          </template>
-             <col width="[[item.width]]">
-          </template>
-        </colgroup>
-        <tbody>
-          <template is="dom-repeat" items="[[data]]" as="row" index-as="rowIndex">
-            <tr class="table__row">
-              <template is="dom-repeat" items="[[columnInfos]]" index-as="columnIndex">
-                <template is="dom-if" if="[[ isEqual(item.type, 'expand') ]]">
-                  <td><iron-icon class="expand-icon" icon="icons:chevron-right" item="[[item]]" onclick="[[ __openExpanderHandler(rowIndex) ]]"></iron-icon></td>
-                </template>
-                <td class="table__column" id="row_[[rowIndex]]_column_[[columnIndex]]">
-                    [[ computeContent(row, rowIndex, item, columnIndex) ]]
-                </td>
               </template>
             </tr>
-            <template is="dom-if" if="[[ isEqual(columnInfos.0.type, 'expand') ]]">
-              <tr class="row__expansion row__expansion-hidden">
-                <td id="row_[[rowIndex]]" class="row__expansion-col" colspan$="[[ colspan ]]">
-                  [[ computeExpansion(row, rowIndex) ]]
-                </td>
-              </tr>
+          </thead>
+        </table>
+      </div>
+      <div class="table__body__container">
+        <table id="tableBody" class="table__body" cellpadding="0" cellspacing="0" border="0">
+          <colgroup>
+            <template is="dom-if" if="[[ __showExpansion ]]">
+               <col width="48">
             </template>
-          </template>
-        </tbody>
-      </table>
+            <template is="dom-if" if="[[ showIndex ]]">
+               <col width="52">
+            </template>
+            
+            <template is="dom-repeat" items="[[columnInfos]]">
+              <col width="[[item.width]]">
+            </template>
+          </colgroup>
+          
+          <tbody>
+            <template is="dom-repeat" items="[[__tableData]]" as="row" index-as="rowIndex">
+              <tr class="table__row">
+                <template is="dom-if" if="[[ __showExpansion ]]">
+                  <td><iron-icon class="expand-icon" icon="icons:chevron-right" item="[[item]]" onclick="[[ __openExpanderHandler(rowIndex) ]]"></iron-icon></td>
+                </template>
+                <template is="dom-if" if="[[ showIndex ]]">
+                   <td>[[ compute(rowIndex, '+', 1) ]]</td>
+                </template>
+                
+                <template is="dom-repeat" items="[[columnInfos]]" index-as="columnIndex">
+                  <td class="table__column" id="row_[[rowIndex]]_column_[[columnIndex]]">
+                      [[ computeContent(row, rowIndex, item, columnIndex) ]]
+                  </td>
+                </template>
+              </tr>
+              <template is="dom-if" if="[[ __showExpansion ]]">
+                <tr class="row__expansion row__expansion-hidden">
+                  <td id="row_[[rowIndex]]" class="row__expansion-col" colspan$="[[ colspan ]]">
+                    [[ computeExpansion(row, rowIndex) ]]
+                  </td>
+                </tr>
+              </template>
+            </template>
+            
+            <template is="dom-if" if="[[showSummary]]">
+              <tr class="table__summary"><td colspan$="[[ colspan ]]"><slot name="summarySlot"></slot></td></tr>
+            </template>
+            
+          </tbody>
+        </table>
+      </div>
     </div>
 `;
   }
   
-  __computeExpansionColspan({length} = []) {
-    return length + 1;
+  __sortTheColumn(e) {
+    const container = e.currentTarget;
+  
+    const ASCENDING = 'ascending';
+    const DESCENDING = 'descending';
+  
+    const sortableContainers = this.$.headerRow.querySelectorAll('.table__sort__icons');
+    
+    Array.from(sortableContainers).filter(node => node !== container)
+      .forEach(node => node.classList.remove(ASCENDING, DESCENDING));
+    
+    let direction;
+    if(container.classList.contains(ASCENDING)) {
+      container.classList.remove(ASCENDING);
+      container.classList.add(DESCENDING);
+      direction = DESCENDING;
+    } else if(container.classList.contains(DESCENDING)) {
+      container.classList.remove(DESCENDING);
+      direction = null;
+    } else {
+      container.classList.add(ASCENDING);
+      direction = ASCENDING;
+    }
+    
+    let cmpFn;
+    switch (direction) {
+    case DESCENDING:
+      cmpFn = field => {
+        return (a, b) => (b[field] || '').toString().localeCompare((a[field] || '').toString());
+      };
+      break;
+    case ASCENDING:
+      cmpFn = field => {
+        return (a, b) => (a[field] || '').toString().localeCompare((b[field] || '').toString());
+      };
+      break;
+    default:
+      cmpFn = () => undefined;
+      break;
+    }
+    
+    const cache = this.data.slice();
+    cache.sort(cmpFn(e.model.column.prop));
+    this.__tableData = cache;
+  }
+  
+  __calColspan(columnInfos = []) {
+    const [first] = columnInfos;
+    let length = columnInfos.length;
+    if(first.type === 'expand') {
+      length += 1;
+    }
+    if(this.showIndex) {
+      length += 1;
+    }
+    return length;
   }
   
   __openExpanderHandler(rowIndex) {
@@ -164,14 +309,24 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       } else {
         expansion.classList.add('row__expansion-hidden');
       }
-      
     };
   }
   
   __appendTmplContent(targetSelector, model, columnTag) {
     const parent = this.shadowRoot.querySelector(targetSelector);
     const {root} = columnTag.stampTemplate(model) || {};
-    if (root) parent.appendChild(root);
+    if (root) {
+      parent.innerHTML = '';
+      parent.appendChild(root);
+    }
+  }
+  
+  __dataChanged(data) {
+    this.__tableData = data.slice();
+  }
+  
+  __calShowExpansion([first] = [{}]) {
+    return first.type === 'expand';
   }
   
   computeExpansion(row, rowIndex) {
@@ -197,10 +352,19 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     return this.getValueByKey(row, column.prop);
   }
   
+  connectedCallback() {
+    super.connectedCallback();
+    this.$.columnSlot.addEventListener('slotchange', e => {
+      const columnInfos = this.$.columnSlot.assignedElements().filter(_ => _.tagName.toLowerCase() === 'h2-table-column');
+      this.set('columnInfos', columnInfos);
+    });
+  }
+  
   static get properties() {
     return {
       data: {
-        type: Array
+        type: Array,
+        observer: '__dataChanged'
       },
       
       sort: {
@@ -210,7 +374,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
       colspan: {
         type: Number,
-        computed: '__computeExpansionColspan(columnInfos)'
+        computed: '__calColspan(columnInfos)'
       },
       /**
        * A function that can be used to filter items out of the view.  This
@@ -230,21 +394,27 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
       assignedElements: {
         type: Object
-      }
+      },
       
+      _tableData: {
+        type: Array
+      },
+  
+      showSummary: {
+        type: Boolean,
+        value: false
+      },
+      
+      showIndex: {
+        type: Boolean,
+        value: false
+      },
+      
+      __showExpansion: {
+        type: Boolean,
+        computed: '__calShowExpansion(columnInfos)'
+      }
     };
-  }
-  
-  __filterChanged() {
-  
-  }
-  
-  connectedCallback() {
-    super.connectedCallback();
-    this.$.columnSlot.addEventListener('slotchange', e => {
-      const columnInfos = this.$.columnSlot.assignedElements().filter(_ => _.tagName.toLowerCase() === 'h2-table-column');
-      this.set('columnInfos', columnInfos);
-    });
   }
   
   static get is() {
