@@ -54,7 +54,7 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
         min-width: 80px;
         outline: none;
         font-family: var(--h2-ui-font-family), sans-serif;
-        font-size: var(--h2-ui-font-szie);
+        font-size: var(--h2-ui-font-size);
       }
 
       .trigger {

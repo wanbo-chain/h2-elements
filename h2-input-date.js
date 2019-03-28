@@ -35,7 +35,7 @@ class H2InputDate extends PolymerElement {
         width: 300px;
         height: 34px;
         font-family: var(--h2-ui-font-family), sans-serif;
-        font-size: var(--h2-ui-font-szie);
+        font-size: var(--h2-ui-font-size);
         line-height: 34px;
       }
 

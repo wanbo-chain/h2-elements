@@ -28,7 +28,7 @@ class H2Loading extends mixinBehaviors([IronOverlayBehavior], PolymerElement) {
         z-index: 9999;
         display: flex;
         font-family: var(--h2-ui-font-family), sans-serif;
-        font-size: var(--h2-ui-font-szie);
+        font-size: var(--h2-ui-font-size);
       }
 
       .loading-container {
