@@ -4,22 +4,22 @@ import './behaviors/h2-elements-shared-styles.js';
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
 import {BaseBehavior} from "./behaviors/base-behavior";
 
-class H2Layout extends mixinBehaviors([BaseBehavior], PolymerElement) {
+class H2GridLayout extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get template() {
     return html`
     <style include="h2-elements-shared-styles">
       :host {
         
       }
-      .h2-layout {
+      .h2-grid-layout {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         grid-gap: 20px;
-        @apply --h2-layout;
+        @apply --h2-grid-layout;
       }
       
     </style>
-    <div class="h2-layout" id="h2-layout">
+    <div class="h2-grid-layout" id="h2-grid-layout">
       <slot id="layout"></slot>
     </div>
     `
@@ -30,7 +30,10 @@ class H2Layout extends mixinBehaviors([BaseBehavior], PolymerElement) {
       columns: {
         type: Number
       },
-      gap: {
+      columnGap: {
+        type: Number
+      },
+      rowGap: {
         type: Number
       },
       templateColumns: {
@@ -43,24 +46,29 @@ class H2Layout extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get observers() {
     return [
       '__columnsChange(columns)',
-      '__gapChange(gap)',
+      '__columnGapChange(columnGap)',
+      '__rowGapChange(rowGap)',
       '__templateColumnsChange(templateColumns)'
     ]
   }
 
   __columnsChange(columns) {
     if (!this.templateColumns) {
-      this.$['h2-layout'].style['grid-template-columns'] = `repeat(${columns}, 1fr)`;
+      this.$['h2-grid-layout'].style['grid-template-columns'] = `repeat(${columns}, 1fr)`;
     }
   }
 
-  __gapChange(gap) {
-    this.$['h2-layout'].style['grid-gap'] = `${gap}px`;
+  __columnGapChange(columnGap) {
+    this.$['h2-grid-layout'].style['grid-column-gap'] = `${columnGap}px`;
+  }
+
+  __rowGapChange(rowGap) {
+    this.$['h2-grid-layout'].style['grid-row-gap'] = `${rowGap}px`;
   }
 
   __templateColumnsChange(templateColumns) {
     if (this.templateColumns) {
-      this.$['h2-layout'].style['grid-template-columns'] = templateColumns;
+      this.$['h2-grid-layout'].style['grid-template-columns'] = templateColumns;
     }
   }
 
@@ -78,8 +86,8 @@ class H2Layout extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   static get is() {
-    return "h2-layout";
+    return "h2-grid-layout";
   }
 }
 
-window.customElements.define(H2Layout.is, H2Layout);
+window.customElements.define(H2GridLayout.is, H2GridLayout);
