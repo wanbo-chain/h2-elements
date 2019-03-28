@@ -28,32 +28,29 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       :host {
         font-family: var(--h2-ui-font-family), sans-serif;
         font-size: var(--h2-ui-font-size);
+        display: block;
       }
       
       .h2-table {
-        overflow-x: auto;
-      }
-      
-      .table__header__container {
-      }
-      
-      .table__body__container {
+        overflow-y: hidden;
       }
       
       .h2-table td, .h2-table th {
         padding: 10px;
-        min-width: 0;
+        margin: 0;
         box-sizing: border-box;
+        overflow: hidden;
         text-overflow: ellipsis;
         vertical-align: middle;
-        position: relative;
         text-align: left;
         border-bottom: 1px solid #ebeef5;
+        line-height: 25px;
       }
       
       .table__head, .table__body {
         width: 100%;
       }
+      
       .table__head {
         color: #909399;
         font-weight: 500;
@@ -64,7 +61,6 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         white-space: nowrap;
         overflow: hidden;
         user-select: none;
-        background-color: #fff;
       }
       
       .table__body {
@@ -73,7 +69,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         border-collapse: separate;
       }
       
-      .table__row:hover, .table__summary {
+      .table__row:hover > td, .table__summary {
         background: #ecf5ff;
       }
       
@@ -91,9 +87,6 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       .expand-icon_opened {
         transform: rotate(90deg);
         transition: transform .2s ease-in-out
-      }
-      
-      .row__expansion {
       }
       
       .row__expansion-hidden {
@@ -145,7 +138,14 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         color: var(--h2-ui-color_skyblue)
       }
       
+      /*.table__column[aria-frozen] {*/
+        /*position: absolute;*/
+        /*background: white;*/
+        /*width: 4em;*/
+      /*}*/
+      
     </style>
+    
     <slot id="columnSlot"></slot>
     
     <div class="h2-table">
@@ -171,7 +171,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                  <th>序号</th>
               </template>
               <template is="dom-repeat" items="[[columnInfos]]" as="column">
-                <th>
+                <th class="table__column" aria-frozen$="[[column.frozen]]">
                   <div class="header__cell">
                     <div class="table__cell">[[column.label]]</div>
                     <template is="dom-if" if="[[ column.sortable ]]">
@@ -213,11 +213,12 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                 </template>
                 
                 <template is="dom-repeat" items="[[columnInfos]]" index-as="columnIndex">
-                  <td class="table__column" id="row_[[rowIndex]]_column_[[columnIndex]]">
+                  <td class="table__column" id="row_[[rowIndex]]_column_[[columnIndex]]" aria-frozen$="[[item.frozen]]">
                       [[ computeContent(row, rowIndex, item, columnIndex) ]]
                   </td>
                 </template>
               </tr>
+              
               <template is="dom-if" if="[[ __showExpansion ]]">
                 <tr class="row__expansion row__expansion-hidden">
                   <td id="row_[[rowIndex]]" class="row__expansion-col" colspan$="[[ colspan ]]">
