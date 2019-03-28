@@ -54,6 +54,11 @@ class H2TableColumn extends mixinBehaviors([Templatizer], PolymerElement) {
       sortable: {
         type: Boolean,
         value: false
+      },
+  
+      frozen: {
+        type: Boolean,
+        value: false
       }
     };
   }
