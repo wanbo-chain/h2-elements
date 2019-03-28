@@ -23,7 +23,8 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         height: 36px;
         line-height: 36px;
         width: 300px;
-        font-size: 14px;
+        font-family: var(--h2-ui-font-family), sans-serif;
+        font-size: var(--h2-ui-font-szie);
         position: relative;
         box-sizing: border-box;
       }

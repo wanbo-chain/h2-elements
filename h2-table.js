@@ -26,6 +26,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     return html`
     <style include="h2-elements-shared-styles">
       :host {
+        font-family: var(--h2-ui-font-family), sans-serif;
+        font-size: var(--h2-ui-font-szie);
         display: block;
       }
       

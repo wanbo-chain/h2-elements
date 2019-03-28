@@ -1,50 +1,181 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>h2-elements demo</title>
+  <title>h2-form demo</title>
 
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <!--<script type="text/javascript" src="../../utils/mock_setup.js"></script>-->
+  <script type="application/javascript" src="../node_modules/web-animations-js/web-animations-next.min.js"></script>
 
-    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../h2-elements.html">
+  <script type="module">
+    import '../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader';
+    import '../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    import '../node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
+    import '../h2-grid-layout';
+    import '../h2-button.js';
+    import '../h2-button-group';
+    import '../h2-checkbox-group';
+    import '../h2-dialog';
+    import '../h2-image-upload.js';
+    import '../h2-image-view.js';
+    import '../h2-input.js';
+    import '../h2-input-date';
+    import '../h2-input-datetime';
+    import '../h2-mask';
+    import '../h2-pagination';
+    import '../h2-radio';
+    import '../h2-select';
+    import '../h2-table-column';
+    import '../h2-table';
+    import '../h2-textarea';
+    import '../h2-tip';
+  </script>
 
-    <!-- FIXME(polymer-modulizer):
-        These imperative modules that innerHTML your HTML are
-        a hacky way to be sure that any mixins in included style
-        modules are ready before any elements that reference them are
-        instantiated, otherwise the CSS @apply mixin polyfill won't be
-        able to expand the underlying CSS custom properties.
-        See: https://github.com/Polymer/polymer-modulizer/issues/154
-        -->
-    <script type="module">
-const $_documentContainer = document.createElement('template');
+  <script type="module">
+    const $_documentContainer = document.createElement('template');
 
-$_documentContainer.innerHTML = `<custom-style>
-      <style is="custom-style" include="demo-pages-shared-styles">
-      </style>
-    </custom-style>`;
+    $_documentContainer.innerHTML = `<custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+      demo-snippet {
+      width: 800px;
+      margin: 0 auto;
+        --demo-snippet-code: {
+          max-height: 1500px;
+        }
+      }
+    </style>
+  </custom-style>`;
 
-document.body.appendChild($_documentContainer.content);
-</script>
-  </head>
-  <body>
-    <script type="module">
-const $_documentContainer = document.createElement('template');
+    document.body.appendChild($_documentContainer.content);
+  </script>
+</head>
+<body>
+<div class="vertical-section-container centered">
+  <h3>Basic h2-button demo</h3>
+  <demo-snippet>
+    <template>
+      <custom-style>
+        <style>
+          h2-button-group {
+            width: 180px;
+            height: 35px;
+          }
+          .text-box {
+            width: 100%;
+          }
+        </style>
+      </custom-style>
+      <h2-grid-layout columns="2" row-grip="40" colunm-grip="10">
+        <h2-button id="btn" type="danger" size="small">测试</h2-button>
+        <h2-button-group id="btnGrp" label="测试"></h2-button-group>
+        <h2-checkbox-group layout-colspan="2" id="checkbox" label="材料" value="0, 1, 2"></h2-checkbox-group>
+        <h2-image-upload id="uploader" label="上河图"></h2-image-upload>
+        <h2-image-view src="https://d1.awsstatic.com/product-marketing/Elastic%20Beanstalk/ElasticBeanstalk_Benefit_Productivity.5cd0e6aedfa2e3b2c05ed7f5faeb0fd215c9742b.png"></h2-image-view>
+        <h2-input class="typed-input" label="文本框" placeholder="Please input something..."></h2-input>
+        <h2-input class="typed-input" label="电话" type="tel" maxlength="11"></h2-input>
+        <h2-input layout-colspan="2" class="typed-input" label="数字框" type="number" required="" min="10" max="20" prompt="请输入10到20之间的数字"></h2-input>
+        <h2-input-date class="input-date" label="日期"></h2-input-date>
+        <h2-input-date class="input-date" label="默认value" value="2017-10-26"></h2-input-date>
+        <h2-input-date class="input-date" label="默认time" timestamp="1509008130349"></h2-input-date>
+        <h2-input-datetime class="datetime" label="无默认日期"></h2-input-datetime>
+        <h2-input-datetime class="datetime" label="默认value" value="2017-10-26T10:20"></h2-input-datetime>
+        <h2-input-datetime class="datetime" label="默认time" timestamp="1509008130349"></h2-input-datetime>
+        <h2-mask label="输入框" class="mask">
+          <h2-input placeholder="测试输入" value="梅西"></h2-input>
+        </h2-mask>
+        <h2-mask label="时间框">
+          <h2-input-datetime placeholder="时间"></h2-input-datetime>
+        </h2-mask>
+        <h2-mask label="Select下拉框">
+          <h2-select placeholder="测试输入" id="select" value="1,2,3" multi=""></h2-select>
+        </h2-mask>
+        <h2-pagination id="page1" total="5000" page-sizes='[10,20]' limit="10" layout-colspan="2"></h2-pagination>
+        <h2-radio id="radio2" label="姓名" attr-for-value="id" attr-for-label="name" value="3"></h2-radio>
+        <h2-select id="select" label="球员" placeholder="选择球员" value="1"></h2-select>
+        <h2-select id="select1" label="球员" placeholder="选择球员" multi="" value="1, 2, 3, 4"></h2-select>
+        <h2-table id="table" layout-colspan="2">
+          <h2-table-column prop="sex" label="性别" width="60" type="expand"  model-as="user">
+            <template>
+              <style>
+                .ext-container {
+                  display: flex;
+                }
+                .ext-container > div {
+                  width: 200px;
+                }
+              </style>
+              <div class="ext-container">
+                <div>姓名：[[user.name]]</div>
+                <div>sex: [[user.sex]]</div>
+                <div>phone: [[user.phone]]</div>
+              </div>
+            </template>
+          </h2-table-column>
+          <h2-table-column prop="name" label="名称" width="80" sortable></h2-table-column>
+          <h2-table-column prop="phone" label="电话号码" width="100" sortable></h2-table-column>
+          <h2-table-column prop="phone" label="操作" width="100" type="operate">
+            <template>
+              <h2-button class="action-bar">查看</h2-button>
+              <template is="dom-if" if="[[ item.modify ]]">
+                <h2-button class="action-bar">修改</h2-button>
+              </template>
+            </template>
+          </h2-table-column>
+        </h2-table>
+        <h2-textarea label="备注" value="readonly" layout-colspan="2" class="text-box"></h2-textarea>
+        <h2-textarea label="备注" value="disabled" disabled layout-colspan="2" class="text-box"></h2-textarea>
+        <h2-textarea label="备注" value="disabled" disabled layout-colspan="2" class="text-box"></h2-textarea>
+        <h2-button id="btn1" onclick="tip.open();" size="large">Success</h2-button>
+        <h2-button id="btn2" onclick="tip2.open(2000);" size="large">Warn</h2-button>
+        <h2-button id="btn3" onclick="tip3.open(5000);" size="large">Error</h2-button>
+      </h2-grid-layout>
+      <h2-dialog id="dialog" stop-auto-dismiss>
+        <div>
+          Put your Content here inside an element which with
+        </div>
+      </h2-dialog>
+      <h2-tip type="success" message="新建成功" id="tip" duration="5000"></h2-tip>
+      <h2-tip type="warn" message="警告：warning,warning,warning,warning,warning,warning,warning" id="tip2"></h2-tip>
+      <h2-tip type="error" message="出错了：这是一条出错的提示消息, 这是一条出错的提示消息" id="tip3"></h2-tip>
 
-$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
-      <h3>Basic h2-elements demo</h3>
-      <demo-snippet>
-        <template>
-          <h2-elements></h2-elements>
-        </template>
-      </demo-snippet>
-    </div>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>
-  </body>
+      <script>
+        btnGrp.items = [
+          {label: "测试1", value: "1"},
+          {label: "测试2", value: "2"},
+          {label: "测试3", value: "3"}
+        ];
+        checkbox.items = [
+          {label: '薄膜', value: 0},
+          {label: '纤维', value: 1},
+          {label: '塑料', value: 2},
+          {label: '其它', value: 3}
+        ];
+        btn.onclick = () => dialog.open();
+        radio2.items = [{id: 1, name: "张三"}, {id: 2, name: "李四水电费"}, {id: 3, name: "王五"}];
+        const items11 = [
+          {"label": "梅西", "value": 1},
+          {"label": "C罗", "value": 2},
+          {"label": "苏亚雷斯", "value": 3},
+          {"label": "库蒂尼奥", "value": 4},
+          {"label": "特尔斯特根", "value": 5},
+          {"label": "保利尼奥", "value": 6},
+          {"label": "内马尔", "value": 13}
+        ];
+        select.items = items11;
+        select1.items = items11;
+        table.data = [
+          {sex: '男', name: 'Apple', phone: '12345', modify: true},
+          {sex: '男', name: 'Wahson', phone: '12346', modify: true},
+          {sex: '女', name: 'Rose', phone: '12356'},
+          {sex: '女', name: 'Lucy', phone: '12390'},
+          {sex: '男', name: 'James', phone: '12326'},
+          {sex: '男', name: 'Cat', phone: '12349'}
+        ]
+      </script>
+    </template>
+  </demo-snippet>
+</div>
+</body>
 </html>

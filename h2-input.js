@@ -45,8 +45,9 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
         display: flex;
         width: 300px;
         height: 34px;
-        font-size: 14px;
         line-height: 34px;
+        font-family: var(--h2-ui-font-family), sans-serif;
+        font-size: var(--h2-ui-font-szie);
       }
 
       :host .input__container {

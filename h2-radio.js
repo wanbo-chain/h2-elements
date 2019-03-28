@@ -32,6 +32,8 @@ class H2Radio extends mixinBehaviors([BaseBehavior], PolymerElement) {
         display: inline-block;
         height: 34px;
         line-height: 34px;
+        font-family: var(--h2-ui-font-family), sans-serif;
+        font-size: var(--h2-ui-font-szie);
       }
 
       :host([hidden]) {

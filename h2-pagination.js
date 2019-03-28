@@ -27,7 +27,8 @@ class H2Pagination extends PolymerElement {
         --page_height: 38px;
         height: var(--page_height);
         line-height: var(--page_height);
-        font-size: 14px;
+        font-family: var(--h2-ui-font-family), sans-serif;
+        font-size: var(--h2-ui-font-szie);
       }
 
       .pagination {
@@ -206,8 +207,7 @@ class H2Pagination extends PolymerElement {
   static get observers() {
     return [
       '_pageIndexChanged(__pageIndex)',
-      '_pageStartChanged(paging.start)',
-      '_limitChanged(limit)'
+      '_pageStartChanged(paging.start)'
     ];
   }
 
@@ -223,10 +223,6 @@ class H2Pagination extends PolymerElement {
     if(!this.paging || this.paging.start !== start) {
       this.paging = {start, limit: this.limit};
     }
-  }
-
-  _limitChanged(limit) {
-    console.log(limit)
   }
 
   _calTotalPageSize(total, limit) {
