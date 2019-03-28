@@ -37,6 +37,8 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
         min-width: 330px;
         min-height: 100px;
         overflow: hidden;
+        font-family: var(--h2-ui-font-family), sans-serif;
+        font-size: var(--h2-ui-font-szie);
       }
       
       #dialog {
@@ -60,7 +62,7 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
 
       :host([type=warn]) #tip {
-        color: var(--h2-ui-orange);
+        color: var(--h2-ui-color_yellow);
       }
 
       :host([type=success]) #tip {
@@ -68,7 +70,7 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
 
       :host([type=error]) #tip {
-        color: var(--h2-ui-red);
+        color: var(--h2-ui-color_pink);
       }
 
       .tip-content {

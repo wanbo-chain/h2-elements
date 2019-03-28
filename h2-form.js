@@ -44,6 +44,8 @@ class H2Form extends mixinBehaviors([BaseBehavior], PolymerElement) {
     <style>
       :host {
         display: block;
+        font-family: var(--h2-ui-font-family), sans-serif;
+        font-size: var(--h2-ui-font-szie);
       }
 
       #title {

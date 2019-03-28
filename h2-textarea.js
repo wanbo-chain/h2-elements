@@ -39,7 +39,8 @@ class H2Textarea extends mixinBehaviors(BaseBehavior, PolymerElement) {
       :host {
         display: flex;
         flex-wrap: nowrap;
-        font-size: 14px;
+        font-family: var(--h2-ui-font-family), sans-serif;
+        font-size: var(--h2-ui-font-szie);
         width: 400px;
         height: 68px;
         position: relative;

@@ -53,7 +53,8 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         width: 300px;
         height: 34px;
         line-height: 34px;
-        font-size: 14px;
+        font-family: var(--h2-ui-font-family), sans-serif;
+        font-size: var(--h2-ui-font-szie);
         position: relative;
         background: white;
       }
@@ -319,7 +320,8 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
        * @type {array}
        */
       items: {
-        type: Array
+        type: Array,
+        value: []
       },
 
       __selected: {
@@ -548,8 +550,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   connectedCallback() {
     super.connectedCallback();
-    console.log(document.documentElement.clientHeight, this.offsetTop, 22 * (items.length), this);
-    const flag = this.offsetTop + 22 * (items.length) < document.documentElement.clientHeight / 2;
+    const flag = this.offsetTop + 22 * (this.items.length) < document.documentElement.clientHeight / 2;
     flag ? this.$['select-collapse'].style['top'] = '100%' : this.$['select-collapse'].style['bottom'] = '100%';
   }
 }

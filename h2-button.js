@@ -58,10 +58,10 @@ class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
     <style include="h2-elements-shared-styles">
       :host {
         display: inline-block;
-        font-size: 14px;
+        font-family: var(--h2-ui-font-family) sans-serif;;
+        font-size: var(--h2-ui-font-szie);
         border-radius: 4px;
         outline: none;
-        /*width: 80px;*/
         height: 34px;
       }
 
