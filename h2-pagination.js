@@ -27,7 +27,8 @@ class H2Pagination extends PolymerElement {
         --page_height: 38px;
         height: var(--page_height);
         line-height: var(--page_height);
-        font-size: 14px;
+        font-family: var(--h2-ui-font-family), sans-serif;
+        font-size: var(--h2-ui-font-szie);
       }
 
       .pagination {

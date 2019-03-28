@@ -39,7 +39,8 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior], PolymerElement) {
     <style include="h2-elements-shared-styles">
       :host {
         display: inline-block;
-        font-size: 14px;
+        font-family: var(--h2-ui-font-family), sans-serif;
+        font-size: var(--h2-ui-font-szie);
       }
 
       #main-container {

@@ -53,7 +53,8 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         width: 300px;
         height: 34px;
         line-height: 34px;
-        font-size: 14px;
+        font-family: var(--h2-ui-font-family), sans-serif;
+        font-size: var(--h2-ui-font-szie);
         position: relative;
         background: white;
       }
