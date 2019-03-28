@@ -161,7 +161,6 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
         max-height: 0;
         position: absolute;
-        top: 100%;
         width: 100%;
         overflow-y: auto;
         z-index: 99;
@@ -182,6 +181,14 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       #select-collapse[data-collapse-open] {
         max-height: 300px;
+      }
+      
+      #select-collapse[data-collapse-open-top] {
+        top: 100%;
+      }
+      
+      #select-collapse[data-collapse-open-bottom] {
+        bottom: 100%;
       }
 
       .selector-panel {
@@ -537,6 +544,13 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
    */
   validate() {
     return this.required ? (this.selectedValues && this.selectedValues.length > 0) : true;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    console.log(document.documentElement.clientHeight, this.offsetTop, 22 * (items.length), this);
+    const flag = this.offsetTop + 22 * (items.length) < document.documentElement.clientHeight / 2;
+    flag ? this.$['select-collapse'].style['top'] = '100%' : this.$['select-collapse'].style['bottom'] = '100%';
   }
 }
 

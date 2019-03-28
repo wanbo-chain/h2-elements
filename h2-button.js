@@ -61,7 +61,7 @@ class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
         font-size: 14px;
         border-radius: 4px;
         outline: none;
-        width: 80px;
+        /*width: 80px;*/
         height: 34px;
       }
 
@@ -70,6 +70,7 @@ class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
       }
 
       .btn {
+        padding: 5px 10px;
         width: 100%;
         height: 100%;
         color: #fff;
