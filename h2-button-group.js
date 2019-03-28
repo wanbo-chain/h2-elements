@@ -59,10 +59,10 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       .trigger {
         width: 100%;
+        height: 100%;
         -moz-border-radius: 4px;
         -webkit-border-radius: 4px;
         border-radius: 4px;
-        height: inherit;
         display: flex;
         padding: 0;
         @apply --h2-button-group-button;
