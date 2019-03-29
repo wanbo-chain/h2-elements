@@ -13,6 +13,7 @@
     import '../../h2-table';
     import '../../h2-table-column';
     import '../../h2-button';
+    import '../../h2-button-group';
   </script>
   
   <script type="module">
@@ -73,6 +74,13 @@
             <template is="dom-if" if="[[ item.modify ]]">
               <h2-button class="action-bar">修改</h2-button>
             </template>
+            <h2-button-group label="更多">
+              <div bind-item="1">测试1</div>
+              <div bind-item="2">测试2</div>
+              <div bind-item="3">测试3</div>
+              <div bind-item="3">测试4</div>
+              <div bind-item="3">测试5</div>
+            </h2-button-group>
           </template>
         </h2-table-column>
       </h2-table>
