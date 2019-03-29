@@ -48,8 +48,6 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
     return html`
     <style include="h2-elements-shared-styles">
       :host {
-        position: relative;
-        /*font: inherit;*/
         display: inline-block;
         min-width: 80px;
         outline: none;
@@ -57,14 +55,13 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
         font-size: var(--h2-ui-font-size);
       }
 
+      .box {
+        position: relative;
+      }
+      
       .trigger {
-        width: 100%;
-        height: 100%;
-        -moz-border-radius: 4px;
-        -webkit-border-radius: 4px;
-        border-radius: 4px;
         display: flex;
-        padding: 0;
+        border-radius: var(--h2-ui-border-radius);
         @apply --h2-button-group-button;
       }
 
@@ -75,52 +72,36 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       /*下拉列表*/
       :host .dropdown-menu {
         position: absolute;
-        display: flex;
         background: #fff;
-        color: #fff;
+        color: var(--h2-ui-color_skyblue);
         flex-flow: column nowrap;
         box-sizing: border-box;
-        top: 100%;
-        left: 0;
-        z-index: 99;
+        z-index: 999;
         width: 100%;
-        margin-top: 1px;
-        list-style: none;
+        margin-top: 2px;
         font-size: 1em;
         text-align: center;
-        -moz-border-radius: 4px;
-        -webkit-border-radius: 4px;
-        border-radius: 4px;
+        border-radius: var(--h2-ui-border-radius);
         background-clip: padding-box;
-
+        border: 1px solid var(--h2-ui-color_skyblue);
+        --iron-collapse-transition-duration: 200ms;
+        overflow:auto;
         @apply --h2-button-group-dropdown;
       }
 
       .item, ::slotted(*) {
-        background: var(--h2-ui-bg);
         cursor: pointer;
         line-height: 30px;
         white-space: nowrap;
         font-size: 0.9em;
         text-align: center;
-        border: none;
         outline: none;
-        border-bottom: 1px solid #fff;
-        margin-top: 1px;
-      }
-      .item:first-of-type {
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
-      }
-      .item:last-of-type {
-        border-bottom: none;
-        border-bottom-left-radius: 4px;
-        border-bottom-right-radius: 4px;
       }
       
       /*hover*/
-      .item:hover {
-        opacity: 0.8;
+      .item:hover, ::slotted(*:hover) {
+        color: #fff;
+        background: var(--h2-ui-bg);
       }
       
       .trigger__icon {
@@ -133,18 +114,20 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
     </style>
-
-    <h2-button class="trigger" on-tap="toggle">
-      <div class="trigger__label">[[ label ]]</div>
+    
+    <div class="box">
+      <h2-button class="trigger" on-tap="toggle">
+        <div class="trigger__label">[[ label ]]</div>
         <iron-icon class="trigger__icon" icon="icons:expand-more"></iron-icon>
-    </h2-button>
-
-    <iron-collapse id="collapse" class="dropdown-menu" opened="[[ opened ]]" on-click="_onButtonDropdownClick">
-      <template is="dom-repeat" items="[[ items ]]">
-        <div class="item" bind-item="[[ item ]]">[[ getValueByKey(item, attrForLabel, 'Unknown') ]]</div>
-      </template>
-      <slot></slot>
-    </iron-collapse>
+      </h2-button>
+  
+      <iron-collapse id="collapse" class="dropdown-menu" opened="[[ opened ]]" on-click="_onButtonDropdownClick">
+         <template is="dom-repeat" items="[[ items ]]">
+           <div class="item" bind-item="[[ item ]]">[[ getValueByKey(item, attrForLabel, 'Unknown') ]]</div>
+         </template>
+         <slot id="itemSlot"></slot>
+      </iron-collapse>
+    </div>
 `;
   }
   
@@ -222,7 +205,19 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
   /**
    * Toggle the group.
    */
-  toggle() {
+  toggle(e) {
+    const itemCount = this.$.itemSlot.assignedElements().length + this.$.collapse.querySelectorAll('.item').length;
+    const totalHeight = e.detail.y + this.offsetHeight + itemCount * 30;
+    
+    const styleObj = this.$.collapse.style;
+    if(totalHeight >= window.innerHeight) {
+      styleObj['bottom'] = this.offsetHeight + 'px';
+      styleObj['margin-bottom'] = '2px';
+    } else {
+      styleObj['bottom'] = null;
+      styleObj['margin-bottom'] = '2px';
+    }
+    
     this.opened = !this.opened;
   }
   
