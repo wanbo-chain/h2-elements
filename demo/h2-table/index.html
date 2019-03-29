@@ -106,29 +106,36 @@
         #table {
           width: 100%;
         }
-      
+        .container {
+          width: 100%;
+          height: 100%;
+          z-index: 999;
+        }
       </style>
-      <h2-table id="table1" border>
-        <h2-table-column prop="sex" label="性别" width="100" type="expand"  model-as="user">
-          <template>
-            <style>
-              .ext-container {
-                display: flex;
-              }
-              .ext-container > div {
-                width: 200px;
-              }
-            </style>
-            <div class="ext-container">
-              <div>姓名：[[user.name]]</div>
-              <div>sex: [[user.sex]]</div>
-              <div>phone: [[user.phone]]</div>
-            </div>
-          </template>
-        </h2-table-column>
-        <h2-table-column prop="name" label="名称" width="100"></h2-table-column>
-        <h2-table-column prop="phone" label="电话号码"></h2-table-column>
-      </h2-table>
+      <div class="container">
+        <h2-table id="table1" border>
+          <h2-table-column prop="sex" label="性别" width="100" type="expand"  model-as="user">
+            <template>
+              <style>
+                .ext-container {
+                  display: flex;
+                }
+                .ext-container > div {
+                  width: 200px;
+                }
+              </style>
+              <div class="ext-container">
+                <div>姓名：[[user.name]]</div>
+                <div>sex: [[user.sex]]</div>
+                <div>phone: [[user.phone]]</div>
+              </div>
+            </template>
+          </h2-table-column>
+          <h2-table-column prop="name" label="名称" width="100"></h2-table-column>
+          <h2-table-column prop="phone" label="电话号码"></h2-table-column>
+        </h2-table>
+        <h2-pagination id="page1" total="5000" page-sizes='[10,20,30,40]' limit="10"></h2-pagination>
+      </div>
       <script>
         table1.data = [
           {sex: '男', name: 'Wahson', phone: '1231231232', modify: true},

@@ -54,7 +54,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         height: 34px;
         line-height: 34px;
         font-family: var(--h2-ui-font-family), sans-serif;
-        font-size: var(--h2-ui-font-szie);
+        font-size: var(--h2-ui-font-size);
         position: relative;
         background: white;
       }
@@ -421,7 +421,16 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
   /**
    * 点击事件
    */
-  _onInputClick({target: {classList}}) {
+  _onInputClick(e) {
+    const flag = e.clientY < window.innerHeight - this.items.length * 40;
+    if (flag) {
+      this.$['select-collapse'].style['top'] = '100%';
+      this.$['select-collapse'].style['bottom'] = null;
+    } else {
+      this.$['select-collapse'].style['top'] = null;
+      this.$['select-collapse'].style['bottom'] = '100%';
+    }
+    const classList = e.target.classList;
     if (classList.contains('tag-deleter') || classList.contains('tag-cursor')) {
       return;
     }
@@ -548,11 +557,6 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
     return this.required ? (this.selectedValues && this.selectedValues.length > 0) : true;
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    const flag = this.offsetTop + 22 * (this.items.length) < document.documentElement.clientHeight / 2;
-    flag ? this.$['select-collapse'].style['top'] = '100%' : this.$['select-collapse'].style['bottom'] = '100%';
-  }
 }
 
 window.customElements.define(H2Select.is, H2Select);

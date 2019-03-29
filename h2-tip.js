@@ -38,7 +38,7 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
         min-height: 100px;
         overflow: hidden;
         font-family: var(--h2-ui-font-family), sans-serif;
-        font-size: var(--h2-ui-font-szie);
+        font-size: var(--h2-ui-font-size);
       }
       
       #dialog {

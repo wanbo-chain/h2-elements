@@ -38,7 +38,7 @@ class H2ImageView extends PolymerElement {
         border: 1px dashed #ccc;
         background: #fafafa;
         font-family: var(--h2-ui-font-family), sans-serif;
-        font-size: var(--h2-ui-font-szie);
+        font-size: var(--h2-ui-font-size);
       }
 
       .img__container {

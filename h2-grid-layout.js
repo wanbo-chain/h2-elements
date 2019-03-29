@@ -10,7 +10,7 @@ class H2GridLayout extends mixinBehaviors([BaseBehavior], PolymerElement) {
     <style include="h2-elements-shared-styles">
       :host {
         font-family: var(--h2-ui-font-family), sans-serif;
-        font-size: var(--h2-ui-font-szie);
+        font-size: var(--h2-ui-font-size);
       }
       .h2-grid-layout {
         display: grid;

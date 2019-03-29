@@ -49,7 +49,7 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
         height: var(--h2-dialog-height, 90%);
         border-radius: 6px;
         font-family: var(--h2-ui-font-family), sans-serif;
-        font-size: var(--h2-ui-font-szie);
+        font-size: var(--h2-ui-font-size);
       }
 
       .scrollable-container {
