@@ -229,7 +229,7 @@ export class H2Fetch extends mixinBehaviors([BaseBehavior], PolymerElement) {
         return Promise.reject(err);
       })
       .finally(() => {
-        option.loading && this.hideLoading(this);
+        option.loading && this.hideLoading();
       });
   }
   

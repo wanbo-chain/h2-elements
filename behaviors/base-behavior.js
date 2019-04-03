@@ -139,7 +139,7 @@ export const BaseBehavior = {
     }
     this.async(function () {
       loadingDiv.open();
-    }, 100);
+    }, 0);
   },
   
   compute(first, op,  ...nums) {
@@ -168,7 +168,7 @@ export const BaseBehavior = {
     this.async(function () {
       const loadingDiv = document.body.querySelector("#h2-loading");
       loadingDiv && loadingDiv.close();
-    }, 100);
+    }, 0);
   },
   
   throwNotFoundError(string) {
