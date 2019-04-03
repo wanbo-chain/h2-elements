@@ -62,8 +62,9 @@ folder, it can be ``index.html?mock=mockData.js`` or ``index.html?mock=./mockDat
 
 */
 import {PolymerElement} from "@polymer/polymer";
-import {BaseBehavior} from '../../behaviors/base-behavior.js';
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
+
+import {BaseBehavior} from './behaviors/base-behavior.js';
 /**
  * `h2-fetch`
  *
@@ -141,12 +142,13 @@ export class H2Fetch extends mixinBehaviors([BaseBehavior], PolymerElement) {
         type: Object
       },
 
-      signal: {
+      __signal: {
         type: Object
       },
 
-      external: {
-        type: Object
+      loading: {
+        type: Boolean,
+        value: false
       }
     };
   }
@@ -161,18 +163,25 @@ export class H2Fetch extends mixinBehaviors([BaseBehavior], PolymerElement) {
       "__responseChange(response)"
     ];
   }
-
+  
+  constructor() {
+    super();
+    if ('AbortController' in window) {
+      // todo: abortControllers persist in global scope
+      this.__controller = new AbortController();
+      this.__signal = this.__controller.signal;
+    }
+  }
+  
   __getCorrectedRequest(request) {
     const req = Request.prototype.isPrototypeOf(request) ? request : new Request(request.url, request);
     //TODO set default value to req
     return req;
   }
 
-
   __requestChange(request) {
     if (!request) return;
-    // return window.__mockEnabled ? this._mockIt() : this._fetchIt();
-    return window.__mockEnabled ? this._mockIt() : this.fetchIt();
+    return this.fetchIt(request);
   }
 
   __responseChange(response) {
@@ -190,59 +199,59 @@ export class H2Fetch extends mixinBehaviors([BaseBehavior], PolymerElement) {
     } else {
       resClone.text().then(err => this.error = {content: err});
     }
-
   }
-
-  _mockIt() {
-    if (window.__mockEnabled && typeof MockDataPool !== "undefined") {
-      const collectedReq = this.__getCorrectedRequest(this.request);
-      const matchedRes = MockDataPool.match(collectedReq);
-      if (matchedRes) {
-        this.response = new Response(matchedRes.body, matchedRes);
-        return;
-      }
-    }
-
-    // return this._fetchIt();
-    return this.fetchIt();
-  }
-
-  // _fetchIt() {
-  //   const collectedReq = this.__getCorrectedRequest(this.request);
-  //   window.fetch(collectedReq, {signal: this.signal})
-  //     .then(res => this.response = res)
-  //     .catch(err => this.error = {content: err});
-  // }
-
+  
   /**
    * Fetch you request, if window.__mockEnabled == true, you can get your mock response.
    * @param {Request|object} request
+   * @param option
    * @return {Promise}
    */
-  fetchIt(request) {
+  fetchIt(request, option = {loading: this.loading}) {
     const collectedReq = this.__getCorrectedRequest(request);
-    if (window.__mockEnabled) {
+    if (window.__mockEnabled && typeof MockDataPool !== "undefined") {
       const matchedRes = MockDataPool.match(collectedReq);
       if (matchedRes) {
-        return Promise.resolve(new Response(matchedRes.body, matchedRes));
+        this.response = new Response(matchedRes.body, matchedRes);
+        return Promise.resolve(this.response);
       }
     }
-    this.showLoading();
-    return window.fetch(collectedReq, {signal: this.signal}).finally(_ => {
-      this.hideLoading()
-    });
+    
+    option.loading && this.showLoading();
+    
+    return window.fetch(collectedReq, {signal: this.__signal})
+      .then(res => {
+        this.response = res;
+        return res;
+      })
+      .catch(err => {
+        this.error = {content: err};
+        return Promise.reject(err);
+      })
+      .finally(() => {
+        option.loading && this.hideLoading(this);
+      });
   }
-
+  
+  /**
+   * Abort your request.
+   */
   abort() {
     this.__controller && this.__controller.abort();
   }
-
-  constructor() {
-    super();
-    if ('AbortController' in window) {
-      this.__controller = new AbortController;
-      this.signal = this.__controller.signal;
-    }
+  
+  /**
+   * Abort all pending requests.
+   */
+  abortAll() {
+    // todo
+  }
+  
+  /**
+   * @param reqArr
+   */
+  fetchAll(reqArr = []) {
+    // todo
   }
 }
 

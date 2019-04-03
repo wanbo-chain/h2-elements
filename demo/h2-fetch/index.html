@@ -111,10 +111,10 @@ document.body.appendChild($_documentContainer.content);
     <template>
       <div id="responseDiv3"></div>
       <div id="responseDiv3_1"></div>
-      <h2-fetch id="fetchDemo3" handle-response-as="text"></h2-fetch>
+      <h2-fetch id="fetchDemo3" handle-response-as="text" loading></h2-fetch>
       <script>
         fetchDemo3.request = {
-          url: "/path/to/helloworld.do",
+          url: "/api/getStr",
           method: "GET",
         };
         fetchDemo3.addEventListener("response-body-changed", (e) => {
@@ -167,19 +167,16 @@ document.body.appendChild($_documentContainer.content);
         import {H2Fetch} from "../../h2-fetch.js";
 
         const request = {
-          url: "/api/getStr",
-          method: "GET",
-          headers: {
-            "Cache-Control": "no-cache"
-          }
+          url: "/api/getStr"
         };
 
         const a  = new H2Fetch();
-        a.fetchIt(request)
+        a.fetchIt(request, {loading: true})
             .then(res => res.text())
             .then(data => responseDiv4_2.innerHTML = JSON.stringify(data))
             .catch(err => responseDiv4_2_err.innerHTML = err);
-        setTimeout(_ => {
+        
+        setTimeout(() => {
           a.abort();
         }, 1000)
       </script>
