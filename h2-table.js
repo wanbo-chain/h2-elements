@@ -315,14 +315,14 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   
   __appendTmplContent(targetSelector, model, columnTag) {
     const parent = this.shadowRoot.querySelector(targetSelector);
-    const {root} = columnTag.stampTemplate(model) || {};
+    const {root} = columnTag.stampTemplate(model);
     if (root) {
       parent.innerHTML = '';
       parent.appendChild(root);
     }
   }
   
-  __dataChanged(data) {
+  __dataChanged(data = []) {
     this.__tableData = data.slice();
   }
   
