@@ -14,12 +14,13 @@
     import '../../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
     import '../../node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
     import '../../h2-fetch';
+    import '../../h2-button';
     if(!window.location.href.endsWith("?mock=mockData.js")) {
       window.location.href = window.location.href + "?mock=mockData.js";
     }
-</script>
+  </script>
 
-    <script type="module">
+<script type="module">
 const $_documentContainer = document.createElement('template');
 
 $_documentContainer.innerHTML = `<custom-style>
@@ -127,15 +128,15 @@ document.body.appendChild($_documentContainer.content);
     </template>
   </demo-snippet>
 
-  <h3>Basic h2-fetch demo</h3>
+  <h3>Basic h2-fetch demo123</h3>
   <demo-snippet>
 
     <template>
       <div id="responseDiv4_1"></div>
       <div id="responseDiv4_1_err"></div>
-      <script>
-        
-        import {H2Fetch} from "../../h2-fetch";
+      <script type="module">
+
+        import { H2Fetch } from "../../h2-fetch.js";
         
         const request = {
           url: "/path/to/index.do",
@@ -153,5 +154,38 @@ document.body.appendChild($_documentContainer.content);
       </script>
     </template>
   </demo-snippet>
+
+  <h3>Basic h2-fetch demo</h3>
+  <demo-snippet>
+
+    <template>
+      <div id="responseDiv4_2"></div>
+      <div id="responseDiv4_2_err"></div>
+      <h2-button id="btn">取消</h2-button>
+      <script type="module">
+
+        import {H2Fetch} from "../../h2-fetch.js";
+
+        const request = {
+          url: "/api/getStr",
+          method: "GET",
+          headers: {
+            "Cache-Control": "no-cache"
+          }
+        };
+
+        const a  = new H2Fetch();
+        a.fetchIt(request)
+            .then(res => res.text())
+            .then(data => responseDiv4_2.innerHTML = JSON.stringify(data))
+            .catch(err => responseDiv4_2_err.innerHTML = err);
+        setTimeout(_ => {
+          a.abort();
+        }, 1000)
+      </script>
+    </template>
+  </demo-snippet>
 </div>
-</script>
+
+</body>
+</html>
