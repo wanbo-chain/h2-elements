@@ -142,7 +142,14 @@ export const BaseBehavior = {
     }, 0);
   },
   
-  compute(first, op,  ...nums) {
+  /**
+   * 简单数学运算
+   * @param first
+   * @param op
+   * @param nums
+   * @returns {*}
+   */
+  calc(first, op,  ...nums) {
     switch (op) {
     case '+':
       return nums.reduce((res, num) => res + num, first);

@@ -208,7 +208,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                   <td><iron-icon class="expand-icon" icon="icons:chevron-right" item="[[item]]" onclick="[[ __openExpanderHandler(rowIndex) ]]"></iron-icon></td>
                 </template>
                 <template is="dom-if" if="[[ showIndex ]]">
-                   <td>[[ compute(rowIndex, '+', 1) ]]</td>
+                   <td>[[ calc(rowIndex, '+', 1) ]]</td>
                 </template>
                 
                 <template is="dom-repeat" items="[[columnInfos]]" index-as="columnIndex">
