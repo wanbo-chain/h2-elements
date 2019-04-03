@@ -62,7 +62,8 @@ folder, it can be ``index.html?mock=mockData.js`` or ``index.html?mock=./mockDat
 
 */
 import {PolymerElement} from "@polymer/polymer";
-
+import {BaseBehavior} from '../../behaviors/base-behavior.js';
+import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
 /**
  * `h2-fetch`
  *
@@ -70,7 +71,7 @@ import {PolymerElement} from "@polymer/polymer";
  * @polymer
  * @demo demo/h2-fetch/index.html
  */
-export class H2Fetch extends PolymerElement {
+export class H2Fetch extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   static get properties() {
     return {
@@ -134,8 +135,19 @@ export class H2Fetch extends PolymerElement {
           }
         },
         readOnly: true
-      }
+      },
 
+      __controller: {
+        type: Object
+      },
+
+      signal: {
+        type: Object
+      },
+
+      external: {
+        type: Object
+      }
     };
   }
 
@@ -159,7 +171,8 @@ export class H2Fetch extends PolymerElement {
 
   __requestChange(request) {
     if (!request) return;
-    return window.__mockEnabled ? this._mockIt() : this._fetchIt();
+    // return window.__mockEnabled ? this._mockIt() : this._fetchIt();
+    return window.__mockEnabled ? this._mockIt() : this.fetchIt();
   }
 
   __responseChange(response) {
@@ -190,15 +203,16 @@ export class H2Fetch extends PolymerElement {
       }
     }
 
-    return this._fetchIt();
+    // return this._fetchIt();
+    return this.fetchIt();
   }
 
-  _fetchIt() {
-    const collectedReq = this.__getCorrectedRequest(this.request);
-    window.fetch(collectedReq)
-      .then(res => this.response = res)
-      .catch(err => this.error = {content: err});
-  }
+  // _fetchIt() {
+  //   const collectedReq = this.__getCorrectedRequest(this.request);
+  //   window.fetch(collectedReq, {signal: this.signal})
+  //     .then(res => this.response = res)
+  //     .catch(err => this.error = {content: err});
+  // }
 
   /**
    * Fetch you request, if window.__mockEnabled == true, you can get your mock response.
@@ -213,8 +227,22 @@ export class H2Fetch extends PolymerElement {
         return Promise.resolve(new Response(matchedRes.body, matchedRes));
       }
     }
+    this.showLoading();
+    return window.fetch(collectedReq, {signal: this.signal}).finally(_ => {
+      this.hideLoading()
+    });
+  }
 
-    return window.fetch(collectedReq);
+  abort() {
+    this.__controller && this.__controller.abort();
+  }
+
+  constructor() {
+    super();
+    if ('AbortController' in window) {
+      this.__controller = new AbortController;
+      this.signal = this.__controller.signal;
+    }
   }
 }
 
