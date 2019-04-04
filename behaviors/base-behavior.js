@@ -126,6 +126,14 @@ export const BaseBehavior = {
   },
   
   /**
+   * Check if an array is empty.
+   * @param arr
+   * @returns {boolean}
+   */
+  isArrayEmpty(arr = []) {
+    return arr.length === 0;
+  },
+  /**
    * 简单数学运算
    * @param first
    * @param op

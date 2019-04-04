@@ -160,6 +160,10 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       :host([tooltip]) paper-tooltip {
         display: block;
       }
+      
+      .table__nodata {
+        text-align: center !important;
+      }
     </style>
     
     <slot id="columnSlot"></slot>
@@ -219,6 +223,12 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
           </colgroup>
           
           <tbody>
+            <template is="dom-if" if="[[ isArrayEmpty(data) ]]">
+              <tr class="table__row">
+                <td class="table__nodata" colspan$="[[ colspan ]]">无数据</td>
+              </tr>
+            </template>
+            
             <template is="dom-repeat" items="[[__tableData]]" as="row" index-as="rowIndex">
               <tr class="table__row">
                 <template is="dom-if" if="[[ __showExpansion ]]">
@@ -377,7 +387,10 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     return {
       data: {
         type: Array,
-        observer: '__dataChanged'
+        observer: '__dataChanged',
+        value: function() {
+          return [];
+        }
       },
       
       sort: {
