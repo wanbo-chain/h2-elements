@@ -68,25 +68,36 @@
         </h2-table-column>
         <h2-table-column prop="name" label="名称" width="100" sortable></h2-table-column>
         <h2-table-column prop="phone" label="电话号码" width="300" sortable></h2-table-column>
-        <h2-table-column prop="phone" label="操作" width="300" type="operate">
+        <h2-table-column prop="phone" label="操作" width="300" type="operate" model-as="user">
           <template>
-            <h2-button class="action-bar">查看</h2-button>
-            <template is="dom-if" if="[[ item.modify ]]">
-              <h2-button class="action-bar">修改</h2-button>
+            <h2-button class="action-bar" on-click="view">查看</h2-button>
+            <template is="dom-if" if="[[ user.modify ]]">
+              <h2-button class="action-bar" on-click="modify">修改</h2-button>
             </template>
             <h2-button-group label="更多">
-              <div bind-item="1">测试1</div>
-              <div bind-item="2">测试2</div>
-              <div bind-item="3">测试3</div>
-              <div bind-item="3">测试4</div>
-              <div bind-item="3">测试5</div>
+              <template is="dom-repeat" items="[[user.actions]]" as="action">
+                <div on-click="more">[[action]]</div>
+              </template>
             </h2-button-group>
           </template>
         </h2-table-column>
       </h2-table>
       <script>
+        
+        table.view = ({model}) => {
+          console.log("view", model.user);
+        };
+
+        table.modify = ({model}) => {
+          console.log("modify", model.user);
+        };
+
+        table.more = (e) => {
+          console.log(e.model.action, e.model.parentModel.user);
+        };
+        
         table.data = [
-          {sex: '男', name: 'Apple', phone: '12345', modify: true},
+          {sex: '男', name: 'Apple', phone: '12345', modify: true, actions:['more', 'more1']},
           {sex: '男', name: 'Wahson', phone: '12346', modify: true},
           {sex: '女', name: 'Rose', phone: '12356'},
           {sex: '女', name: 'Lucy', phone: '12390'},

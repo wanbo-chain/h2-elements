@@ -205,7 +205,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
             <template is="dom-repeat" items="[[__tableData]]" as="row" index-as="rowIndex">
               <tr class="table__row">
                 <template is="dom-if" if="[[ __showExpansion ]]">
-                  <td><iron-icon class="expand-icon" icon="icons:chevron-right" item="[[item]]" onclick="[[ __openExpanderHandler(rowIndex) ]]"></iron-icon></td>
+                  <td><iron-icon class="expand-icon" icon="icons:chevron-right" item="[[item]]" on-click="__openExpanderHandler"></iron-icon></td>
                 </template>
                 <template is="dom-if" if="[[ showIndex ]]">
                    <td>[[ calc(rowIndex, '+', 1) ]]</td>
@@ -297,17 +297,15 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     return length;
   }
   
-  __openExpanderHandler(rowIndex) {
-    return ({target: icon}) => {
-      this.toggleClass(icon, 'expand-icon_opened');
-      const expansion = this.shadowRoot.querySelector(`#row_${rowIndex}`).parentElement;
-      this.toggleClass(expansion, 'row__expansion-hidden');
-    };
+  __openExpanderHandler({path: [icon], model: {rowIndex}}) {
+    this.toggleClass(icon, 'expand-icon_opened');
+    const expansion = this.shadowRoot.querySelector(`#row_${rowIndex}`).parentElement;
+    this.toggleClass(expansion, 'row__expansion-hidden');
   }
   
   __appendTmplContent(targetSelector, model, columnTag) {
     const parent = this.shadowRoot.querySelector(targetSelector);
-    const {root} = columnTag.stampTemplate(model);
+    const {root} = columnTag.stampTemplate(model) || {};
     if (root) {
       parent.innerHTML = '';
       parent.appendChild(root);

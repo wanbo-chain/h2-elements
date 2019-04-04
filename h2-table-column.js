@@ -70,7 +70,13 @@ class H2TableColumn extends mixinBehaviors([Templatizer], PolymerElement) {
   constructor() {
     super();
     this.tmpl = this._findTemplate().pop();
-    if (this.tmpl) this.templatize(this.tmpl);
+    
+    if (this.tmpl) {
+      // hack for template.__dataHost
+      this.tmpl.__dataHost = this.parentElement;
+      this._parentModel = {};
+      this.templatize(this.tmpl);
+    }
   }
   
   _findTemplate() {
@@ -79,10 +85,9 @@ class H2TableColumn extends mixinBehaviors([Templatizer], PolymerElement) {
   }
   
   stampTemplate(instanceProps, key = this.modelAs) {
-    if (this.tmpl) return this.stamp({[key]: instanceProps});
+    if(this.tmpl) return this.stamp({[key]: instanceProps});
     return null;
   }
-  
 }
 
 window.customElements.define(H2TableColumn.is, H2TableColumn);
