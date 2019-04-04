@@ -5,14 +5,14 @@
 ```
 */
 
-import './h2-pagination.js';
 import {html, PolymerElement} from "@polymer/polymer";
-import './h2-table-column'
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
-import {BaseBehavior} from "./behaviors/base-behavior";
-import './behaviors/h2-elements-shared-styles.js';
 import '@polymer/iron-icon';
 import '@polymer/iron-icons';
+
+import {BaseBehavior} from "./behaviors/base-behavior";
+import './behaviors/h2-elements-shared-styles.js';
+import './h2-table-column'
 
 /**
  * `h2-table`
@@ -174,7 +174,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                   <div class="header__cell">
                     <div class="table__cell">[[column.label]]</div>
                     <template is="dom-if" if="[[ column.sortable ]]">
-                      <div class="table__sort__icons" on-click="__sortTheColumn">
+                      <div class="table__sort__icons" on-tap="__sortTheColumn">
                         <iron-icon class="table__sort__icon ascending" icon="icons:arrow-drop-up"></iron-icon>
                         <iron-icon class="table__sort__icon descending" icon="icons:arrow-drop-down"></iron-icon>
                       </div>
@@ -228,7 +228,11 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
             </template>
             
             <template is="dom-if" if="[[showSummary]]">
-              <tr class="table__summary"><td colspan$="[[ colspan ]]"><slot name="summarySlot"></slot></td></tr>
+              <tr class="table__summary">
+                <td colspan$="[[ colspan ]]">
+                  <slot name="summarySlot"></slot>
+                </td>
+              </tr>
             </template>
             
           </tbody>
@@ -238,23 +242,22 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
 `;
   }
   
-  __sortTheColumn(e) {
-    const container = e.currentTarget;
-  
+  __sortTheColumn({currentTarget: container, model}) {
     const ASCENDING = 'ascending';
     const DESCENDING = 'descending';
-  
+    
     const sortableContainers = this.$.headerRow.querySelectorAll('.table__sort__icons');
     
+    // clear other sortable states.
     Array.from(sortableContainers).filter(node => node !== container)
       .forEach(node => node.classList.remove(ASCENDING, DESCENDING));
     
     let direction;
-    if(container.classList.contains(ASCENDING)) {
+    if (container.classList.contains(ASCENDING)) {
       container.classList.remove(ASCENDING);
       container.classList.add(DESCENDING);
       direction = DESCENDING;
-    } else if(container.classList.contains(DESCENDING)) {
+    } else if (container.classList.contains(DESCENDING)) {
       container.classList.remove(DESCENDING);
       direction = null;
     } else {
@@ -264,52 +267,41 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     
     let cmpFn;
     switch (direction) {
-    case DESCENDING:
-      cmpFn = field => {
-        return (a, b) => (b[field] || '').toString().localeCompare((a[field] || '').toString());
-      };
-      break;
-    case ASCENDING:
-      cmpFn = field => {
-        return (a, b) => (a[field] || '').toString().localeCompare((b[field] || '').toString());
-      };
-      break;
-    default:
-      cmpFn = () => undefined;
-      break;
+      case DESCENDING:
+        cmpFn = field => {
+          return (a, b) => (b[field] || '').toString().localeCompare((a[field] || '').toString());
+        };
+        break;
+      case ASCENDING:
+        cmpFn = field => {
+          return (a, b) => (a[field] || '').toString().localeCompare((b[field] || '').toString());
+        };
+        break;
+      default:
+        cmpFn = () => undefined;
+        break;
     }
     
     const cache = this.data.slice();
-    cache.sort(cmpFn(e.model.column.prop));
+    cache.sort(cmpFn(model.column.prop));
     this.__tableData = cache;
   }
   
   __calColspan(columnInfos = []) {
     const [first] = columnInfos;
     let length = columnInfos.length;
-    if(first.type === 'expand') {
-      length += 1;
-    }
-    if(this.showIndex) {
-      length += 1;
-    }
+    
+    if (first.type === 'expand') length += 1;
+    if (this.showIndex) length += 1;
+    
     return length;
   }
   
   __openExpanderHandler(rowIndex) {
     return ({target: icon}) => {
-      if(icon.classList.contains('expand-icon_opened')) {
-        icon.classList.remove('expand-icon_opened');
-      } else {
-        icon.classList.add('expand-icon_opened');
-      }
+      this.toggleClass(icon, 'expand-icon_opened');
       const expansion = this.shadowRoot.querySelector(`#row_${rowIndex}`).parentElement;
-  
-      if (expansion.classList.contains('row__expansion-hidden')) {
-        expansion.classList.remove('row__expansion-hidden');
-      } else {
-        expansion.classList.add('row__expansion-hidden');
-      }
+      this.toggleClass(expansion, 'row__expansion-hidden');
     };
   }
   
@@ -340,15 +332,13 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
   
   computeContent(row, rowIndex, column, columnIndex) {
-    if (column.tmpl) {
-      if(column.type === 'operate') {
-        
-        setTimeout(() => {
-          this.__appendTmplContent(`#row_${rowIndex}_column_${columnIndex}`, row, column);
-        }, 0, this);
-  
-        return null;
-      }
+    if (column.tmpl && column.type === 'operate') {
+      
+      setTimeout(() => {
+        this.__appendTmplContent(`#row_${rowIndex}_column_${columnIndex}`, row, column);
+      }, 0, this);
+      
+      return null;
     }
     return this.getValueByKey(row, column.prop);
   }
@@ -356,7 +346,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   connectedCallback() {
     super.connectedCallback();
     this.$.columnSlot.addEventListener('slotchange', e => {
-      const columnInfos = this.$.columnSlot.assignedElements().filter(_ => _.tagName.toLowerCase() === 'h2-table-column');
+      const columnInfos = e.target.assignedElements()
+        .filter(_ => _.tagName.toLowerCase() === 'h2-table-column');
       this.set('columnInfos', columnInfos);
     });
   }
@@ -377,17 +368,6 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         type: Number,
         computed: '__calColspan(columnInfos)'
       },
-      /**
-       * A function that can be used to filter items out of the view.  This
-       * property should either be provided as a string, indicating a method
-       * name on the element's host, or else be an actual function.  The
-       * function should match the sort function passed to `Array.filter`.
-       * Using a filter function has no effect on the underlying `items` array.
-       */
-      filter: {
-        type: Function,
-        observer: '__filterChanged'
-      },
       
       columnInfos: {
         type: Array
@@ -400,7 +380,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       _tableData: {
         type: Array
       },
-  
+      
       showSummary: {
         type: Boolean,
         value: false

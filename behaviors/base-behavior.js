@@ -124,23 +124,6 @@ export const BaseBehavior = {
   toBoolean(val) {
     return !!val;
   },
-  /**
-   * 添加loading
-   */
-  showLoading() {
-    let loadingDiv = document.body.querySelector("#h2-loading");
-    if (!loadingDiv) {
-      loadingDiv = document.createElement("h2-loading");
-      loadingDiv.setAttribute("id", "h2-loading");
-      loadingDiv.noCancelOnOutsideClick = true;
-      loadingDiv.noCancelOnEscKey = true;
-      loadingDiv.withBackdrop = true;
-      document.body.appendChild(loadingDiv);
-    }
-    this.async(function () {
-      loadingDiv.open();
-    }, 0);
-  },
   
   /**
    * 简单数学运算
@@ -166,8 +149,33 @@ export const BaseBehavior = {
     }
   },
   
+  toggleClass(target, className) {
+    if(target instanceof Element) {
+      if (target.classList.contains(className)) {
+        target.classList.remove(className);
+      } else {
+        target.classList.add(className);
+      }
+    }
+  },
   
-  
+  /**
+   * 添加loading
+   */
+  showLoading() {
+    let loadingDiv = document.body.querySelector("#h2-loading");
+    if (!loadingDiv) {
+      loadingDiv = document.createElement("h2-loading");
+      loadingDiv.setAttribute("id", "h2-loading");
+      loadingDiv.noCancelOnOutsideClick = true;
+      loadingDiv.noCancelOnEscKey = true;
+      loadingDiv.withBackdrop = true;
+      document.body.appendChild(loadingDiv);
+    }
+    this.async(function () {
+      loadingDiv.open();
+    }, 0);
+  },
   /**
    * 消除loading
    */
