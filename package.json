@@ -47,6 +47,7 @@
     "@polymer/paper-dialog": "^3.0.1",
     "@polymer/paper-dialog-behavior": "^3.0.1",
     "@polymer/paper-input": "^3.0.0",
+    "@polymer/paper-tooltip": "^3.0.1",
     "@polymer/polymer": "^3.1.0",
     "web-animations-js": "^2.3.1"
   },

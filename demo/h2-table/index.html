@@ -48,7 +48,7 @@
         }
         
       </style>
-      <h2-table id="table">
+      <h2-table id="table" tooltip>
         <h2-table-column prop="sex" label="性别" width="100" type="expand"  model-as="user">
             <template>
               <style>
@@ -67,18 +67,20 @@
             </template>
         </h2-table-column>
         <h2-table-column prop="name" label="名称" width="100" sortable></h2-table-column>
-        <h2-table-column prop="phone" label="电话号码" width="300" sortable></h2-table-column>
+        <h2-table-column prop="phone" label="电话号码" width="100" sortable></h2-table-column>
         <h2-table-column prop="phone" label="操作" width="300" type="operate" model-as="user">
           <template>
             <h2-button class="action-bar" on-click="view">查看</h2-button>
             <template is="dom-if" if="[[ user.modify ]]">
               <h2-button class="action-bar" on-click="modify">修改</h2-button>
             </template>
-            <h2-button-group label="更多">
-              <template is="dom-repeat" items="[[user.actions]]" as="action">
-                <div on-click="more">[[action]]</div>
-              </template>
-            </h2-button-group>
+            <template is="dom-if" if="[[ user.actions ]]">
+              <h2-button-group label="更多">
+                <template is="dom-repeat" items="[[user.actions]]" as="action">
+                  <div on-click="more">[[action]]</div>
+                </template>
+              </h2-button-group>
+            </template>
           </template>
         </h2-table-column>
       </h2-table>
@@ -97,9 +99,9 @@
         };
         
         table.data = [
-          {sex: '男', name: 'Apple', phone: '12345', modify: true, actions:['more', 'more1']},
-          {sex: '男', name: 'Wahson', phone: '12346', modify: true},
-          {sex: '女', name: 'Rose', phone: '12356'},
+          {sex: '男', name: 'Apple', phone: '1211111111111345', modify: true, actions:['more', 'more1']},
+          {sex: '男', name: 'Wahson', phone: '12341111111116', modify: true},
+          {sex: '女', name: 'Rose', phone: '12111111111356', actions:['more']},
           {sex: '女', name: 'Lucy', phone: '12390'},
           {sex: '男', name: 'James', phone: '12326'},
           {sex: '男', name: 'Cat', phone: '12349'}
@@ -183,7 +185,6 @@
         <h2-table-column prop="phone1" label="电话号码1" width="200"></h2-table-column>
         <h2-table-column prop="phone" label="电话号码" width="200"></h2-table-column>
         <h2-table-column prop="phone3" label="电话号码3" width="200"></h2-table-column>
-        
         <div slot="summarySlot" class="summary">
           <div>总价： 4人</div>
           <div>男： 2人</div>
@@ -201,6 +202,49 @@
   
         </script>
       </template>
+  </demo-snippet>
+</div>
+
+
+
+
+<div class="vertical-section-container centered">
+  <h3>同一列显示多个字段</h3>
+  <demo-snippet>
+    <template>
+      <style>
+        #table {
+          width: 100%;
+        }
+        
+        .summary {
+          display: flex;
+          flex-flow: row nowrap;
+          justify-content: space-evenly;
+        }
+      
+      </style>
+      <h2-table id="table3" show-index>
+        <h2-table-column prop="name" label="名称 / 性别" width="100" props="name, sex" separator=" / "></h2-table-column>
+        <h2-table-column prop="phone" label="电话号码" width="200"></h2-table-column>
+        
+        <div slot="summarySlot" class="summary">
+          <div>总价： 4人</div>
+          <div>男： 2人</div>
+          <div>女： 2人</div>
+        </div>
+      
+      </h2-table>
+      <script>
+        table3.data = [
+          {sex: '男', name: 'Wahson', phone: '1231231232', modify: true},
+          {sex: '女', name: 'Lucy', phone: '1231231233'},
+          {sex: '女', name: 'Rose', phone: '1231231234'},
+          {sex: '男', name: 'James', phone: '1231231235'}
+        ]
+      
+      </script>
+    </template>
   </demo-snippet>
 </div>
 

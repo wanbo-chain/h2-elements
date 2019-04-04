@@ -9,6 +9,7 @@ import {html, PolymerElement} from "@polymer/polymer";
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
 import '@polymer/iron-icon';
 import '@polymer/iron-icons';
+import '@polymer/paper-tooltip/paper-tooltip';
 
 import {BaseBehavior} from "./behaviors/base-behavior";
 import './behaviors/h2-elements-shared-styles.js';
@@ -42,6 +43,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         text-overflow: ellipsis;
         vertical-align: middle;
         text-align: left;
+        overflow: hidden;
         border-bottom: 1px solid #ebeef5;
         line-height: 25px;
       }
@@ -137,12 +139,27 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         color: var(--h2-ui-color_skyblue)
       }
       
+      .table__column[role=operate] {
+        overflow: unset;
+      }
+      
       /*.table__column[aria-frozen] {*/
         /*position: absolute;*/
         /*background: white;*/
         /*width: 4em;*/
       /*}*/
       
+      :host paper-tooltip {
+        display: none;
+        --paper-tooltip-opacity: 1;
+        --paper-tooltip: {
+          font-size: 12px;
+        }
+      }
+      
+      :host([tooltip]) paper-tooltip {
+        display: block;
+      }
     </style>
     
     <slot id="columnSlot"></slot>
@@ -212,8 +229,9 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                 </template>
                 
                 <template is="dom-repeat" items="[[columnInfos]]" index-as="columnIndex">
-                  <td class="table__column" id="row_[[rowIndex]]_column_[[columnIndex]]" aria-frozen$="[[item.frozen]]">
+                  <td class="table__column" role$="[[item.type]]" id="row_[[rowIndex]]_column_[[columnIndex]]" aria-frozen$="[[item.frozen]]">
                       [[ computeContent(row, rowIndex, item, columnIndex) ]]
+                      <paper-tooltip position="top" animation-delay="10" offset="-10" fit-to-visible-bounds>[[ computeContent(row, rowIndex, item, columnIndex) ]]</paper-tooltip>
                   </td>
                 </template>
               </tr>
@@ -338,6 +356,11 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
       return null;
     }
+    
+    if(column.props) {
+      return column.props.split(",").map(p => this.getValueByKey(row, p.trim())).join(column.separator || ',');
+    }
+    
     return this.getValueByKey(row, column.prop);
   }
   
@@ -384,6 +407,11 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         value: false
       },
       
+      tooltip: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
       showIndex: {
         type: Boolean,
         value: false

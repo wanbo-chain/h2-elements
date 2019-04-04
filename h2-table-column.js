@@ -27,6 +27,10 @@ class H2TableColumn extends mixinBehaviors([Templatizer], PolymerElement) {
       prop: {
         type: String
       },
+  
+      props: String,
+  
+      separator: String,
       
       label: {
         type: String
@@ -41,7 +45,8 @@ class H2TableColumn extends mixinBehaviors([Templatizer], PolymerElement) {
       },
       
       type: {
-        type: String
+        type: String,
+        value: 'view'
       },
       
       tmpl: Object,
