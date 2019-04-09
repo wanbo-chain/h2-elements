@@ -227,7 +227,13 @@ class H2Pagination extends PolymerElement {
   }
 
   _limitChanged(limit) {
-    this.set('paging.limit', limit);
+    const pageIndex = Math.floor(this.total / limit) + 1;
+    if (pageIndex < this.__pageIndex) {
+      this.__pageIndex = pageIndex;
+    } else {
+      const start = (this.__pageIndex - 1) * limit;
+      this.paging = {start, limit};
+    }
   }
 
   _calTotalPageSize(total, limit) {

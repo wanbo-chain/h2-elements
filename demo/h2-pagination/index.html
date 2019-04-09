@@ -52,7 +52,7 @@ document.body.appendChild($_documentContainer.content);
   <h3>自定义分页条数</h3>
   <demo-snippet>
     <template>
-      <h2-pagination id="page1" total="5000" page-sizes='[10,20]' limit="10"></h2-pagination>
+      <h2-pagination id="page1" total="50" page-sizes='[10,20,30]' limit="10"></h2-pagination>
       <script>
         page1.addEventListener("paging-changed", e => {
           console.log(e.detail);
