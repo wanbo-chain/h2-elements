@@ -163,7 +163,7 @@ class H2Pagination extends PolymerElement {
        */
       limit: {
         type: Number,
-        value: 20
+        value: 10
       },
       /**
        * Total count.
@@ -207,7 +207,8 @@ class H2Pagination extends PolymerElement {
   static get observers() {
     return [
       '_pageIndexChanged(__pageIndex)',
-      '_pageStartChanged(paging.start)'
+      '_pageStartChanged(paging.start)',
+      '_limitChanged(limit)'
     ];
   }
 
@@ -223,6 +224,10 @@ class H2Pagination extends PolymerElement {
     if(!this.paging || this.paging.start !== start) {
       this.paging = {start, limit: this.limit};
     }
+  }
+
+  _limitChanged(limit) {
+    this.set('paging.limit', limit);
   }
 
   _calTotalPageSize(total, limit) {
