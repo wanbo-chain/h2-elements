@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const process = require("process");
 
 const showTutorial = function () {
   console.log("Usage: ");
@@ -17,7 +18,7 @@ const args = process.argv.slice(2);
 
 if (args.length < 1 || args[0] === '-h') {
   showTutorial();
-  return;
+  process.exit(0);
 }
 
 const [component, targetPath = ""] = args;
@@ -26,7 +27,7 @@ const componentPattern = /\w+-\w+/g;
 
 if (!componentPattern.test(component)) {
   console.error(`Component name must be like "some-elem"`);
-  return;
+  process.exit(0);
 }
 
 const dash2Camel = function dash2Camel(dash) {
