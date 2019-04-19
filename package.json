@@ -29,7 +29,7 @@
     "lint": "polymer lint",
     "test": "polymer test",
     "test:integration": "polymer build # test that psk builds without error with the CLI",
-    "start:proxy": "polymer serve --proxy-target http://127.0.0.1:8888 --proxy-path api",
+    "start:proxy": "polymer serve --proxy-target http://127.0.0.1:8888 --proxy-path dapeng",
     "debug": "npm run start:proxy"
   },
   "dependencies": {

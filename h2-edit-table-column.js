@@ -36,10 +36,6 @@ class H2EditTableColumn extends mixinBehaviors([Templatizer], PolymerElement) {
 
       type: {
         type: String
-      },
-
-      operate: {
-        type: String
       }
     };
   }

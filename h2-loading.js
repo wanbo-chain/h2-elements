@@ -47,7 +47,7 @@ class H2Loading extends mixinBehaviors([IronOverlayBehavior], PolymerElement) {
       }
     </style>
     <div class="loading-container">
-      <img src="[[importPath]]/img/loading-4.gif">
+      <img src="/img/loading-4.gif">
     </div>
     
 `;

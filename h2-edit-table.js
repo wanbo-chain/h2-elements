@@ -12,7 +12,6 @@ import {BaseBehavior} from "./behaviors/base-behavior";
 import './behaviors/h2-elements-shared-styles.js';
 import './h2-input';
 import './h2-button';
-import './h2-button-group';
 
 /**
  * `h2-table`
@@ -119,8 +118,15 @@ class H2EditTable extends mixinBehaviors([BaseBehavior], PolymerElement) {
                   <template is="dom-if" if="[[ isEqual(column.type, 'input') ]]">
                     <h2-input class="h2-td-input" value="{{ computeContent(row, rowIndex, column) }}" on-value-changed="valueChanged"></h2-input>
                   </template>
-                  <template is="dom-if" if="[[ isEqual(column.type, 'operate') ]]">
-                    <h2-button on-click="delete">[[column.operate]]</h2-button>
+                  <template is="dom-if" if="[[ isEqual(column.type, 'delete') ]]">
+                    <h2-button on-click="delete">删除</h2-button>
+                  </template>
+                  <template is="dom-if" if="[[ isEqual(column.type, 'add') ]]">
+                    <h2-button on-click="add">新增</h2-button>
+                  </template>
+                  <template is="dom-if" if="[[ isEqual(column.type, 'deleteAndAdd') ]]">
+                    <h2-button on-click="delete">删除</h2-button>
+                    <h2-button on-click="add">新增</h2-button>
                   </template>
                 </td>
               </template>
@@ -140,8 +146,11 @@ class H2EditTable extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   delete({model: {rowIndex}}) {
-    console.log(rowIndex);
     this.splice('data', rowIndex, 1);
+  }
+
+  add({model: {rowIndex}}) {
+    this.splice('data', rowIndex + 1, 0, {})
   }
 
   disconnectedCallback() {

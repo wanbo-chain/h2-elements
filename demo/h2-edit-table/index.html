@@ -38,7 +38,7 @@
 <body>
 
 <div class="vertical-section-container centered">
-  <h3>测试</h3>
+  <h3>可编辑表格（含输入框及可编辑单元格）</h3>
   <demo-snippet>
     <template>
       <style>
@@ -54,7 +54,9 @@
         <h2-edit-table-column prop="phone1" label="电话号码1" width="160"></h2-edit-table-column>
         <h2-edit-table-column prop="phone2" label="电话号码2" width="200"></h2-edit-table-column>
         <h2-edit-table-column prop="phone3" label="电话号码3" width="200"></h2-edit-table-column>
-        <h2-edit-table-column type="operate" operate="删除" label="操作" width="200"></h2-edit-table-column>
+        <h2-edit-table-column type="delete" label="删除操作" width="100"></h2-edit-table-column>
+        <h2-edit-table-column type="add" label="新增操作" width="100"></h2-edit-table-column>
+        <h2-edit-table-column type="deleteAndAdd" label="删除及新增操作" width="150"></h2-edit-table-column>
       </h2-edit-table>
       <script>
         table.data = [
