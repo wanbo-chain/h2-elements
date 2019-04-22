@@ -267,7 +267,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
                 </div>
                 <iron-icon class="tag-deleter" icon="icons:clear" data-args="[[getValueByKey(item, attrForValue)]]" on-click="_deleteTag"></iron-icon>
               </div>
-              <template is="dom-if" if="[[ multi ]]">
+              <template is="dom-if" if="[[ isFocus ]]">
                 <input class="tag-cursor" id="tag-cursor__[[index]]" data-cursor-index$="[[index]]" on-keydown="_updatePressed" autocomplete="off">
               </template>
             </template>
@@ -395,7 +395,11 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
       attrForLabel: {
         type: String,
         value: "label"
-      }
+      },
+      /*
+      * 判断是否需要最后一个虚拟输入框的焦点
+      * */
+      isFocus: Boolean
     };
   }
 
@@ -416,6 +420,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.addEventListener('blur', e => {
       this.closeCollapse();
     });
+    this.isFocus = !this.classList.contains('size-selector');
   }
 
   /**
