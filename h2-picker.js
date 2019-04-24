@@ -269,7 +269,9 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       _fetchUtil: {
         type: Object,
         readOnly: true,
-        value: new H2Fetch()
+        value: function () {
+          return new H2Fetch()
+        }
       },
       /**
        * The label of the picker.
@@ -437,14 +439,21 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     });
   }
 
+  _requestNew() {
+    return {
+      url: this.src,
+      method: "POST",
+      headers: {
+        "content-type": "application/json;charset=utf-8",
+        "Cache-Control": "no-cache"
+      },
+      body: this.keywordSearchSrc
+    };
+  };
+
   _srcChanged(src) {
     if (!src) return;
-
-    const request = new Request(src, {
-      method: "GET",
-      credentials: "include"
-    });
-
+    const request = this._requestNew();
     this._fetchUtil.fetchIt(request)
       .then(res => res.json())
       .then(data => {
@@ -474,12 +483,9 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     const matched = this._cacheSearchUtil.search(userInputKeyword);
 
     if (matched.length === 0 && this.keywordSearchSrc) {
-      const url = this.keywordSearchSrc + userInputKeyword;
-      const request = new Request(url , {
-        method: "GET",
-        credentials: "include"
-      });
-
+      const requestObj = JSON.parse(this.keywordSearchSrc);
+      this.keywordSearchSrc = JSON.stringify(Object.assign(requestObj, {keyword: userInputKeyword}));
+      const request = this._requestNew();
       this._fetchUtil.fetchIt(request)
         .then(res => res.json())
         .then(data => {

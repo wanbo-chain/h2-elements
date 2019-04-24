@@ -52,7 +52,7 @@ class H2InputDate extends PolymerElement {
       }
 
     </style>
-    <h2-input id="input" value="{{value}}" label="[[label]]" placeholder="[[placeholder]]" required="[[required]]" min="[[min]]" max="[[max]]" readonly$="[[readonly]]" type="date">
+    <h2-input id="input" value="{{value}}" label="[[label]]" placeholder="[[placeholder]]" required$="[[required]]" min="[[min]]" max="[[max]]" readonly$="[[readonly]]" type="date">
     </h2-input>
 `;
   }

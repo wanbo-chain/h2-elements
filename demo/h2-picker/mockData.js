@@ -1,6 +1,8 @@
 import {banks, companies} from "./data.js";
 
-MockDataPool.when("GET", "/init.do")
+MockDataPool.when("POST", "/init.do")
+  .withExpectedHeader("content-type", "application/json;charset=utf-8")
+  .withExpectedHeader("Cache-Control", "no-cache")
   .responseWith({
     status: 200,
     body: JSON.stringify(banks)
@@ -11,7 +13,9 @@ MockDataPool.when("GET", "/query.do")
     status: 200, body: JSON.stringify(companies)
   });
 
-MockDataPool.when("GET", "/more_banks.do")
+MockDataPool.when("POST", "/more_banks.do")
+  .withExpectedHeader("content-type", "application/json;charset=utf-8")
+  .withExpectedHeader("Cache-Control", "no-cache")
   .responseWith({
     status: 200, body: JSON.stringify(companies)
   });

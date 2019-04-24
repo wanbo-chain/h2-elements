@@ -6,21 +6,19 @@
 
   <title>h2-picker demo</title>
 
+  <script type="text/javascript" src="../../utils/mock_setup.js"></script>
 
   <script type="module">
     import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js';
     import '../../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
     import '../../node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
-    import '../../h2-picker'
+    import '../../h2-picker';
+    if (!window.location.href.endsWith("?mock=mockData.js")) {
+      window.location.href = window.location.href + "?mock=mockData.js";
+    }
   </script>
-  <script type="module">
-if (!window.location.href.endsWith("?mock=mockData.js")) {
-  window.location.href = window.location.href + "?mock=mockData.js";
-}
-</script>
 
-  <script type="text/javascript" src="../../utils/mock_setup.js"></script>
-    <script type="module">
+<script type="module">
 const $_documentContainer = document.createElement('template');
 
 $_documentContainer.innerHTML = `<custom-style>
@@ -161,9 +159,10 @@ document.body.appendChild($_documentContainer.content);
           }
         </style>
       </custom-style>
-      <h2-picker id="picker9" label="公司" src="/init.do" keyword-search-src="/more_banks.do?limit=10&amp;code=business&amp;keyword=" value="1,2,3" multi="" attr-for-value="id"></h2-picker>
+      <h2-picker id="picker9" label="公司" src="/init.do" multi="" attr-for-value="id"></h2-picker>
       <script>
         picker9.pickerMeta = pickerMeta;
+        picker9.keywordSearchSrc = JSON.stringify({pageRequest: {limit: "10", start: 0}});
       </script>
     </template>
   </demo-snippet>
@@ -179,7 +178,7 @@ document.body.appendChild($_documentContainer.content);
           }
         </style>
       </custom-style>
-      <h2-picker id="picker10" label="公司" src="/init.do" keyword-search-src="/more_banks.do?limit=10&amp;code=business&amp;keyword=" value="1,2,3" multi="" attr-for-value="id"></h2-picker>
+      <h2-picker id="picker10" label="公司" src="/more_banks.do" value="1,2,3" multi="" attr-for-value="id"></h2-picker>
       <p>
       </p><ul>
         <li>下拉选择框打开是，键盘UP, DOWN键 切换选项</li>
@@ -190,11 +189,11 @@ document.body.appendChild($_documentContainer.content);
       <p></p>
       <script>
         picker10.pickerMeta = pickerMeta;
+        picker10.keywordSearchSrc = JSON.stringify({pageRequest: {limit: "10", start: 0}});
       </script>
     </template>
   </demo-snippet>
 </div>
-  </demo-snippet>
-</div>
+
 </body>
 </html>
