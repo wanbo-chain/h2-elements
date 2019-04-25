@@ -291,7 +291,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         type: Object,
         readOnly: true,
         value: function () {
-          return new H2Fetch()
+          return new H2Fetch();
         }
       },
       /**
