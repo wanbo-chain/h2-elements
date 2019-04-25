@@ -48,6 +48,10 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         line-height: 25px;
       }
       
+      .h2-table th {
+        border-bottom-width: 2px;
+      }
+      
       .table__head, .table__body {
         width: 100%;
       }
@@ -169,7 +173,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     <slot id="columnSlot"></slot>
     
     <div class="h2-table">
-      <div class="table__header__container">
+      <div class="table__scroll__head">
+        <div class="table__scroll__head__inner"></div>
         <table class="table__head" cellpadding="0" cellspacing="0" border="0">
           <colgroup>
             <template is="dom-if" if="[[ __showExpansion ]]">
@@ -331,7 +336,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.toggleClass(expansion, 'row__expansion-hidden');
   }
   
-  __appendTmplContent(targetSelector, model, columnTag) {
+  __appendTmplContent(targetSelector, model, rowIndex,  columnTag) {
     const parent = this.shadowRoot.querySelector(targetSelector);
     const {root} = columnTag.stampTemplate(model) || {};
     if (root) {
@@ -352,7 +357,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     const [column] = this.columnInfos || [];
     if (column && column.type === 'expand') {
       setTimeout(() => {
-        this.__appendTmplContent(`#row_${rowIndex}`, row, column);
+        this.__appendTmplContent(`#row_${rowIndex}`, row, rowIndex,  column);
       }, 0, this);
     }
   }
@@ -361,7 +366,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     if (column.tmpl && column.type === 'operate') {
       
       setTimeout(() => {
-        this.__appendTmplContent(`#row_${rowIndex}_column_${columnIndex}`, row, column);
+        this.__appendTmplContent(`#row_${rowIndex}_column_${columnIndex}`, row, rowIndex, column);
       }, 0, this);
       
       return null;
@@ -410,8 +415,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       assignedElements: {
         type: Object
       },
-      
-      _tableData: {
+  
+      __tableData: {
         type: Array
       },
       

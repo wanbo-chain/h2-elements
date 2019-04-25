@@ -90,7 +90,7 @@ class H2TableColumn extends mixinBehaviors([Templatizer], PolymerElement) {
   }
   
   stampTemplate(instanceProps, key = this.modelAs) {
-    if(this.tmpl) return this.stamp({[key]: instanceProps});
+    if(this.tmpl) return this.stamp({[key]: instanceProps, "global": this.tmpl.__dataHost.global});
     return null;
   }
 }
