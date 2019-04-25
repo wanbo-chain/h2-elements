@@ -142,11 +142,11 @@ class H2Pagination extends PolymerElement {
     </ul>
 `;
   }
-
+  
   static get is() {
     return "h2-pagination";
   }
-
+  
   static get properties() {
     return {
       /**
@@ -163,7 +163,7 @@ class H2Pagination extends PolymerElement {
        */
       limit: {
         type: Number,
-        value: 10
+        value: 20
       },
       /**
        * Total count.
@@ -174,7 +174,7 @@ class H2Pagination extends PolymerElement {
         type: Number,
         value: 0
       },
-
+      
       /**
        * Total page sizes
        */
@@ -182,7 +182,7 @@ class H2Pagination extends PolymerElement {
         type: Number,
         computed: '_calTotalPageSize(total, limit)'
       },
-  
+      
       pageSizes: {
         type: Array,
         value: [20, 40, 60,]
@@ -192,14 +192,17 @@ class H2Pagination extends PolymerElement {
         type: Number,
         value: 1
       },
-      
+      start: {
+        type: Number,
+        value: 0
+      },
       __pageSize: {
         type: Array,
         computed: '__computedPageSize(pageSizes)'
       }
     };
   }
-
+  
   __computedPageSize(pageSizes = []) {
     return pageSizes.map(ps => ({value: ps, label: `${ps}条/页`}))
   }
@@ -207,46 +210,48 @@ class H2Pagination extends PolymerElement {
   static get observers() {
     return [
       '_pageIndexChanged(__pageIndex)',
-      '_pageStartChanged(paging.start)',
+      '_pageStartChanged(start)',
       '_limitChanged(limit)'
     ];
   }
-
+  
   _pageStartChanged(start) {
-    const pageIndex = Math.floor(start / this.limit) + 1;
-    if (pageIndex !== this.__pageIndex) {
-      this.__pageIndex = pageIndex;
-    }
-  }
-
-  _pageIndexChanged() {
-    const start = (this.__pageIndex - 1) * this.limit;
-    if(!this.paging || this.paging.start !== start) {
+    if (start >= 0) {
+      const pageIndex = Math.floor(start / this.limit) + 1;
+      if (pageIndex !== this.__pageIndex) {
+        this.__pageIndex = pageIndex;
+      }
       this.paging = {start, limit: this.limit};
     }
   }
-
+  
+  _pageIndexChanged() {
+    this.start = (this.__pageIndex - 1) * this.limit;
+  }
+  
   _limitChanged(limit) {
-    const pageIndex = Math.floor(this.total / limit) + 1;
-    if (pageIndex < this.__pageIndex) {
-      this.__pageIndex = pageIndex;
-    } else {
-      const start = (this.__pageIndex - 1) * limit;
-      this.paging = {start, limit};
+    if (limit > 0) {
+      const totalPage = Math.floor(this.total / limit) + 1;
+      if (totalPage < this.__pageIndex) {
+        this.__pageIndex = totalPage;
+      } else {
+        this.start = (this.__pageIndex - 1) * limit;
+      }
+      this.set('paging.limit', limit);
     }
   }
-
+  
   _calTotalPageSize(total, limit) {
     return Math.ceil((total || 0) / limit);
   }
-
+  
   /**
    * Go to the first page.
    */
   first() {
     this.__pageIndex = 1;
   }
-
+  
   /**
    * Go to previous page.
    */
@@ -255,7 +260,7 @@ class H2Pagination extends PolymerElement {
       this.__pageIndex--;
     }
   }
-
+  
   /**
    * Go to next page.
    */
@@ -264,14 +269,14 @@ class H2Pagination extends PolymerElement {
       this.__pageIndex++;
     }
   }
-
+  
   /**
    * Go to the last page.
    */
   last() {
     this.__pageIndex = this.totalPageSize;
   }
-
+  
 }
 
 window.customElements.define(H2Pagination.is, H2Pagination);

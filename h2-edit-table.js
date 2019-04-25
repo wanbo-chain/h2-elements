@@ -112,8 +112,8 @@ class H2EditTable extends mixinBehaviors([BaseBehavior], PolymerElement) {
             <tr>
               <template is="dom-repeat" items="[[columnInfos]]" as="column" index-as="columnIndex">
                 <td id="row_[[rowIndex]]_column_[[columnIndex]]">
-                  <template is="dom-if" if="[[ !column.type ]]">
-                    [[ computeContent(row, rowIndex, column) ]]
+                  <template is="dom-if" if="[[ isOneOf(column.type, 'view', 'operate') ]]">
+                    [[ computeContent(row, rowIndex, column, columnIndex) ]]
                   </template>
                   <template is="dom-if" if="[[ isEqual(column.type, 'input') ]]">
                     <h2-input class="h2-td-input" value="{{ computeContent(row, rowIndex, column) }}" on-value-changed="valueChanged"></h2-input>
@@ -142,7 +142,6 @@ class H2EditTable extends mixinBehaviors([BaseBehavior], PolymerElement) {
     super.connectedCallback();
     const columnInfos = [...this.children];
     this.set('columnInfos', columnInfos);
-    Gestures.addListener(this, 'value-changed', this.valueChanged.bind(this))
   }
 
   delete({model: {rowIndex}}) {
@@ -152,20 +151,30 @@ class H2EditTable extends mixinBehaviors([BaseBehavior], PolymerElement) {
   add({model: {rowIndex}}) {
     this.splice('data', rowIndex + 1, 0, {})
   }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    Gestures.removeListener(this, 'value-changed', this.valueChanged.bind(this));
+  
+  __appendTmplContent(targetSelector, model, rowIndex,  columnTag) {
+    const parent = this.shadowRoot.querySelector(targetSelector);
+    const {root} = columnTag.stampTemplate(model) || {};
+    if (root) {
+      parent.innerHTML = '';
+      parent.appendChild(root);
+    }
   }
-
-  valueChanged({model}, {value}) {
-    const row = Object.assign({}, model.row, {[model.column.prop]: value});
-    console.log(row);
-    const str = `data.${model.rowIndex}`;
-    this.set(str, row);
-  }
-
-  computeContent(row, rowIndex, column) {
+  
+  computeContent(row, rowIndex, column, columnIndex) {
+    if (column.tmpl && column.type === 'operate') {
+      
+      setTimeout(() => {
+        this.__appendTmplContent(`#row_${rowIndex}_column_${columnIndex}`, row, rowIndex, column);
+      }, 0, this);
+      
+      return null;
+    }
+    
+    if(column.props) {
+      return column.props.split(",").map(p => this.getValueByKey(row, p.trim())).join(column.separator || ',');
+    }
+    
     return this.getValueByKey(row, column.prop);
   }
 

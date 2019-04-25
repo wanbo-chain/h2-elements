@@ -11,7 +11,9 @@
     import '../../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
     import '../../node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
     import '../../h2-edit-table';
-    import '../../h2-edit-table-column';
+    import '../../h2-table-column';
+    import '../../h2-input';
+    import '../../h2-radio';
   </script>
 
   <script type="module">
@@ -48,23 +50,42 @@
 
       </style>
       <h2-edit-table id="table">
-        <h2-edit-table-column prop="name" label="名称" width="100"></h2-edit-table-column>
-        <h2-edit-table-column prop="phone" type="input" label="电话号码" width="160"></h2-edit-table-column>
-        <h2-edit-table-column prop="phone" type="input" label="电话号码11" width="160"></h2-edit-table-column>
-        <h2-edit-table-column prop="phone1" label="电话号码1" width="160"></h2-edit-table-column>
-        <h2-edit-table-column prop="phone2" label="电话号码2" width="200"></h2-edit-table-column>
-        <h2-edit-table-column prop="phone3" label="电话号码3" width="200"></h2-edit-table-column>
-        <h2-edit-table-column type="delete" label="删除操作" width="100"></h2-edit-table-column>
-        <h2-edit-table-column type="add" label="新增操作" width="100"></h2-edit-table-column>
-        <h2-edit-table-column type="deleteAndAdd" label="删除及新增操作" width="150"></h2-edit-table-column>
+        <h2-table-column prop="name" label="名称" width="100"></h2-table-column>
+        <h2-table-column prop="sex" label="性别" width="80" type="operate">
+          <template>
+            <h2-radio class="h2-td-input" value="{{item.sex}}" items="[[global.sex]]"></h2-radio>
+          </template>
+        </h2-table-column>
+        <h2-table-column prop="phone" label="电话号码1" width="160" type="operate">
+          <template>
+            <h2-input class="h2-td-input" value="{{item.phone1}}"></h2-input>
+          </template>
+        </h2-table-column>
+        <h2-table-column prop="count" label="数量" width="50"></h2-table-column>
+        <h2-table-column prop="unit" label="单位" width="50"></h2-table-column>
+        <h2-table-column label="总数" width="100" type="operate">
+          <template>
+            <h2-input class="h2-td-input" value="[[calc(item.unit,'*', item.count)]]" readonly></h2-input>
+          </template>
+        </h2-table-column>
+        
+        <h2-table-column type="delete" label="删除操作" width="100"></h2-table-column>
+        <h2-table-column type="add" label="新增操作" width="100"></h2-table-column>
+        <h2-table-column type="deleteAndAdd" label="删除及新增操作" width="150"></h2-table-column>
       </h2-edit-table>
       <script>
+        
+        table.global = {
+          sex: [{value: 1, label: "男"}, {value: 2, label: "女"}]
+        };
+        
         table.data = [
-          {phone1:'132121212121',phone2:'2323423423423423',phone3:'3453534534', sex: '男', name: 'Wahson', phone: '1231231232'},
-          {phone1:'113131733132',phone2:'2323423423423423',phone3:'3453534534', sex: '女', name: 'Lucy', phone: '1231231233'},
-          {phone1:'171212121222',phone2:'2323423423423423',phone3:'3453534534', sex: '女', name: 'Rose', phone: '1231231234'},
-          {phone1:'192123323323',phone2:'2323423423423423',phone3:'3453534534', sex: '男', name: 'James', phone: '1231231235'}
+          {phone1:'132121212121',unit:1, count: 10, sex: 1, name: 'Wahson', phone: '1231231232'},
+          {phone1:'113131733132',unit:2, count: 10, sex: 2, name: 'Lucy', phone: '1231231233'},
+          {phone1:'171212121222',unit:3, count: 10, sex: 1, name: 'Rose', phone: '1231231234'},
+          {phone1:'192123323323',unit:4, count: 10, sex: 1, name: 'James', phone: '1231231235'}
         ]
+        
       </script>
     </template>
   </demo-snippet>

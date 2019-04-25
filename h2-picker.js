@@ -478,7 +478,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       },
       body: this.keywordSearchSrc
     };
-  };
+  }
 
   _srcChanged(src) {
     if (!src) return;
