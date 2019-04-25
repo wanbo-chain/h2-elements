@@ -184,13 +184,34 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       .table-hotkey {
         width: 40px;
       }
+      
+      #placeholder[hidden] {
+        display: none;
+      }
 
-      :host([required])::before {
+      #placeholder {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        color: #999;
+        opacity: 1;
+        padding: 0 6px;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      :host([required]) .input-wrap::before {
         content: "*";
         color: red;
         position: absolute;
-        left: -12px;
+        left: -10px;
         line-height: inherit;
+      }
+      
+      :host([data-invalid]) .tags-input {
+        border-color: var(--h2-ui-color_pink);
       }
     </style>
     <template is="dom-if" if="[[ toBoolean(label) ]]">
@@ -199,8 +220,8 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     
     <div class="input-wrap">
       <div class="input-container">
-
         <div class="tags-input" on-click="__openCollapse">
+          <div id="placeholder">[[placeholder]]</div>
           <template is="dom-repeat" items="[[ selectedValues ]]">
             <span class="tag">
                 <span class="tag-name" title="[[ getValueByKey(item, attrForLabel) ]]">
@@ -278,6 +299,13 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
        * @type {string}
        */
       label: {
+        type: String
+      },
+      /**
+       * The placeholder of the select.
+       * @type {String}
+       */
+      placeholder: {
         type: String
       },
       /**
@@ -424,7 +452,8 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       '_itemsChanged(items)',
       '_userInputKeywordChanged(_userInputKeyword)',
       '_selectedValuesChanged(selectedValues.splices)',
-      '_valueChanged(value)'
+      '_valueChanged(value)',
+      '__refreshUIState(required)'
     ]
   }
 
@@ -524,7 +553,24 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
           flatValues.map(val => tmp.find(item => item[this.attrForValue] == val))
             .filter(selected => !!selected);
       }
+
+      this._displayPlaceholder(this.selectedValues.length === 0);
     }
+
+    this.__refreshUIState(value);
+
+  }
+
+  __refreshUIState() {
+    if (!this.validate()) {
+      this.setAttribute("data-invalid", "");
+    } else {
+      this.removeAttribute("data-invalid");
+    }
+  }
+
+  _displayPlaceholder(display) {
+    this.$.placeholder.hidden = !display;
   }
 
   _selectItemAt(index) {

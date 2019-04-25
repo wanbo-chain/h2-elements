@@ -36,8 +36,8 @@ import '@polymer/iron-icon/iron-icon';
 import '@polymer/iron-icons/iron-icons';
 import '@polymer/iron-selector/iron-selector';
 import './behaviors/base-behavior.js';
-import './behaviors/h2-elements-shared-styles.js';
 import {BaseBehavior} from "./behaviors/base-behavior";
+import './behaviors/h2-elements-shared-styles.js';
 /**
  *
  * @customElement
@@ -234,19 +234,23 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         right: 0;
         bottom: 0;
         left: 0;
-
-        opacity: 0.5;
+        color: #999;
+        opacity: 1;
         padding: 0 6px;
         overflow: hidden;
         white-space: nowrap;
       }
 
-      :host([required])::after {
+      :host([required]) #select__container::after {
         content: "*";
         color: red;
         position: absolute;
-        right: -15px;
+        left: -10px;
         line-height: inherit;
+      }
+      
+      :host([data-invalid]) #select__container {
+        border-color: var(--h2-ui-color_pink);
       }
     </style>
     
@@ -411,7 +415,9 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
     return [
       '_valueChanged(value, items)',
       '_selectedValuesChanged(selectedValues.splices)',
-      '__selectedChanged(__selected)'
+      '__selectedChanged(__selected)',
+      '__refreshUIState(required)',
+      '__refreshUIState(value)'
     ];
   }
 
@@ -421,6 +427,14 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.closeCollapse();
     });
     this.isFocus = !this.classList.contains('size-selector');
+  }
+
+  __refreshUIState() {
+    if (!this.validate()) {
+      this.setAttribute("data-invalid", "");
+    } else {
+      this.removeAttribute("data-invalid");
+    }
   }
 
   /**
