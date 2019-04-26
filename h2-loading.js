@@ -10,6 +10,8 @@ import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
 import {html, PolymerElement} from "@polymer/polymer";
 import {IronOverlayBehavior} from "@polymer/iron-overlay-behavior";
 
+import './behaviors/h2-elements-shared-styles.js';
+
 /**
  * @customElement
  * @polymer
@@ -18,7 +20,7 @@ import {IronOverlayBehavior} from "@polymer/iron-overlay-behavior";
 class H2Loading extends mixinBehaviors([IronOverlayBehavior], PolymerElement) {
   static get template() {
     return html`
-    <style>
+    <style include="h2-elements-shared-styles">
       :host {
         position: fixed;
         top: 0;
@@ -27,8 +29,6 @@ class H2Loading extends mixinBehaviors([IronOverlayBehavior], PolymerElement) {
         height: 100%;
         z-index: 9999;
         display: flex;
-        font-family: var(--h2-ui-font-family), sans-serif;
-        font-size: var(--h2-ui-font-size);
       }
 
       .loading-container {
@@ -36,18 +36,42 @@ class H2Loading extends mixinBehaviors([IronOverlayBehavior], PolymerElement) {
         height: 80px;
         margin: auto;
         background: black;
-        opacity: 0.5;
+        opacity: 0.7;
         border-radius: 6px;
         display: flex;
       }
       
-      img {
-        width: 40px;
+      .loader {
+        height: 100px;
+        width: 20%;
+        text-align: center;
+        padding: 1em;
+        margin: auto;
+        display: inline-block;
+        vertical-align: top;
+      }
+      
+      svg {
         margin: auto;
       }
+      svg path,
+      svg rect{
+        fill: var(--h2-ui-color_skyblue);
+      }
+      
     </style>
     <div class="loading-container">
-      <img src="/img/loading-4.gif">
+      <svg version="1.1" id="loader-1" x="0px" y="0px" width="40px" height="40px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;">
+        <path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+         <animateTransform
+          attributeName="transform"
+          type="rotate"
+          from="0 25 25"
+          to="360 25 25"
+          dur="0.6s"
+          repeatCount="indefinite"/>
+        </path>
+      </svg>
     </div>
     
 `;

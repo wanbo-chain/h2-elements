@@ -217,14 +217,16 @@ class H2Pagination extends PolymerElement {
   }
   
   _pageStartChanged(start, oldStart) {
-    const pageIndex = Math.floor(start / this.limit) + 1;
-    if (pageIndex !== this.__pageIndex) {
-      this.__pageIndex = pageIndex;
-    }
-    
-    // would not dispatch event when at initial phase
-    if (oldStart !== undefined) {
-      this.dispatchEvent(new CustomEvent("start-changed", {detail: {value: start}}));
+    if(start >= 0) {
+      const pageIndex = Math.floor(start / this.limit) + 1;
+      if (pageIndex !== this.__pageIndex) {
+        this.__pageIndex = pageIndex;
+      }
+  
+      // would not dispatch event when at initial phase
+      if (oldStart !== undefined) {
+        this.dispatchEvent(new CustomEvent("start-changed", {detail: {value: start}}));
+      }
     }
   }
   
@@ -237,7 +239,7 @@ class H2Pagination extends PolymerElement {
     if (totalPage < this.__pageIndex) {
       this.__pageIndex = totalPage;
     } else {
-      this.start = (this.__pageIndex - 1) * limit;
+      this.start = (this.__pageIndex - 1) * limit || 0;
     }
     
     // would not dispatch event when at initial phase
