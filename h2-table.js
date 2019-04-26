@@ -139,6 +139,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       .table__cell {
         text-overflow: ellipsis;
         overflow: hidden;
+        white-space : nowrap;
       }
       
       .table__sort__icons.ascending .table__sort__icon.ascending,
