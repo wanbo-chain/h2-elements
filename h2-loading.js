@@ -41,16 +41,6 @@ class H2Loading extends mixinBehaviors([IronOverlayBehavior], PolymerElement) {
         display: flex;
       }
       
-      .loader {
-        height: 100px;
-        width: 20%;
-        text-align: center;
-        padding: 1em;
-        margin: auto;
-        display: inline-block;
-        vertical-align: top;
-      }
-      
       svg {
         margin: auto;
       }
