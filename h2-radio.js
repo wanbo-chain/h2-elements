@@ -31,7 +31,7 @@ class H2Radio extends mixinBehaviors([BaseBehavior], PolymerElement) {
       :host {
         display: inline-block;
         height: 34px;
-        line-height: 34px;
+        line-height: 32px;
         font-family: var(--h2-ui-font-family), sans-serif;
         font-size: var(--h2-ui-font-size);
       }
@@ -73,6 +73,8 @@ class H2Radio extends mixinBehaviors([BaseBehavior], PolymerElement) {
         cursor: pointer;
         border: 1px solid #ccc;
         background-color: #ffffff;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
 
       .candidate__item:not(:last-of-type) {

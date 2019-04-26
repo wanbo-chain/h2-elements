@@ -20,8 +20,8 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     <style include="h2-elements-shared-styles">
       :host {
         display: flex;
-        height: 36px;
-        line-height: 36px;
+        height: 34px;
+        line-height: 32px;
         width: 300px;
         font-family: var(--h2-ui-font-family), sans-serif;
         font-size: var(--h2-ui-font-size);
@@ -48,7 +48,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         height: 22px;
         line-height: 22px;
         padding: 0;
-        margin: 2px 2px 3px 2px;
+        margin: 3px 2px;
 
         border: none;
         outline: none;
@@ -64,7 +64,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         align-content: flex-start;
 
         background: #FFF;
-        padding: 4px;
+        padding: 2px;
         overflow-y: auto;
 
         border: 1px solid #CCC;
@@ -76,7 +76,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         background: var(--h2-ui-bg);
         border-radius: 4px;
 
-        margin: 2px 2px 3px 2px;
+        margin: 3px 2px;
         padding: 0 4px;
         height: 22px;
         line-height: 22px;

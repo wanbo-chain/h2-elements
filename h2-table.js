@@ -40,10 +40,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         padding: 10px;
         margin: 0;
         box-sizing: border-box;
-        text-overflow: ellipsis;
         vertical-align: middle;
         text-align: left;
-        overflow: hidden;
         border-bottom: 1px solid #ebeef5;
         line-height: 25px;
       }
@@ -136,6 +134,11 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       th div.header__cell {
         display: flex;
         align-items: center;
+      }
+      
+      .table__cell {
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
       
       .table__sort__icons.ascending .table__sort__icon.ascending,
@@ -244,7 +247,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                 </template>
                 
                 <template is="dom-repeat" items="[[columnInfos]]" index-as="columnIndex">
-                  <td class="table__column" role$="[[item.type]]" id="row_[[rowIndex]]_column_[[columnIndex]]" aria-frozen$="[[item.frozen]]">
+                  <td class="table__column table__cell" role$="[[item.type]]" id="row_[[rowIndex]]_column_[[columnIndex]]" aria-frozen$="[[item.frozen]]">
                       [[ computeContent(row, rowIndex, item, columnIndex) ]]
                       <paper-tooltip position="top" animation-delay="10" offset="-10" fit-to-visible-bounds>[[ computeContent(row, rowIndex, item, columnIndex) ]]</paper-tooltip>
                   </td>

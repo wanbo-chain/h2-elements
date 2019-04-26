@@ -52,7 +52,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         display: flex;
         width: 300px;
         height: 34px;
-        line-height: 34px;
+        line-height: 32px;
         font-family: var(--h2-ui-font-family), sans-serif;
         font-size: var(--h2-ui-font-size);
         position: relative;
@@ -100,7 +100,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         flex-wrap: wrap;
         align-content: flex-start;
         overflow-y: auto;
-        padding: 4px;
+        padding: 2px;
       }
 
       .tag {
@@ -108,7 +108,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         background: var(--h2-ui-bg);
         border-radius: 4px;
 
-        margin: 2px 2px 3px 2px;
+        margin: 3px 2px;
         padding: 0 4px;
         height: 22px;
         line-height: 22px;
@@ -141,8 +141,8 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       .tag-cursor {
         font-size: 16px;
-        line-height: 30px;
-        height: 30px;
+        line-height: 28px;
+        height: 28px;
 
         @apply --h2-select-tag-cursor;
 
