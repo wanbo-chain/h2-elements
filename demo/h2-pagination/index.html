@@ -38,10 +38,14 @@ document.body.appendChild($_documentContainer.content);
   <h3>Basic h2-pagination demo</h3>
   <demo-snippet>
     <template>
-      <h2-pagination id="page" total="5000"></h2-pagination>
+      <h2-pagination id="page" total="5000" start="0" limit="20"></h2-pagination>
       <script>
-        page.addEventListener("paging-changed", e => {
-          console.log(e.detail);
+        page.addEventListener("start-changed", e => {
+          console.log("page start", e);
+        });
+
+        page.addEventListener("limit-changed", e => {
+          console.log("page limit", e);
         });
       </script>
     </template>
@@ -52,10 +56,14 @@ document.body.appendChild($_documentContainer.content);
   <h3>自定义分页条数</h3>
   <demo-snippet>
     <template>
-      <h2-pagination id="page1" total="50" page-sizes='[10,20,30]' limit="10"></h2-pagination>
+      <h2-pagination id="page1" total="50" page-sizes='[10,20,30]' start="0" limit="10"></h2-pagination>
       <script>
-        page1.addEventListener("paging-changed", e => {
-          console.log(e.detail);
+        page1.addEventListener("start-changed", e => {
+          console.log("page1 start", e);
+        });
+  
+        page1.addEventListener("limit-changed", e => {
+          console.log("page1 limit", e);
         });
       </script>
     </template>
