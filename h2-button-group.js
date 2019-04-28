@@ -227,9 +227,9 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
   
   _onButtonDropdownClick(e) {
     const target = e.target,
-      bindItem = e.target.bindItem || e.target.getAttribute('bind-item');
-    this.onItemClick && this.onItemClick({target, bindItem});
+        bindItem = e.target.bindItem || e.target.getAttribute('bind-item');
+    // this.onItemClick && this.onItemClick({target, bindItem});
+    this.dispatchEvent(new CustomEvent('item-click', {detail: {target, bindItem}}));
   }
 }
-
 window.customElements.define(H2ButtonGroup.is, H2ButtonGroup);

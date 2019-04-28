@@ -66,9 +66,9 @@ document.body.appendChild($_documentContainer.content);
           {name: "测试2", value: "2"},
           {name: "测试3", value: "3"}
         ];
-        btnGrp2.onItemClick = ({target, bindItem}) => {
-          console.log(target, bindItem);
-        }
+        btnGrp2.addEventListener('item-click', ({detail:{bindItem, target}}) => {
+          console.log(bindItem, target);
+        })
       </script>
     </template>
   </demo-snippet>
