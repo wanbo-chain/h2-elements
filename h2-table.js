@@ -340,7 +340,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.toggleClass(expansion, 'row__expansion-hidden');
   }
   
-  __appendTmplContent(targetSelector, model, rowIndex,  columnTag) {
+  __appendTmplContent(targetSelector, model, rowIndex, columnTag) {
     const parent = this.shadowRoot.querySelector(targetSelector);
     const {root} = columnTag.stampTemplate(model) || {};
     if (root) {
@@ -361,7 +361,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     const [column] = this.columnInfos || [];
     if (column && column.type === 'expand') {
       setTimeout(() => {
-        this.__appendTmplContent(`#row_${rowIndex}`, row, rowIndex,  column);
+        this.__appendTmplContent(`#row_${rowIndex}`, row, rowIndex, column);
       }, 0, this);
     }
   }
@@ -376,8 +376,12 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       return null;
     }
     
-    if(column.props) {
+    if (column.props) {
       return column.props.split(",").map(p => this.getValueByKey(row, p.trim())).join(column.separator || ',');
+    }
+    
+    if (Function.prototype.isPrototypeOf(column.formatter)) {
+      return column.formatter.call(this, this.getValueByKey(row, column.prop))
     }
     
     return this.getValueByKey(row, column.prop);
@@ -397,7 +401,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       data: {
         type: Array,
         observer: '__dataChanged',
-        value: function() {
+        value: function () {
           return [];
         }
       },
@@ -419,7 +423,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       assignedElements: {
         type: Object
       },
-  
+      
       __tableData: {
         type: Array
       },

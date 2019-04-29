@@ -7,7 +7,11 @@ import {BaseBehavior} from "./behaviors/base-behavior";
 import './behaviors/h2-elements-shared-styles.js';
 import {H2Fetch} from './h2-fetch';
 import {CacheSearchUtil} from './utils/cacheSearchUtil'
-import {PinyinUtil} from './utils/pinyinUtil'
+
+
+import {PinyinUtil} from './utils/pinyinUtil';
+import throttle from 'lodash-es/throttle';
+
 
 /**
  * @customElement
@@ -122,11 +126,6 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
         visibility: visible;
         opacity: 1;
-
-        -webkit-transition: all 150ms ease-in;
-        -moz-transition: all 150ms ease-in;
-        -ms-transition: all 150ms ease-in;
-        -o-transition: all 150ms ease-in;
         transition: all 150ms ease-in;
 
         @apply --h2-picker-dropdown;
@@ -152,9 +151,6 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         border-spacing: 0;
         text-align: left;
         border-radius: 4px;
-
-        -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-        -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
       }
 
@@ -225,7 +221,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
           <template is="dom-repeat" items="[[ selectedValues ]]">
             <span class="tag">
                 <span class="tag-name" title="[[ getValueByKey(item, attrForLabel) ]]">
-                  [[ getValueByKey(item, attrForLabel) ]]
+                  [[ __calcTagName(item) ]]
                 </span>
                 <iron-icon class="tag-deleter" icon="icons:clear" data-args="[[ getValueByKey(item, attrForValue) ]]" on-click="_deleteTag"></iron-icon>
             </span>
@@ -243,7 +239,9 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
             <template is="dom-repeat" items="[[pickerMeta]]">
               <th class="collapse-table__cell">[[item.label]]</th>
             </template>
-            <th class="collapse-table__cell table-hotkey">快捷键</th>
+            <template is="dom-if" if="[[ enableHotkey ]]">
+              <th class="collapse-table__cell table-hotkey">快捷键</th>
+            </template>
           </tr>
           </thead>
           <tbody>
@@ -252,7 +250,9 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
               <template is="dom-repeat" items="[[pickerMeta]]" as="col">
                 <td class="collapse-table__cell">[[ getValueByPath(row, col.field) ]]</td>
               </template>
-              <td class="collapse-table__cell table-hotkey">[[_getHotKey(index)]]</td>
+              <template is="dom-if" if="[[ enableHotkey ]]">
+                <td class="collapse-table__cell table-hotkey">[[_getHotKey(index)]]</td>
+              </template>
             </tr>
           </template>
           </tbody>
@@ -337,9 +337,9 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
        * A url for searching data with user input keywords, the response data of the request should be json.
        * @type {string}
        */
-      keywordSearchSrc: {
-        type: String
-      },
+      // keywordSearchSrc: {
+      //   type: String
+      // },
       /**
        * The candidate selection of this picker.
        * @type {array}
@@ -390,11 +390,11 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       },
       /**
        * Attribute name for label.
-       * @type {string}
+       * @type {object}
        * @default 'label'
        */
       attrForLabel: {
-        type: String,
+        type: Object,
         value: "label"
       },
       /**
@@ -438,6 +438,19 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       __focusIndex: {
         type: Number,
         value: 0
+      },
+      /**
+       * If true, hotkeys for selecting items are allowed.
+       * @type {boolean}
+       * @default false
+       */
+      enableHotkey: {
+        type: Boolean,
+        value: false
+      },
+      
+      fetchParam: {
+        type: Object
       }
     };
   }
@@ -461,14 +474,20 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     super.connectedCallback();
 
     this.$.keywordInput.addEventListener("keydown", this._keyDownHandler.bind(this));
-
     this.addEventListener("blur", e => {
       e.stopPropagation();
       this.displayCollapse(false);
     });
   }
-
-  _requestNew() {
+  
+  __calcTagName(item) {
+    if(Function.prototype.isPrototypeOf(this.attrForLabel)) {
+      return this.attrForLabel.call(this, item);
+    }
+    return this.getValueByKey(item, this.attrForLabel);
+  }
+  
+  _mkRequest(data) {
     return {
       url: this.src,
       method: "POST",
@@ -476,58 +495,66 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         "content-type": "application/json;charset=utf-8",
         "Cache-Control": "no-cache"
       },
-      body: this.keywordSearchSrc
+      credentials: "include",
+      body: JSON.stringify(data)
     };
   }
 
   _srcChanged(src) {
     if (!src) return;
-    const request = this._requestNew();
+    const request = this._mkRequest(this.fetchParam);
     this._fetchUtil.fetchIt(request)
       .then(res => res.json())
       .then(data => {
         this.items = data || [];
       })
-      .catch(err => console.error(err));
+      .catch(console.error);
   }
 
   _itemsChanged(items = []) {
 
     this._displayItems = items.slice(0, 9);
-
     // 初始化一次选中项
     this._valueChanged(this.value);
-
     // 清空缓存插件的缓存
     this._cacheSearchUtil.resetCache();
 
     items.forEach(item => this._cacheSearchUtil.addCacheItem(item, this._loadPinyinKeys(item, this.fieldsForIndex)));
   }
 
-  _userInputKeywordChanged(userInputKeyword) {
-    if (this._userInputKeyword.length > 0) {
-      this.displayCollapse(true);
-    }
-
-    const matched = this._cacheSearchUtil.search(userInputKeyword);
-
-    if (matched.length === 0 && this.keywordSearchSrc) {
-      const requestObj = JSON.parse(this.keywordSearchSrc);
-      this.keywordSearchSrc = JSON.stringify(Object.assign(requestObj, {keyword: userInputKeyword}));
-      const request = this._requestNew();
-      this._fetchUtil.fetchIt(request)
-        .then(res => res.json())
-        .then(data => {
-          this._displayItems = (data || []).slice(0, 9);
+  
+  _userInputKeywordChanged() {
+  
+    if (!this.__keywordChangedHandler) {
+      this.__keywordChangedHandler = throttle(() => {
+        if (this._userInputKeyword.length > 0) {
+          this.displayCollapse(true);
+        }
+      
+        const matched = this._cacheSearchUtil.search(this._userInputKeyword);
+      
+        if (matched.length === 0 && this.fetchParam) {
+          const requestObj = this.fetchParam;
+          // this.keywordSearchSrc = JSON.stringify(Object.assign(requestObj, {keyword: userInputKeyword}));
+          const request = this._mkRequest(Object.assign(requestObj, {keyword: this._userInputKeyword}));
+          this._fetchUtil.abort();
+          this._fetchUtil.fetchIt(request)
+            .then(res => res.json())
+            .then(data => {
+              this._displayItems = (data || []).slice(0, 9);
+              this._switchFocusItemAt(0);
+            })
+            .catch(err => console.error(err));
+        
+        } else {
+          this._displayItems = matched.slice(0, 9);
           this._switchFocusItemAt(0);
-        })
-        .catch(err => console.error(err));
-
-    } else {
-      this._displayItems = matched.slice(0, 9);
-      this._switchFocusItemAt(0);
+        }
+      }, 1000);
     }
+    this.__keywordChangedHandler();
   }
+  
 
   _selectedValuesChanged() {
     if(this.selectedValues.length > 0) {
@@ -654,10 +681,9 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     }
 
     const collapseOpend = !this._isPickerCollapseHidden();
-    if (collapseOpend && event.altKey) {
+    if (collapseOpend && this.enableHotkey && event.altKey) {
       const ind = event.code.replace(/[A-Za-z]*/g, '') - 1;
       this._selectItemAt(ind);
-      
     } else {
       switch (key) {
         case 'ArrowUp':
