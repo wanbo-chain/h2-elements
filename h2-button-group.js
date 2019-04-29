@@ -85,12 +85,15 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
         margin-top: 2px;
         font-size: 1em;
         text-align: center;
-        border-radius: var(--h2-ui-border-radius);
         background-clip: padding-box;
-        border: 1px solid var(--h2-ui-color_skyblue);
         --iron-collapse-transition-duration: 200ms;
         overflow:auto;
         @apply --h2-button-group-dropdown;
+      }
+      
+      .container {
+        border-radius: var(--h2-ui-border-radius);
+        border: 1px solid var(--h2-ui-color_skyblue);
       }
 
       .item, ::slotted(*) {
@@ -126,15 +129,17 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       </h2-button>
   
       <iron-collapse id="collapse" class="dropdown-menu" opened="[[ opened ]]" on-click="_onButtonDropdownClick">
+        <div class="container">
          <template is="dom-repeat" items="[[ items ]]">
            <div class="item" bind-item="[[ item ]]">[[ getValueByKey(item, attrForLabel, 'Unknown') ]]</div>
          </template>
          <slot id="itemSlot"></slot>
+        </div>
       </iron-collapse>
     </div>
 `;
   }
-  
+
   static get properties() {
     return {
       /**
@@ -153,7 +158,7 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
         value: false,
         reflectToAttribute: true
       },
-      
+
       /**
        * The dropdown items.
        * @type Array
@@ -161,7 +166,7 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       items: {
         type: Array
       },
-      
+
       /**
        * Attribute name for label.
        * @type {string}
@@ -179,11 +184,11 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
     };
   }
-  
+
   static get is() {
     return "h2-button-group";
   }
-  
+
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('blur', e => {
@@ -191,28 +196,28 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       setTimeout(this.close.bind(this), 100);
     });
   }
-  
+
   /**
    * Expand the group.
    */
   open() {
     this.opened = true;
   }
-  
+
   /**
    * Collpase the group.
    */
   close() {
     this.opened = false;
   }
-  
+
   /**
    * Toggle the group.
    */
   toggle(e) {
     const itemCount = this.$.itemSlot.assignedElements().length + this.$.collapse.querySelectorAll('.item').length;
     const totalHeight = e.detail.y + this.offsetHeight + itemCount * 30;
-    
+
     const styleObj = this.$.collapse.style;
     if(totalHeight >= window.innerHeight) {
       styleObj['bottom'] = this.offsetHeight + 'px';
@@ -221,10 +226,10 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       styleObj['bottom'] = null;
       styleObj['margin-bottom'] = '2px';
     }
-    
+
     this.opened = !this.opened;
   }
-  
+
   _onButtonDropdownClick(e) {
     const target = e.target,
         bindItem = e.target.bindItem || e.target.getAttribute('bind-item');
@@ -232,4 +237,5 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.dispatchEvent(new CustomEvent('item-click', {detail: {target, bindItem}}));
   }
 }
+
 window.customElements.define(H2ButtonGroup.is, H2ButtonGroup);
