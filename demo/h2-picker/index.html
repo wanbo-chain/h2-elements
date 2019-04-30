@@ -53,34 +53,76 @@ document.body.appendChild($_documentContainer.content);
   <h3>支持单选、多选、输入关键字过滤下拉选项</h3>
   <demo-snippet>
     <template>
-      <h2-picker id="picker" label="单选" value="1" attr-for-value="id" placeholder="请选择"></h2-picker>
-      <h2-picker id="picker1" label="多选" value="1,2,3,4" attr-for-value="id" multi=""></h2-picker>
+      <h2-picker id="picker" label="单选" attr-for-value="id" placeholder="请选择"></h2-picker>
+      <h2-picker id="picker1" label="多选" value="1,2,3,4" attr-for-value="id" multi picker-meta='[{"field": "label", "label": "选项"}, {"field": "business", "label": "业务范围"}]'></h2-picker>
       <script>
-        const pickerMeta = [{field: 'label', label: '选项'}, {field: 'business', label: '业务范围'}];
         const items = [
-          {"id": 1, "label": "快塑网", "business": "塑料"},
-          {"id": 2, "label": "阿里巴巴", "business": "电商"},
-          {"id": 3, "label": "腾讯", "business": "游戏"},
-          {"id": 4, "label": "京东", "business": "电商"},
-          {"id": 5, "label": "京东1", "business": "电商"},
-          {"id": 6, "label": "京东22", "business": "电商"}
+          {"id": 1, "label": "快塑网", "business": "塑料", "tags": ["ksw", "sl"]},
+          {"id": 2, "label": "阿里巴巴", "business": "电商", "tags": ["albb", "ds"]},
+          {"id": 3, "label": "腾讯", "business": "游戏", "tags": ["tx", "yx"]},
+          {"id": 4, "label": "京东", "business": "电商", "tags": ["jd", "ds"]}
         ];
-        picker.pickerMeta = pickerMeta;
-        picker.items = items;
 
-        picker1.pickerMeta = pickerMeta;
+        const productPickerMeta = [{field: 'category', label: '分类'}, {field: 'designation', label: '牌号'}, {field: 'manufacturerName', label: '生产商'}, {field: 'originCountry', label: '产地'}];
+        const products = [
+          {
+            "id": 1,
+            "category": "PE",
+            "designation": "I26A50UA",
+            "manufacturerId": 1375,
+            "manufacturerName": "印度信诚",
+            "originCountry": "CN"
+          },
+          {
+            "id": 2,
+            "category": "PP",
+            "designation": "S003G",
+            "manufacturerId": 1937,
+            "manufacturerName": "云天化",
+            "originCountry": "CN"
+          },
+          {
+            "id": 3,
+            "category": "PP",
+            "designation": "EPS30R-B",
+            "manufacturerId": 173,
+            "manufacturerName": "延长榆能化",
+            "originCountry": "CN"
+          },
+          {
+            "id": 4,
+            "category": "PP",
+            "designation": "T4401",
+            "manufacturerId": 21,
+            "manufacturerName": "茂名石化",
+            "originCountry": "CN"
+          },
+          {
+            "id": 5,
+            "category": "PE",
+            "designation": "5502A",
+            "manufacturerId": 90,
+            "manufacturerName": "中海壳牌",
+            "originCountry": "CN"
+          }
+        ];
+        picker.attrForLabel = ({category, designation, manufacturerName}) => `${category} | ${designation} | ${manufacturerName}`;
+        picker.pickerMeta = productPickerMeta;
+        picker.items = products;
+
+        picker1.attrForLabel = "label";
         picker1.items = items;
       </script>
     </template>
   </demo-snippet>
 
-  <h3>支持只读、必填属性</h3>
+  <h3>支持只读、必填、快捷键属性</h3>
   <demo-snippet>
     <template>
-      <h2-picker id="picker3" label="公司" value="1,2,3" attr-for-value="id" multi="" readonly=""></h2-picker>
-      <h2-picker id="picker4" label="公司" value="1,2,3" attr-for-value="id" multi="" required=""></h2-picker>
+      <h2-picker id="picker3" label="公司" value="1,2,3" attr-for-value="id" multi readonly></h2-picker>
+      <h2-picker id="picker4" label="公司" value="1,2,3" attr-for-value="id" multi required enable-hotkey></h2-picker>
       <script>
-
+        const pickerMeta = [{field: 'label', label: '选项'}, {field: 'business', label: '业务范围'}];
         picker3.pickerMeta = pickerMeta;
         picker3.items = items;
         
@@ -178,7 +220,13 @@ document.body.appendChild($_documentContainer.content);
           }
         </style>
       </custom-style>
-      <h2-picker id="picker10" label="公司" src="/more_banks.do" value="1,2,3" multi="" attr-for-value="id"></h2-picker>
+      <h2-picker id="picker10" label="公司"
+                 src="/api/listProduct"
+                 attr-for-value="id"
+                 keyword-path="request.keyword"
+                 result-path="success.result"
+                 fetch-param='{"request": {"pageRequest": {"limit": 10, "start": 0}}}'>
+      </h2-picker>
       <p>
       </p><ul>
         <li>下拉选择框打开是，键盘UP, DOWN键 切换选项</li>
@@ -188,8 +236,8 @@ document.body.appendChild($_documentContainer.content);
       </ul>
       <p></p>
       <script>
-        picker10.pickerMeta = pickerMeta;
-        picker10.keywordSearchSrc = JSON.stringify({pageRequest: {limit: "10", start: 0}});
+        picker10.pickerMeta = productPickerMeta;
+        picker10.attrForLabel = ({category, designation, manufacturerName}) => `${category} | ${designation} | ${manufacturerName}`;
       </script>
     </template>
   </demo-snippet>

@@ -113,8 +113,49 @@ export const BaseBehavior = {
       if (!copy[key]) return !!defVal ? JSON.parse(defVal) : undefined;
       copy = copy[key];
     }
-    
     return copy;
+  },
+  
+  /**
+   * 通过路径设置对象字段值， 如果路径不存在，会抛出异常
+   * @param model
+   * @param path
+   * @param value
+   * @return {*}
+   */
+  setValueByPath(model, path, value) {
+    const paths = String(path).split(".");
+    
+    let tmp = model, ctx = model, key;
+    for (key of paths) {
+      if (key in tmp) {
+        ctx = tmp;
+        tmp = tmp[key];
+      } else {
+        throw new Error(`path ${key} not found in the giving object`);
+      }
+    }
+    ctx[key] = value;
+    
+    return model;
+  },
+  
+  /**
+   * 根据路径生成对象，如 path='a.b' 返回 {a: {b: {}}}, 如果指定了target, 会在target上生成不存在的key
+   * @param path
+   * @param target
+   */
+  mkObject(path = '', target = {}) {
+    const paths = String(path).split(".");
+    
+    if (String(path).length > 0) {
+      paths.reduce((res, p) => {
+        if (!(p in res && typeof res[p] === 'object')) res[p] = {};
+        return res[p];
+      }, target);
+    }
+    
+    return target;
   },
   
   /**
@@ -140,25 +181,25 @@ export const BaseBehavior = {
    * @param nums
    * @returns {*}
    */
-  calc(first, op,  ...nums) {
+  calc(first, op, ...nums) {
     switch (op) {
-    case '+':
-      return nums.reduce((res, num) => res + num, first);
-    case '-':
-      return nums.reduce((res, num) => res - num, first);
-    case '*':
-      return nums.reduce((res, num) => res * num, first);
-    case '/':
-      return nums.reduce((res, num) => res / num, first);
-    case '%':
-      return nums.reduce((res, num) => res % num, first);
-    default:
-      return '';
+      case '+':
+        return nums.reduce((res, num) => res + num, first);
+      case '-':
+        return nums.reduce((res, num) => res - num, first);
+      case '*':
+        return nums.reduce((res, num) => res * num, first);
+      case '/':
+        return nums.reduce((res, num) => res / num, first);
+      case '%':
+        return nums.reduce((res, num) => res % num, first);
+      default:
+        return '';
     }
   },
   
   toggleClass(target, className) {
-    if(target instanceof Element) {
+    if (target instanceof Element) {
       if (target.classList.contains(className)) {
         target.classList.remove(className);
       } else {
