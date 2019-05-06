@@ -126,7 +126,7 @@ export const BaseBehavior = {
   setValueByPath(model, path, value) {
     const paths = String(path).split(".");
     
-    let tmp = model, ctx = model, key;
+    let tmp = model, ctx, key;
     for (key of paths) {
       if (key in tmp) {
         ctx = tmp;

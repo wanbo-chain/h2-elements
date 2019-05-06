@@ -551,7 +551,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this._displayPlaceholder(this._userInputKeyword.length === 0 && this.selectedValues.length === 0);
     
     const matched = this._cacheSearchUtil.search(this._userInputKeyword);
-    if (matched.length === 0 && this.fetchParam) {
+    if (matched.length === 0) {
       
       if (!this.__fetchByKeyword) {
         this.__fetchByKeyword = throttle(() => {
