@@ -97,20 +97,33 @@ export const BaseBehavior = {
     return (model && (key in model)) ? model[key] : undefined;
   },
   /**
+   * 解析json串，如果传入参数不符合json标准，则原样返回
+   * @param val
+   * @return {*}
+   */
+  resolveJsonValue(val) {
+    try {
+      if(typeof val === 'string') {
+        return JSON.parse(val)
+      }
+    } catch (e) {}
+    
+    return val;
+  },
+  /**
    * 通过路径获取对象字段值
    * @param {Object} model eg. { foo: { bar: 1} }
    * @param {String} path  eg. "foo.bar"
-   * @param {String} defVal  支持任何符合json格式的字符串
+   * @param {*} defVal  如果传入的是符合json格式的字符串，会返回JSON.parse处理的结果
    * @returns {*}
    */
   getValueByPath(model, path = '', defVal) {
-    // TODO if user wants a defVal equal to '', this won't work.
-    if (!model) return !!defVal ? JSON.parse(defVal) : undefined;
+    if (!model) return this.resolveJsonValue(defVal);
     
     const splits = path.split('.');
     let copy = model;
     for (let key of splits) {
-      if (!copy[key]) return !!defVal ? JSON.parse(defVal) : undefined;
+      if (!copy[key]) return this.resolveJsonValue(defVal);
       copy = copy[key];
     }
     return copy;
