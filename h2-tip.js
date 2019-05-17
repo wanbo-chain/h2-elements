@@ -204,10 +204,24 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
         value: false
       },
       
-      title: String
+      title: String,
+      width: String,
+      height: String
     };
   }
   
+  static get observers() {
+    return [
+      '__sizeChanged(width, "width")',
+      '__sizeChanged(height, "height")'
+    ];
+  }
+  
+  __sizeChanged(size, sizeAttr) {
+    if(size) {
+      this.$.dialog.updateStyles({["--h2-dialog-" + sizeAttr]: size});
+    }
+  }
   /**
    * Cancel handler
    */
