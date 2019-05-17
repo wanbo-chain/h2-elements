@@ -49,17 +49,17 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
     <style include="h2-elements-shared-styles">
       :host {
         display: inline-block;
-        min-width: 80px;
+        min-width: 70px;
         outline: none;
         font-family: var(--h2-ui-font-family), sans-serif;
         font-size: var(--h2-ui-font-size);
       }
 
-      .box {
-        position: relative;
-        width: 100%;
-        height: 100%;
-      }
+      /*.box {*/
+        /*!*position: relative;*!*/
+        /*!*width: 100%;*!*/
+        /*!*height: 100%;*!*/
+      /*}*/
       
       .trigger {
         width: 100%;
@@ -81,7 +81,7 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
         flex-flow: column nowrap;
         box-sizing: border-box;
         z-index: 999;
-        width: 100%;
+        /*width: 100%;*/
         margin-top: 2px;
         font-size: 1em;
         text-align: center;
@@ -122,21 +122,19 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
     </style>
     
-    <div class="box">
-      <h2-button class="trigger" on-tap="toggle">
-        <div class="trigger__label">[[ label ]]</div>
-        <iron-icon class="trigger__icon" icon="icons:expand-more"></iron-icon>
-      </h2-button>
-  
-      <iron-collapse id="collapse" class="dropdown-menu" opened="[[ opened ]]" on-click="_onButtonDropdownClick">
-        <div class="container">
-         <template is="dom-repeat" items="[[ items ]]">
-           <div class="item" bind-item="[[ item ]]">[[ getValueByKey(item, attrForLabel, 'Unknown') ]]</div>
-         </template>
-         <slot id="itemSlot"></slot>
-        </div>
-      </iron-collapse>
-    </div>
+    <h2-button class="trigger" on-tap="toggle">
+      <div class="trigger__label">[[ label ]]</div>
+      <iron-icon class="trigger__icon" icon="icons:expand-more"></iron-icon>
+    </h2-button>
+
+    <iron-collapse id="collapse" class="dropdown-menu" opened="[[ opened ]]" on-click="_onButtonDropdownClick">
+      <div class="container">
+       <template is="dom-repeat" items="[[ items ]]">
+         <div class="item" bind-item="[[ item ]]">[[ getValueByKey(item, attrForLabel, 'Unknown') ]]</div>
+       </template>
+       <slot id="itemSlot"></slot>
+      </div>
+    </iron-collapse>
 `;
   }
 
@@ -226,7 +224,8 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       styleObj['bottom'] = null;
       styleObj['margin-bottom'] = '2px';
     }
-
+    this.$.collapse.style.width = this.clientWidth + 'px';
+    styleObj['width'] = this.clientWidth + 'px';
     this.opened = !this.opened;
   }
 

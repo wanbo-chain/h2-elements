@@ -33,7 +33,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
       .h2-table {
-        overflow: auto;
+        overflow-x: auto;
+        overflow-y: hidden;
       }
       
       .h2-table td, .h2-table th {
