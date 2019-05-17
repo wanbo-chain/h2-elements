@@ -294,6 +294,10 @@
         table31.addEventListener('row-selection-changed', ({detail}) => {
           console.log(detail, table31.getSelectedRows());
         });
+        
+        table31.addEventListener('rows-all-selection-changed', ({detail}) => {
+          console.log(detail);
+        })
       </script>
     </template>
   </demo-snippet>

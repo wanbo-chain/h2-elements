@@ -204,7 +204,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
           <thead>
             <tr id="headerRow">
               <template is="dom-if" if="[[ selectable ]]">
-                 <th></th>
+                 <th><paper-checkbox class="checkbox-item" noink checked="{{__selectedState}}" on-click="__rowSelecttionAll"></paper-checkbox></th>
               </template>
               <template is="dom-if" if="[[ __showExpansion ]]">
                  <th></th>
@@ -359,8 +359,16 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
   
   __rowSelecttion({model: {row}}) {
+    this.__selectedState = this.__tableData.some(d => d.__selected);
     this.dispatchEvent(new CustomEvent('row-selection-changed', {detail: {row, selected: row.__selected}}));
   }
+  
+  __rowSelecttionAll() {
+    this.__tableData =
+      this.__tableData.map(d => Object.assign({}, d, {__selected: this.__selectedState}));
+    this.dispatchEvent(new CustomEvent('rows-all-selection-changed', {detail: {selectedRows:  this.getSelectedRows()}}));
+  }
+  
   __appendTmplContent(targetSelector, model, rowIndex, columnTag) {
     const parent = this.shadowRoot.querySelector(targetSelector);
     const {root} = columnTag.stampTemplate(model) || {};
@@ -481,7 +489,9 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       __showExpansion: {
         type: Boolean,
         computed: '__calShowExpansion(columnInfos)'
-      }
+      },
+      
+      __selectedState: Boolean
     };
   }
   
