@@ -135,7 +135,7 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
           <template is="dom-if" if="[[ isEqual(type, 'error') ]]">
             <iron-icon class="tip-icon" icon="icons:cancel"></iron-icon>
           </template>
-          <div class="tip-content">[[message]]</div>
+          <div class="tip-content" id="messageContainer"></div>
       </div>
       <h2-input id="remark-input" value="{{ remark }}"></h2-input>
       <div id="operate-panel">
@@ -213,7 +213,8 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get observers() {
     return [
       '__sizeChanged(width, "width")',
-      '__sizeChanged(height, "height")'
+      '__sizeChanged(height, "height")',
+      '__messageChanged(message)'
     ];
   }
   
@@ -221,6 +222,10 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
     if(size) {
       this.$.dialog.updateStyles({["--h2-dialog-" + sizeAttr]: size});
     }
+  }
+  
+  __messageChanged(message) {
+    this.$.messageContainer.innerHTML = message;
   }
   /**
    * Cancel handler
