@@ -87,7 +87,7 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
         text-align: center;
         background-clip: padding-box;
         --iron-collapse-transition-duration: 200ms;
-        overflow:auto;
+        overflow: auto;
         @apply --h2-button-group-dropdown;
       }
       

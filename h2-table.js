@@ -266,7 +266,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                    <td>[[ calc(rowIndex, '+', 1) ]]</td>
                 </template>
                 <template is="dom-repeat" items="[[columnInfos]]" index-as="columnIndex">
-                  <td class="table__column table__cell" role$="[[item.type]]" id="row_[[rowIndex]]_column_[[columnIndex]]" aria-frozen$="[[item.frozen]]">
+                  <td style$="[[item.cellStyle]]" class="table__column table__cell" role$="[[item.type]]" id="row_[[rowIndex]]_column_[[columnIndex]]" aria-frozen$="[[item.frozen]]">
                       [[ computeContent(row, rowIndex, item, columnIndex) ]]
                       <paper-tooltip position="top" animation-delay="10" offset="-10" fit-to-visible-bounds>[[ computeContent(row, rowIndex, item, columnIndex) ]]</paper-tooltip>
                   </td>

@@ -66,7 +66,8 @@ class H2TableColumn extends mixinBehaviors([Templatizer], PolymerElement) {
         value: false
       },
       
-      formatter: Function
+      formatter: Function,
+      cellStyle: String
     };
   }
   

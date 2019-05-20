@@ -232,7 +232,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         <div class="mask"></div>
       </div>
 
-      <div id="picker-collapse" hidden="">
+      <div id="picker-collapse" hidden>
         <table class="collapse-content__table">
           <thead>
           <tr>
