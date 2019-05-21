@@ -82,7 +82,7 @@ export const TipBehavior = {
       tip.height = height;
       tip.duration = duration;
       tip.autoDetach = true;
-      tip.option = {cancelBtnLabel, confirmBtnLabel, title};
+      tip.config = {cancelBtnLabel, confirmBtnLabel, title};
       document.body.appendChild(tip);
       tip.open(confirmCallback, cancelCallback);
     }
