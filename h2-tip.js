@@ -139,8 +139,8 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
       </div>
       <h2-input id="remark-input" value="{{ remark }}"></h2-input>
       <div id="operate-panel">
-        <h2-button on-click="_cancel" type="warning" size="small">[[config.cancelBtnLabel]]</h2-button>
-        <h2-button on-click="_confirm" size="small">[[config.confirmBtnLabel]]</h2-button>
+        <h2-button on-click="_cancel" type="warning" size="small">[[orElse(config.cancelBtnLabel, '取消')]]</h2-button>
+        <h2-button on-click="_confirm" size="small">[[orElse(config.confirmBtnLabel, '确定')]]</h2-button>
       </div>
     </h2-dialog>
 `;
@@ -211,10 +211,7 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
       config: {
         type: Object,
         value: function() {
-          return {
-            cancelBtnLabel: "取消",
-            confirmBtnLabel: "确定",
-          };
+          return {};
         }
       }
       
