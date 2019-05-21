@@ -36,7 +36,7 @@
 </head>
 <body>
 <div class="vertical-section-container centered">
-  <h3>Basic h2-image-upload demo</h3>
+  <h3>Basic h2-upload demo</h3>
   <demo-snippet>
     <template>
       <custom-style>
@@ -47,6 +47,22 @@
       <script>
         upload.request = {formType: 'BANK'};
         console.log(upload.response);
+      </script>
+    </template>
+  </demo-snippet>
+
+  <h3>Basic h2-upload demo</h3>
+  <demo-snippet>
+    <template>
+      <custom-style>
+        <style>
+        </style>
+      </custom-style>
+      <h2-upload accept="" multiple src="src" id="upload">
+        <div slot="list">返回结果或其他</div>
+      </h2-upload>
+      <script>
+        upload.request = {formType: 'BANK'};
       </script>
     </template>
   </demo-snippet>
