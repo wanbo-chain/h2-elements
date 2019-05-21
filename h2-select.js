@@ -281,7 +281,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
       </div>
 
       <div id="select-collapse" on-click="__focusOnLast">
-        <iron-selector class="selector-panel" multi="[[ multi ]]" selected="{{ __selected }}" selected-values="{{ selectedValues }}" attr-for-selected="candidate-item">
+        <iron-selector class="selector-panel" multi="[[ multi ]]" selected="{{ selectedItem }}" selected-values="{{ selectedValues }}" attr-for-selected="candidate-item">
           <template is="dom-repeat" items="[[items]]">
             <div class="candidate-item" candidate-item="[[item]]" title="[[getValueByKey(item, attrForLabel)]]">
               [[getValueByKey(item, attrForLabel)]]
@@ -328,7 +328,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         value: []
       },
 
-      __selected: {
+      selectedItem: {
         type: Object
       },
 
@@ -415,7 +415,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
     return [
       '_valueChanged(value, items)',
       '_selectedValuesChanged(selectedValues.splices)',
-      '__selectedChanged(__selected)',
+      'selectedItemChanged(selectedItem)',
       '__refreshUIState(required)',
       '__refreshUIState(value)'
     ];
@@ -468,7 +468,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
           .filter(selected => typeof selected !== 'undefined');
 
       if (!this.multi) {
-        this.__selected = items.find(item => item[this.attrForValue] == flatValues[0]);
+        this.selectedItem = items.find(item => item[this.attrForValue] == flatValues[0]);
       }
     }
 
@@ -484,8 +484,8 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.closeCollapse();
   }
 
-  __selectedChanged() {
-    this.selectedValues = this.__selected ? [this.__selected] : [];
+  selectedItemChanged() {
+    this.selectedValues = this.selectedItem ? [this.selectedItem] : [];
   }
 
   /**
