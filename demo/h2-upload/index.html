@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>h2-upload demo</title>
+
+  <script type="module">
+    import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
+    import '../../h2-upload.js';
+  </script>
+
+  <script type="module">
+    const $_documentContainer = document.createElement('template');
+
+    $_documentContainer.innerHTML = `<custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+      .centered {
+        min-width: 800px;
+      }
+
+      demo-snippet {
+        --demo-snippet-code: {
+          max-height: 800px;
+        }
+      }
+
+    </style>
+  </custom-style>`;
+
+    document.body.appendChild($_documentContainer.content);
+  </script>
+</head>
+<body>
+<div class="vertical-section-container centered">
+  <h3>Basic h2-image-upload demo</h3>
+  <demo-snippet>
+    <template>
+      <custom-style>
+        <style>
+        </style>
+      </custom-style>
+      <h2-upload accept="" multiple src="src" id="upload"></h2-upload>
+      <script>
+        upload.request = {formType: 'BANK'};
+        console.log(upload.response);
+      </script>
+    </template>
+  </demo-snippet>
+</div>
+</body>
+</html>
