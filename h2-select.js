@@ -329,7 +329,8 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
       },
 
       selectedItem: {
-        type: Object
+        type: Object,
+        notify: true
       },
 
       /**
