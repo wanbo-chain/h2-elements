@@ -92,7 +92,7 @@ class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
       }
       
       :host([disabled]) .btn {
-        background: #aeaeae;
+        background: #aeaeae !important;
         cursor: not-allowed;
       }
       
@@ -106,6 +106,10 @@ class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
       
      :host([type=warning]) .btn {
         background: var(--h2-ui-orange);
+      }
+      
+      :host([type=fresh]) .btn {
+        background: var(--h2-ui-green);
       }
       
      :host([size=small]) {
