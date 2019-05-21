@@ -123,7 +123,7 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
     </style>
 
-    <h2-dialog id="dialog" modal="[[ isOneOf(type, 'confirm', 'prompt') ]]" no-cancel-on-outside-click title="[[title]]">
+    <h2-dialog id="dialog" modal="[[ isOneOf(type, 'confirm', 'prompt') ]]" no-cancel-on-outside-click title="[[orElse(title, config.title)]]">
       
       <div id="tip">
           <template is="dom-if" if="[[ isEqual(type, 'success') ]]">
@@ -135,12 +135,12 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
           <template is="dom-if" if="[[ isEqual(type, 'error') ]]">
             <iron-icon class="tip-icon" icon="icons:cancel"></iron-icon>
           </template>
-          <div class="tip-content">[[message]]</div>
+          <div class="tip-content" id="messageContainer"></div>
       </div>
       <h2-input id="remark-input" value="{{ remark }}"></h2-input>
       <div id="operate-panel">
-        <h2-button on-click="_cancel" type="warning" size="small">取消</h2-button>
-        <h2-button on-click="_confirm" size="small">确定</h2-button>
+        <h2-button on-click="_cancel" type="warning" size="small">[[orElse(config.cancelBtnLabel, '取消')]]</h2-button>
+        <h2-button on-click="_confirm" size="small">[[orElse(config.confirmBtnLabel, '确定')]]</h2-button>
       </div>
     </h2-dialog>
 `;
@@ -204,10 +204,37 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
         value: false
       },
       
-      title: String
+      title: String,
+      width: String,
+      height: String,
+  
+      config: {
+        type: Object,
+        value: function() {
+          return {};
+        }
+      }
+      
     };
   }
   
+  static get observers() {
+    return [
+      '__sizeChanged(width, "width")',
+      '__sizeChanged(height, "height")',
+      '__messageChanged(message)'
+    ];
+  }
+  
+  __sizeChanged(size, sizeAttr) {
+    if(size) {
+      this.$.dialog.updateStyles({["--h2-dialog-" + sizeAttr]: size});
+    }
+  }
+  
+  __messageChanged(message) {
+    this.$.messageContainer.innerHTML = message;
+  }
   /**
    * Cancel handler
    */

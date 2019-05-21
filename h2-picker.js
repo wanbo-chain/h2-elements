@@ -232,7 +232,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         <div class="mask"></div>
       </div>
 
-      <div id="picker-collapse" hidden="">
+      <div id="picker-collapse" hidden>
         <table class="collapse-content__table">
           <thead>
           <tr>
@@ -524,7 +524,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       .then(res => res.json())
       .then(data => {
         if (this.resultPath) {
-          this.items = this.getValueByPath(data, this.resultPath, '[]');
+          this.items = this.getValueByPath(data, this.resultPath, []);
         } else {
           this.items = data || [];
         }
@@ -564,7 +564,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
             .then(res => res.json())
             .then(data => {
               if (this.resultPath) {
-                this._displayItems = this.getValueByPath(data, this.resultPath, '[]').slice(0, 9);
+                this._displayItems = this.getValueByPath(data, this.resultPath, []).slice(0, 9);
               } else {
                 this._displayItems = (data || []).slice(0, 9);
               }
