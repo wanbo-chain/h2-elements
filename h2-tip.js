@@ -123,7 +123,7 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
     </style>
 
-    <h2-dialog id="dialog" modal="[[ isOneOf(type, 'confirm', 'prompt') ]]" no-cancel-on-outside-click title="[[title]]">
+    <h2-dialog id="dialog" modal="[[ isOneOf(type, 'confirm', 'prompt') ]]" no-cancel-on-outside-click title="[[orElse(title, config.title)]]">
       
       <div id="tip">
           <template is="dom-if" if="[[ isEqual(type, 'success') ]]">
@@ -139,8 +139,8 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
       </div>
       <h2-input id="remark-input" value="{{ remark }}"></h2-input>
       <div id="operate-panel">
-        <h2-button on-click="_cancel" type="warning" size="small">取消</h2-button>
-        <h2-button on-click="_confirm" size="small">确定</h2-button>
+        <h2-button on-click="_cancel" type="warning" size="small">[[config.cancelBtnLabel]]</h2-button>
+        <h2-button on-click="_confirm" size="small">[[config.confirmBtnLabel]]</h2-button>
       </div>
     </h2-dialog>
 `;
@@ -206,7 +206,18 @@ class H2Tip extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
       title: String,
       width: String,
-      height: String
+      height: String,
+  
+      config: {
+        type: Object,
+        value: function() {
+          return {
+            cancelBtnLabel: "取消",
+            confirmBtnLabel: "确定",
+          };
+        }
+      }
+      
     };
   }
   

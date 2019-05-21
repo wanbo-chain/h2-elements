@@ -72,7 +72,7 @@ export const TipBehavior = {
      */
     tip({msgObj, type, duration = 0, confirmCallback, cancelCallback}) {
       
-      let {message, title, width, height} = (typeof msgObj === 'object') ? msgObj : {message: msgObj};
+      let {message, title, width, height, cancelBtnLabel, confirmBtnLabel} = (typeof msgObj === 'object') ? msgObj : {message: msgObj};
       
       const tip = document.createElement('h2-tip');
       tip.setAttribute('type', type);
@@ -82,6 +82,7 @@ export const TipBehavior = {
       tip.height = height;
       tip.duration = duration;
       tip.autoDetach = true;
+      tip.option = {cancelBtnLabel, confirmBtnLabel, title};
       document.body.appendChild(tip);
       tip.open(confirmCallback, cancelCallback);
     }

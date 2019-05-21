@@ -60,7 +60,7 @@ document.body.appendChild($_documentContainer.content);
   <demo-snippet>
     <template>
       <h2-button id="btn4">Confirm</h2-button>
-      <h2-tip type="confirm" title="提示" message="Are you sure? Are you sure? Are you sure? Are you sure? Are you sure? Are you sure?" id="tip4"></h2-tip>
+      <h2-tip type="confirm" config='{"title":"Notice!!!", "cancelBtnLabel": "NO", "confirmBtnLabel": "YES"}' message='<h3 style="color: red;">Are you sure? </h3>' id="tip4"></h2-tip>
       <script>
         btn4.onclick = () => {
           tip4.open(() => {
