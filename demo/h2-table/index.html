@@ -67,8 +67,8 @@
               </div>
             </template>
         </h2-table-column>
-        <h2-table-column prop="name" label="名称" width="100" sortable cell-style="text-align: right;"></h2-table-column>
-        <h2-table-column prop="phone" label="电话号码" width="100" sortable></h2-table-column>
+        <h2-table-column prop="name" label="名称" width="100" sortable></h2-table-column>
+        <h2-table-column prop="phone" label="电话号码" width="100" sortable default-value="--" cell-style="text-align: center;"></h2-table-column>
         <h2-table-column prop="phone" label="操作" width="300" type="operate" model-as="user" frozen>
           <template>
             <template is="dom-if" if="[[ isEqual(user.name, 'Wahson') ]]">
@@ -112,7 +112,7 @@
         
         table.data = [
           {sex: '男', name: 'Wahson', phone: '12341111116', modify: true},
-          {sex: '女', name: 'Rose', phone: '12111111356', actions:['more']},
+          {sex: '女', name: 'Rose', actions:['more']},
           {sex: '女', name: 'Lucy', phone: '12390'},
           {sex: '男', name: 'James', phone: '12326'},
           {sex: '男', name: 'Cat', phone: '12349'},

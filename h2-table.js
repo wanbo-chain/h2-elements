@@ -418,10 +418,10 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     }
     
     if (Function.prototype.isPrototypeOf(column.formatter)) {
-      return column.formatter.call(this, this.getValueByKey(row, column.prop))
+      return column.formatter.call(this, this.getValueByKey(row, column.prop, column.defaultValue));
     }
     
-    return this.getValueByKey(row, column.prop);
+    return this.getValueByKey(row, column.prop, column.defaultValue);
   }
   
   connectedCallback() {
