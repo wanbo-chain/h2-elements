@@ -192,7 +192,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
               <col width="40">
             </template>
             <template is="dom-if" if="[[ __showExpansion ]]">
-              <col width="48">
+              <col width="30">
             </template>
             <template is="dom-if" if="[[ showIndex ]]">
               <col width="52">
@@ -236,7 +236,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                <col width="40">
             </template>
             <template is="dom-if" if="[[ __showExpansion ]]">
-               <col width="48">
+               <col width="30">
             </template>
             <template is="dom-if" if="[[ showIndex ]]">
                <col width="52">
