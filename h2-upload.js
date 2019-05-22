@@ -128,6 +128,7 @@ export class H2Upload extends mixinBehaviors([TipBehavior], PolymerElement) {
     } else {
       this.files = Array.prototype.slice.call(e.target.files).concat(this.files);
     }
+    this.set('response', null);
   };
 
   delete({model: {index}}) {
@@ -149,7 +150,7 @@ export class H2Upload extends mixinBehaviors([TipBehavior], PolymerElement) {
         form.append(key, this.request[key])
       }
     }
-    fetchApi.fetchIt({method: "post", body: form, url: this.src}).then(res => {
+    fetchApi.fetchIt({method: "post", body: form, url: this.src}, {loading: true}).then(res => {
       return res.json();
     }).then(res => {
       if (res.status === 1) {
