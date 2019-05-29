@@ -134,7 +134,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
       th div.header__cell {
-        display: flex;
+        display: inline-flex;
         align-items: center;
       }
       
@@ -213,7 +213,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                  <th>序号</th>
               </template>
               <template is="dom-repeat" items="[[columnInfos]]" as="column">
-                <th class="table__column" aria-frozen$="[[column.frozen]]">
+                <th class="table__column" style$="[[column.cellStyle]]" aria-frozen$="[[column.frozen]]">
                   <div class="header__cell">
                     <div class="table__cell">[[column.label]]</div>
                     <template is="dom-if" if="[[ column.sortable ]]">
