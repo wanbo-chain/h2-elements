@@ -68,6 +68,10 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
         border-radius: var(--h2-ui-border-radius);
         @apply --h2-button-group-button;
       }
+      
+      .trigger:hover {
+        
+      }
 
       .trigger__label {
         flex: 1;
@@ -75,14 +79,14 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
       /*下拉列表*/
       :host .dropdown-menu {
-        position: absolute;
+        position: fixed;
         background: #fff;
         color: var(--h2-ui-color_skyblue);
         flex-flow: column nowrap;
         box-sizing: border-box;
         z-index: 999;
         /*width: 100%;*/
-        margin-top: 2px;
+        /*margin-top: 2px;*/
         font-size: 1em;
         text-align: center;
         background-clip: padding-box;
@@ -122,12 +126,12 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
     </style>
     
-    <h2-button class="trigger" on-tap="toggle">
+    <h2-button class="trigger" on-mouseover="toggle" on-mouseout="close">
       <div class="trigger__label">[[ label ]]</div>
       <iron-icon class="trigger__icon" icon="icons:expand-more"></iron-icon>
     </h2-button>
 
-    <iron-collapse id="collapse" class="dropdown-menu" opened="[[ opened ]]" on-click="_onButtonDropdownClick">
+    <iron-collapse id="collapse" on-mouseover="toggle" on-mouseout="close" class="dropdown-menu" opened="[[ opened ]]" on-click="_onButtonDropdownClick">
       <div class="container">
        <template is="dom-repeat" items="[[ items ]]">
          <div class="item" bind-item="[[ item ]]">[[ getValueByKey(item, attrForLabel, 'Unknown') ]]</div>
@@ -189,9 +193,8 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   connectedCallback() {
     super.connectedCallback();
-    this.addEventListener('blur', e => {
-      // make sure other event can happen on slotted element before the iron-collapse closed.
-      setTimeout(this.close.bind(this), 100);
+    window.addEventListener('scroll', e => {
+      this.close();
     });
   }
 
@@ -213,26 +216,35 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
    * Toggle the group.
    */
   toggle(e) {
-    const itemCount = this.$.itemSlot.assignedElements().length + this.$.collapse.querySelectorAll('.item').length;
-    const totalHeight = e.detail.y + this.offsetHeight + itemCount * 30;
-
-    const styleObj = this.$.collapse.style;
-    if(totalHeight >= window.innerHeight) {
-      styleObj['bottom'] = this.offsetHeight + 'px';
-      styleObj['margin-bottom'] = '2px';
-    } else {
-      styleObj['bottom'] = null;
-      styleObj['margin-bottom'] = '2px';
-    }
+    const {top, left} = this.getElemPos(this);
+    this.$.collapse.style.top = top + this.clientHeight + 'px';
+    this.$.collapse.style.left = left + 'px';
     this.$.collapse.style.width = this.clientWidth + 'px';
-    styleObj['width'] = this.clientWidth + 'px';
     this.opened = !this.opened;
+  }
+
+  getElemPos(obj){
+    let pos = {"top":0, "left":0};
+    if (obj.offsetParent){
+      while (obj.offsetParent){
+        if (obj.scrollWidth - obj.clientWidth > 0) {
+          obj.addEventListener('scroll', e => {
+            this.close();
+          })
+        }
+        pos.top += obj.offsetTop - obj.scrollTop;
+        pos.left += obj.offsetLeft - obj.scrollLeft;
+        obj = obj.offsetParent;
+      }
+    }
+    pos.top -= document.documentElement.scrollTop - 2;
+    pos.left -= document.documentElement.scrollLeft;
+    return pos;
   }
 
   _onButtonDropdownClick(e) {
     const target = e.target,
         bindItem = e.target.bindItem || e.target.getAttribute('bind-item');
-    // this.onItemClick && this.onItemClick({target, bindItem});
     this.dispatchEvent(new CustomEvent('item-click', {detail: {target, bindItem}}));
   }
 }

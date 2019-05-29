@@ -16,9 +16,10 @@ import './h2-button';
 import {H2Fetch} from './h2-fetch';
 import './h2-tip';
 import { TipBehavior } from './behaviors/tip-behavior';
+import { BaseBehavior } from './behaviors/base-behavior';
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
 
-export class H2Upload extends mixinBehaviors([TipBehavior], PolymerElement) {
+export class H2Upload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerElement) {
 
   static get template() {
     return html`
@@ -122,7 +123,6 @@ export class H2Upload extends mixinBehaviors([TipBehavior], PolymerElement) {
   };
 
   _chooseFile(e) {
-    console.log(e.target.files);
     if (!this.multiple) {
       this.set('files', [e.target.files[0]]);
     } else {
@@ -134,7 +134,6 @@ export class H2Upload extends mixinBehaviors([TipBehavior], PolymerElement) {
   delete({model: {index}}) {
     this.$['file-chooser'].value = '';
     this.splice('files', index, 1);
-    console.log(this.files);
   };
 
   upload() {
@@ -155,6 +154,7 @@ export class H2Upload extends mixinBehaviors([TipBehavior], PolymerElement) {
     }).then(res => {
       if (res.status === 1) {
         this.set('files', []);
+        this.$['file-chooser'].value = '';
         this.set('response', res);
         this.h2Tip.success('导入成功', 2500);
       } else {

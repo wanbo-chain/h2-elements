@@ -551,8 +551,8 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this._displayPlaceholder(this._userInputKeyword.length === 0 && this.selectedValues.length === 0);
     
     const matched = this._cacheSearchUtil.search(this._userInputKeyword);
-    if (matched.length === 0) {
-      
+    if (matched.length === 0 && this.src) {
+
       if (!this.__fetchByKeyword) {
         this.__fetchByKeyword = throttle(() => {
           const requestObj = this.fetchParam;
@@ -703,7 +703,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     event.stopPropagation();
     
     const key = event.key;
-    if (event.altKey || key === 'Enter' || key === ' ') {
+    if (event.altKey || key === 'Enter') {
       event.preventDefault();
     }
     
@@ -727,7 +727,6 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
           break;
         
         case 'Enter':
-        case ' ':
           if (collapseOpend && this._displayItems.length > 0 && this.__focusIndex < this._displayItems.length) {
             this._selectItemAt(this.__focusIndex);
           }
