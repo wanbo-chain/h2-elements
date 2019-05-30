@@ -468,6 +468,9 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       resultPath: {
         type: String
+      },
+      text: {
+        type: String
       }
     };
   }
@@ -493,6 +496,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.$.keywordInput.addEventListener("keydown", this._keyDownHandler.bind(this));
     this.addEventListener("blur", e => {
       e.stopPropagation();
+      if (!this.value) this.text = this._userInputKeyword;
       this.displayCollapse(false);
     });
   }
@@ -543,8 +547,6 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   _userInputKeywordChanged() {
-    if (this._userInputKeyword === null) return;
-    if (!this.multi) this.value = this._userInputKeyword;
 
     if (this._userInputKeyword.length > 0) {
       this.displayCollapse(true);
@@ -586,13 +588,13 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   _selectedValuesChanged() {
     if (this.selectedValues.length > 0) {
-      this._userInputKeyword = null;
       this.value = this.selectedValues.map(selected => selected[this.attrForValue]).join(',');
       this.selectedItem = this.selectedValues[this.selectedValues.length - 1];
     } else {
-      if (this.multi) this.value = null;
+      this.value = null;
       this.selectedItem = undefined;
     }
+    this.text = this.value && !this.multi ? this.value : this._userInputKeyword;
     this.displayCollapse(false);
   }
 
@@ -653,7 +655,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
     this.displayCollapse(false);
     this.__focusOnKeywordInput();
-    // this._userInputKeyword = "";
+    this._userInputKeyword = "";
   }
 
   /**
