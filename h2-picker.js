@@ -471,7 +471,8 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       },
       text: {
         type: String,
-        notify: true
+        notify: true,
+        observer: '__refreshUIState'
       },
       mode: {
         type: String,
