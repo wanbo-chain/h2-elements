@@ -472,6 +472,10 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       text: {
         type: String,
         notify: true
+      },
+      mode: {
+        type: String,
+        value: 'default'
       }
     };
   }
@@ -823,7 +827,11 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
    * @returns {boolean}
    */
   validate() {
-    return this.required ? (this.selectedValues && this.selectedValues.length > 0) : true;
+    if (this.mode === 'text') {
+      return this.required ? this.text : true;
+    } else {
+      return this.required ? (this.selectedValues && this.selectedValues.length > 0) : true;
+    }
   }
 }
 
