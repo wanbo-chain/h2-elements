@@ -3,6 +3,8 @@ import './behaviors/h2-elements-shared-styles.js';
 // import './h2-col';
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
 import {BaseBehavior} from "./behaviors/base-behavior";
+import '@polymer/iron-icon/iron-icon';
+import '@polymer/iron-icons/iron-icons';
 
 class H2GridLayout extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get template() {
@@ -16,10 +18,45 @@ class H2GridLayout extends mixinBehaviors([BaseBehavior], PolymerElement) {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         grid-gap: 20px;
+        max-height: 2000px;
         @apply --h2-grid-layout;
       }
       
+      .header {
+        width: 100%;
+        padding: 5px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        font-size: 16px;
+        font-weight: 700;
+      }
+      
+      #caret {
+        position: absolute;
+        right: 10px;
+        top: 0;
+      }
+      
+      :host([opened]) #caret {
+        transform: rotate(-90deg);
+        transition: transform .2s ease-in-out;
+      }
+      
+      :host([opened]) .h2-grid-layout {
+        padding: 0;
+        max-height: 0;
+        transition: max-height .6s ease-in-out;
+        overflow: hidden;
+      }
+      
     </style>
+    <template is="dom-if" if="[[accordion]]">
+      <div class="header" on-click="__handler">
+        <div class="title">[[title]]</div>
+        <iron-icon id="caret" icon="icons:expand-more"></iron-icon>
+      </div>
+    </template>
     <div class="h2-grid-layout" id="h2-grid-layout">
       <slot id="layout"></slot>
     </div>
@@ -39,6 +76,18 @@ class H2GridLayout extends mixinBehaviors([BaseBehavior], PolymerElement) {
       },
       templateColumns: {
         type: String
+      },
+      accordion: {
+        type: Boolean
+      },
+      opened: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+      title: {
+        type: String,
+        value: '标题'
       }
 
     }
@@ -71,6 +120,10 @@ class H2GridLayout extends mixinBehaviors([BaseBehavior], PolymerElement) {
     if (this.templateColumns) {
       this.$['h2-grid-layout'].style['grid-template-columns'] = templateColumns;
     }
+  }
+
+  __handler() {
+    this.opened = !this.opened;
   }
 
   connectedCallback() {
