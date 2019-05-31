@@ -472,7 +472,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       text: {
         type: String,
         notify: true,
-        observer: '__refreshUIState'
+        observer: '__textChanged'
       },
       mode: {
         type: String,
@@ -558,8 +558,6 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.displayCollapse(true);
     }
 
-    this._displayPlaceholder(this._userInputKeyword.length === 0 && this.selectedValues.length === 0);
-
     const matched = this._cacheSearchUtil.search(this._userInputKeyword);
     if (matched.length === 0 && this.src) {
 
@@ -590,6 +588,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this._displayItems = matched.slice(0, 9);
       this._switchFocusItemAt(0);
     }
+    this._displayPlaceholder();
   }
 
   _selectedValuesChanged() {
@@ -620,7 +619,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
             .filter(selected => !!selected);
       }
 
-      this._displayPlaceholder(this.selectedValues.length === 0);
+      this._displayPlaceholder();
     }
 
     this.__refreshUIState(value);
@@ -634,8 +633,17 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     }
   }
 
-  _displayPlaceholder(display) {
-    this.$.placeholder.hidden = !display;
+  __textChanged(text) {
+    if (this.items && this.items.some(val => val[this.attrForValue] == text)) {
+      this.set('value', text)
+    } else if (this.mode === 'text') {
+      this.set('_userInputKeyword', text);
+    }
+    this.__refreshUIState();
+  }
+
+  _displayPlaceholder() {
+    this.$.placeholder.hidden = this.value || (this.mode && this.text) || this._userInputKeyword;
   }
 
   _selectItemAt(index) {
