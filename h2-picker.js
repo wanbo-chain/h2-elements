@@ -637,7 +637,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     if (this.items && this.items.some(val => val[this.attrForValue] == text)) {
       this.set('value', text)
     } else if (this.mode === 'text') {
-      this.set('_userInputKeyword', text);
+      this.set('_userInputKeyword', text ? text : '');
     }
     this.__refreshUIState();
   }
