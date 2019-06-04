@@ -16,8 +16,6 @@ class H2GridLayout extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       .h2-grid-layout {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-gap: 20px;
         max-height: 2000px;
         @apply --h2-grid-layout;
       }
@@ -66,13 +64,16 @@ class H2GridLayout extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get properties() {
     return {
       columns: {
-        type: Number
+        type: Number,
+        value: 4
       },
       columnGap: {
-        type: Number
+        type: Number,
+        value: 20
       },
       rowGap: {
-        type: Number
+        type: Number,
+        value: 20
       },
       templateColumns: {
         type: String
