@@ -136,6 +136,10 @@ class H2GridLayout extends mixinBehaviors([BaseBehavior], PolymerElement) {
       assignedElements.filter(_ => _.hasAttribute('layout-rowspan')).forEach( item => {
         item.style['grid-row-end'] = `span ${item.getAttribute('layout-rowspan')}`
       });
+      assignedElements.filter(_ => _.hasAttribute('full-colspan')).forEach( item => {
+        const span = this.columns ? this.columns : this.templateColumns.split(' ').length;
+        item.style['grid-column-end'] = `span ${span}`
+      });
     });
   }
 
