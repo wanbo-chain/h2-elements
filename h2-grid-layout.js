@@ -62,7 +62,7 @@ class H2GridLayout extends mixinBehaviors([BaseBehavior], PolymerElement) {
     </div>
     `
   }
-
+  
   static get properties() {
     return {
       columns: {
@@ -89,10 +89,10 @@ class H2GridLayout extends mixinBehaviors([BaseBehavior], PolymerElement) {
         type: String,
         value: '标题'
       }
-
+      
     }
   }
-
+  
   static get observers() {
     return [
       '__columnsChange(columns)',
@@ -101,48 +101,52 @@ class H2GridLayout extends mixinBehaviors([BaseBehavior], PolymerElement) {
       '__templateColumnsChange(templateColumns)'
     ]
   }
-
+  
   __columnsChange(columns) {
     if (!this.templateColumns) {
       this.$['h2-grid-layout'].style['grid-template-columns'] = `repeat(${columns}, 1fr)`;
     }
   }
-
+  
   __columnGapChange(columnGap) {
     this.$['h2-grid-layout'].style['grid-column-gap'] = `${columnGap}px`;
   }
-
+  
   __rowGapChange(rowGap) {
     this.$['h2-grid-layout'].style['grid-row-gap'] = `${rowGap}px`;
   }
-
+  
   __templateColumnsChange(templateColumns) {
     if (this.templateColumns) {
       this.$['h2-grid-layout'].style['grid-template-columns'] = templateColumns;
     }
   }
-
+  
   __handler() {
     this.opened = !this.opened;
   }
-
+  
   connectedCallback() {
     super.connectedCallback();
     this.$.layout.addEventListener('slotchange', e => {
       const assignedElements = e.target.assignedElements();
-      assignedElements.filter(_ => _.hasAttribute('layout-colspan')).forEach( item => {
+      
+      assignedElements.filter(_ => _.hasAttribute('layout-colspan')).forEach(item => {
         item.style['grid-column-end'] = `span ${item.getAttribute('layout-colspan')}`
       });
-      assignedElements.filter(_ => _.hasAttribute('layout-rowspan')).forEach( item => {
+      
+      assignedElements.filter(_ => _.hasAttribute('layout-rowspan')).forEach(item => {
         item.style['grid-row-end'] = `span ${item.getAttribute('layout-rowspan')}`
       });
-      assignedElements.filter(_ => _.hasAttribute('full-colspan')).forEach( item => {
-        const span = this.columns ? this.columns : this.templateColumns.split(' ').length;
-        item.style['grid-column-end'] = `span ${span}`
+      
+      const columnSpans = this.$['h2-grid-layout'].style['grid-template-columns'].split(/\s+/g).length;
+      assignedElements.filter(_ => _.hasAttribute('full-colspan')).forEach(item => {
+        item.style['grid-column-end'] = `span ${columnSpans}`
       });
+      
     });
   }
-
+  
   static get is() {
     return "h2-grid-layout";
   }
