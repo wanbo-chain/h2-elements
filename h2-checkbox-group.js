@@ -53,13 +53,25 @@ class H2CheckboxGroup extends mixinBehaviors(BaseBehavior, PolymerElement) {
 
       #checkbox-container {
         position: relative;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
       }
 
+      :host([direction=column]) #checkbox-container {
+        flex-direction: column;
+      }
+      
+      :host([direction=column]) .checkbox-item {
+        margin-bottom: 6px;
+      }
       .checkbox-item {
         margin-left: 6px;
         --paper-checkbox-checked-color: var(--h2-ui-color_skyblue);
       }
-
+      
+      
+      
     </style>
     [[label]]
     <div id="checkbox-container">
