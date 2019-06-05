@@ -60,6 +60,7 @@ class H2CheckboxGroup extends mixinBehaviors(BaseBehavior, PolymerElement) {
 
       :host([direction=column]) #checkbox-container {
         flex-direction: column;
+        align-items: start;
       }
       
       :host([direction=column]) .checkbox-item {
