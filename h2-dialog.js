@@ -39,9 +39,19 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get template() {
     return html`
     <style include="h2-elements-shared-styles">
-      :host {}
+      :host {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: none;
+        align-items: center;
+        justify-content: center;
+      }
 
       #dialog {
+        position: relative;
         display: flex;
         flex-flow: column nowrap;
         align-content: stretch;
@@ -82,13 +92,25 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
         padding: 0 16px;
         @apply --h2-dialog-title;
       }
+      
+      :host([modal]) .backdrop {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 1;
+      }
 
     </style>
 
-    <paper-dialog id="dialog" modal="[[modal]]"
+    <paper-dialog id="dialog"
       entry-animation="scale-up-animation"
       exit-animation="fade-out-animation"
-      no-cancel-on-outside-click="[[noCancelOnOutsideClick]]">
+      no-cancel-on-esc-key="[[noCancelOnEscKey]]"
+      no-cancel-on-outside-click="[[noCancelOnOutsideClick]]" on-opened-changed="openedChanged">
       
       <div class="close-dialog" on-tap="close">
         <iron-icon icon="icons:close"></iron-icon>
@@ -101,6 +123,8 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
         <slot></slot>
       </div>
     </paper-dialog>
+    
+    <div class="backdrop"></div>
 `;
   }
 
@@ -121,7 +145,7 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
         type: Boolean,
         value: false
       },
-  
+
       /**
        * @type {boolean}
        * @default false
@@ -129,9 +153,10 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
       modal: {
         type: Boolean,
         value: false,
-        reflectToAttribute: true
+        reflectToAttribute: true,
+        observer: 'modalChanged'
       },
-  
+
       /**
        * @type {boolean}
        * @default false
@@ -140,7 +165,12 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
         type: Boolean,
         value: false,
         reflectToAttribute: true
-      }
+      },
+
+      noCancelOnEscKey: {
+        type: Boolean,
+        value: false
+      },
     };
   }
 
@@ -166,7 +196,7 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
         composed: true,
         bubbles: true
       });
-      
+
       if (!this.stopAutoDismiss) {
         setTimeout(() => {
           this.parentElement && this.parentElement.removeChild(this);
@@ -178,15 +208,15 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
      * @listens h2-dialog-dismiss
      */
     this.addEventListener('h2-dialog-dismiss', this.close);
-  
-    
-    // this.$.dialog.noCancelOnOutsideClick = true;
+
+
   }
 
   /**
    * Open the dialog.
    */
   open() {
+    this.style.display = 'flex';
     this.$.dialog.open();
   }
 
@@ -194,7 +224,19 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
    * Close the dialog.
    */
   close() {
+    this.style.display = 'none';
     this.$.dialog.close();
+  }
+
+  openedChanged({detail: {value}}) {
+    if (!value) this.close();
+  }
+
+  modalChanged(modal) {
+    if(modal) {
+      this.noCancelOnOutsideClick = true;
+      this.noCancelOnEscKey = true;
+    }
   }
 }
 
