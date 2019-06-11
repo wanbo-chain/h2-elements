@@ -20,6 +20,10 @@ const template = html`
         --h2-ui-font-size: 14px;
       }
       
+      :host([hidden]) {
+        display: none;
+      }
+      
       :host([readonly]) .mask,
       :host([disabled]) .mask {
         position: absolute;
