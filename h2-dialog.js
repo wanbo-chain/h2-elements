@@ -48,6 +48,7 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
         display: none;
         align-items: center;
         justify-content: center;
+        z-index: 99;
       }
 
       #dialog {
