@@ -608,12 +608,12 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
    */
   _valueChanged(value) {
     // 本地模式，或远程数据已经就位
-    if (this._displayItems) {
+    if (this.items) {
       const flatValues = [...(new Set(String(value).split(",")))];
       const selectedValues = this.selectedValues || [];
       const dirty = selectedValues.map(selected => selected[this.attrForValue]).join(',');
       if (dirty !== value) {
-        const tmp = [...selectedValues, ...this._displayItems];
+        const tmp = [...selectedValues, ...this.items];
         this.selectedValues =
           flatValues.map(val => tmp.find(item => item[this.attrForValue] == val))
             .filter(selected => !!selected);
