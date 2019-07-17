@@ -254,5 +254,9 @@ export const BaseBehavior = {
   
   deepClone(obj) {
     return obj == null || typeof (obj) !== "object" ? obj : JSON.parse(JSON.stringify(obj));
-  }
+  },
+
+  optional(bool, trueReturn, falseReturn = '') {
+    return bool ? trueReturn : falseReturn;
+  },
 };

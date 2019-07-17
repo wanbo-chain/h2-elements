@@ -44,13 +44,19 @@
       <custom-style>
         <style is="custom-style">
           .input-date {
-            --h2-input-date-label: {
-              width: 100px;
+            --h2-label: {
+              width: 120px;
             }
+          }
+          .multi {
+            width: 560px;
           }
         </style>
       </custom-style>
-      <h2-input-date class="input-date" label="日期"></h2-input-date>
+      <h2-input-date class="input-date multi" label="选择日期" value="2018-12-12"></h2-input-date>
+      <h2-input-date class="input-date multi" label="选择日期时间" type="datetime" value="2018-12-12 12:00:00"></h2-input-date>
+      <h2-input-date class="input-date multi" label="选择日期范围" type="dateRange" start-date="2017-10-25" end-date="2018-12-12"></h2-input-date>
+      <h2-input-date class="input-date multi" label="选择日期时间范围" type="datetimeRange" start-date="2017-10-25 00:00:00" end-date="2018-12-12 12:30:00"></h2-input-date>
       <h2-input-date class="input-date" label="默认value" value="2017-10-26"></h2-input-date>
       <h2-input-date class="input-date" label="默认time" timestamp="1509008130349"></h2-input-date>
     </template>
@@ -69,7 +75,7 @@
     <template>
       <h2-input-date label="最小值" min="2017-10-23"></h2-input-date>
       <h2-input-date label="最大值" max="2017-12-30"></h2-input-date>
-      <h2-input-date label="最大值和最小值" min="2017-09-10" max="2017-09-30"></h2-input-date>
+      <h2-input-date label="最大值和最小值" min="2017-01-10" max="2017-09-30"></h2-input-date>
     </template>
   </demo-snippet>
 </div>

@@ -210,7 +210,11 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
           <thead>
             <tr id="headerRow">
               <template is="dom-if" if="[[ selectable ]]">
-                 <th><paper-checkbox class="checkbox-item" noink checked="{{__selectedState}}" on-click="__rowSelecttionAll"></paper-checkbox></th>
+                 <th>
+                  <template is="dom-if" if="[[ !radio ]]">
+                    <paper-checkbox class="checkbox-item" noink checked="{{__selectedState}}" on-click="__rowSelecttionAll"></paper-checkbox>
+                  </template>
+                 </th>
               </template>
               <template is="dom-if" if="[[ __showExpansion ]]">
                  <th></th>
@@ -354,7 +358,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     const [first] = columnInfos;
     let length = columnInfos.length;
 
-    if (first.type === 'expand') length += 1;
+    if (first.type === 'expand' || this.selectable) length += 1;
     if (this.showIndex) length += 1;
 
     return length;
@@ -366,8 +370,12 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.toggleClass(expansion, 'row__expansion-hidden');
   }
 
-  __rowSelecttion({model: {row}}) {
-    this.__selectedState = this.__tableData.some(d => d.__selected);
+  __rowSelecttion({model: {row, rowIndex}}) {
+    if (this.radio) {
+      this.__tableData = this.__tableData.map(val => Object.assign({}, val, {__selected: false}));
+      this.set(`__tableData.${rowIndex}.__selected`, true);
+    }
+    if (!this.radio) this.__selectedState = this.__tableData.some(d => d.__selected);
     this.dispatchEvent(new CustomEvent('row-selection-changed', {detail: {row, selected: row.__selected}}));
   }
 
@@ -490,6 +498,11 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       },
 
       selectable: {
+        type: Boolean,
+        value: false
+      },
+
+      radio: {
         type: Boolean,
         value: false
       },
