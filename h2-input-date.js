@@ -332,7 +332,7 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
           </div>
         </div>
         <div class="date-content">
-          <template is="dom-if" if="[[!showDashboard]]">
+          <template is="dom-if" if="[[!isOneOf(showDashboard, 'year', 'month')]]">
             <h2-grid-layout columns="7" column-gap="0" row-gap="0" class="day-layout">
               <div class="date-title">日</div>
               <div class="date-title">一</div>
@@ -348,17 +348,12 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
               </template>
             </h2-grid-layout>
           </template>
-          <template is="dom-if" if="[[showDashboard]]">
+          <template is="dom-if" if="[[isOneOf(showDashboard, 'year', 'month')]]">
             <h2-grid-layout columns="3" column-gap="0" row-gap="0">
               <template is="dom-repeat" items="[[yearList]]">
-                <template is="dom-if" if="[[isOneOf(item, year, month)]]">
-                  <div class="item-y-m select-item" on-click="selectYearOrMonth">[[item]]</div>
-                </template>
-                <template is="dom-if" if="[[!isOneOf(item, year, month)]]">
-                  <div class$="[[optionalClassYM(item)]]">
-                    <div on-click="selectYearOrMonth">[[item]]</div>
-                  </div>
-                </template>
+                <div class$="[[optionalClassYM(item, year, month)]]">
+                  <div on-click="selectYearOrMonth">[[item]]</div>
+                </div>
               </template>
             </h2-grid-layout>
           </template>
@@ -436,8 +431,8 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       month: Number,
       date: Number,
       showDashboard: {
-        type: Boolean,
-        value: false
+        type: String,
+        value: ''
       },
       type: {
         type: String,
@@ -627,13 +622,19 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
     for (let i = year - 5, max = year + 6; i <= max; i++) {
       yearList.push(i);
     }
+    this.set('showDashboard', 'year');
     this.set('yearList', yearList);
-    this.set('showDashboard', true);
   }
 
   monthOpen() {
+    this.set('showDashboard', 'month');
+    if (this.min) {
+      if (this.month < this.min.split('-')[1] && this.year <= this.min.split('-')[0]) this.month = this.min.split('-')[1];
+    }
+    if (this.max) {
+      if (this.month > this.max.split('-')[1] && this.year >= this.max.split('-')[0]) this.month = this.max.split('-')[1];
+    }
     this.set('yearList', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
-    this.set('showDashboard', true);
   }
 
   getDayList() {
@@ -674,23 +675,20 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
   yearMinus() {
     const min = this.min ? this.min.split('-')[0] : 1970;
     this.year > min && this.year--;
-    if (this.showDashboard && this.yearList[0] > this.year) this.yearOpen();
-    this.showDashboard = false;
-    this.getDayList();
+    if (this.showDashboard === 'year' && this.yearList[0] > this.year) this.yearOpen();
+    if (!this.showDashboard) this.getDayList();
   }
 
   yearAdd() {
     const max = this.max ? this.max.split('-')[0] : 9999;
     this.year < max && this.year++;
-    if (this.showDashboard && this.yearList[11] < this.year) this.yearOpen();
-    this.showDashboard = false;
-    this.getDayList();
+    if (this.showDashboard === 'year' && this.yearList[11] < this.year) this.yearOpen();
+    if (!this.showDashboard) this.getDayList();
   }
 
-  optionalClassYM(item) {
+  optionalClassYM(item, year, month) {
     let str = 'item-y-m';
     if (this.min) {
-      console.log(this.year, 12333, this.year >= this.min.split('-')[0]);
       str += item <= 12 && item < this.min.split('-')[1] && this.year <= this.min.split('-')[0] ? ' disabled' : '';
       str += item > 12 && item < this.min.split('-')[0] ? ' disabled' : '';
     }
@@ -698,27 +696,28 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       str += item <= 12 && item > this.max.split('-')[1] && this.year >= this.max.split('-')[0] ? ' disabled' : '';
       str += item > 12 && item > this.max.split('-')[0] ? ' disabled' : '';
     }
+    str += item === year || item === month ? ' select-item' : '';
     return str;
   }
 
   monthMinus() {
     const min = this.min ? this.min.split('-')[1] : 0;
-    if (this.month === 1 && !this.min) {
+    if (this.month === 1) {
       this.month = 12;
       this.yearMinus();
-    } else {
-      this.month > min && this.month--;
+    } else if (this.month > min || (this.min && this.year > this.min.split('-')[0])) {
+      this.month--;
       this.getDayList();
     }
   }
 
   monthAdd() {
     const max = this.max ? this.max.split('-')[1] : 13;
-    if (this.month === 12 && !this.max) {
+    if (this.month === 12) {
       this.month = 1;
       this.yearAdd();
-    } else {
-      this.month < max && this.month++;
+    } else if (this.month < max || (this.max && this.year < this.max.split('-')[0])) {
+      this.month++;
       this.getDayList();
     }
   }
@@ -746,15 +745,16 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   selectYearOrMonth({model: {item}}) {
-    this[item <= 12 ? 'month' : 'year'] = item;
-    if (this.min && item <= 12) {
-      if (this.month < this.min.split('-')[1] && this.year <= this.min.split('-')[0]) this.month = this.min.split('-')[1];
+    this[this.showDashboard] = item;
+    if (this.showDashboard === 'year') {
+      this.monthOpen();
+      return
     }
-    if (this.max && item <= 12) {
-      if (this.month > this.max.split('-')[1] && this.year >= this.max.split('-')[0]) this.month = this.max.split('-')[1];
+    if (this.showDashboard === 'month') {
+      this.showDashboard = '';
+      this.getDayList();
     }
-    this.getDayList();
-    this.showDashboard = false;
+
   }
 
   selectToday() {
