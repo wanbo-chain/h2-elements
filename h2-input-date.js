@@ -492,8 +492,8 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       const endDate = new Date(this.endTimestamp);
       this.endDate = `${endDate.getFullYear()}-${this._preReplenish(endDate.getMonth() + 1, 2, "0")}-${this._preReplenish(endDate.getDate(), 2, "0")}`;
       if (this.type === 'datetimeRange') {
-        this.startDate += this.getTime(startDate);
-        this.endDate += this.getTime(endDate);
+        this.startDate += ` ${this.getTime(startDate)}`;
+        this.endDate += ` ${this.getTime(endDate)}`;
         this.getTimeList(this.startDate, 'start');
         this.getTimeList(this.endDate, 'end');
       }
@@ -573,7 +573,7 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
         this.set('endDate', this.startDate);
         this.set('endTimestamp', timestamp);
         this.set('startDate', value);
-        this.set('endTimestamp', time);
+        this.set('startTimestamp', time);
       }
       if (!this.type.includes('time')) {
         this.endTimestamp = this.endTimestamp + 24 * 3600 * 1000 - 1;
