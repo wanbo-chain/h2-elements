@@ -284,12 +284,12 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       <iron-icon class="date-range" icon=icons:date-range></iron-icon>
       <template is="dom-if" if="[[ isOneOf(type, 'dateRange', 'datetimeRange') ]]">
         <div class="item-date">
-          [[startDate]]
+          {{startDate}}
           <!--<template is="dom-if" if="[[ !toBoolean(startDate) ]]"><span>开始日期</span></template>-->
         </div>
         <div class="separator">至</div>
         <div class="item-date">
-          [[endDate]]
+          {{endDate}}
           <!--<template is="dom-if" if="[[ !toBoolean(endDate) ]]"><span>结束日期</span></template>-->
         </div>
       </template>
@@ -442,8 +442,22 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
         type: Array,
         value: ['dateRange', 'datetimeRange']
       },
-      startDate: String,
-      endDate: String,
+      startDate: {
+        type: String,
+        notify: true
+      },
+      startTimestamp: {
+        type: Number,
+        notify: true
+      },
+      endDate: {
+        type: String,
+        notify: true
+      },
+      endTimestamp: {
+        type: Number,
+        notify: true
+      },
       startDateTimeList: Array,
       endDateTimeList: Array,
       stepTime: {
@@ -472,6 +486,19 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.getTimeList(this.endDate, 'end');
       this.set('value', `${this.startDate},${this.endDate}`)
     }
+    if (this.endTimestamp && this.startTimestamp) {
+      const startDate = new Date(this.startTimestamp);
+      this.startDate = `${startDate.getFullYear()}-${this._preReplenish(startDate.getMonth() + 1, 2, "0")}-${this._preReplenish(startDate.getDate(), 2, "0")}`;
+      const endDate = new Date(this.endTimestamp);
+      this.endDate = `${endDate.getFullYear()}-${this._preReplenish(endDate.getMonth() + 1, 2, "0")}-${this._preReplenish(endDate.getDate(), 2, "0")}`;
+      if (this.type === 'datetimeRange') {
+        this.startDate += this.getTime(startDate);
+        this.endDate += this.getTime(endDate);
+        this.getTimeList(this.startDate, 'start');
+        this.getTimeList(this.endDate, 'end');
+      }
+      this.set('value', `${this.startDate},${this.endDate}`)
+    }
   };
   /**
    * @param value
@@ -488,16 +515,16 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.set("timestamp", time);
     }
     // if (value && this.rangeList.includes(this.type)) {
-      // let time = new Date(`${value}${this.type === 'date' && value.indexOf(':') > -1 ? ' 00:00:00' : ''}`).getTime();
-      // this.set("timestamp", time);
+    // let time = new Date(`${value}${this.type === 'date' && value.indexOf(':') > -1 ? ' 00:00:00' : ''}`).getTime();
+    // this.set("timestamp", time);
     // }
     //   console.log(value, 99991203);
     //   const arr = value.split(',');
     //   this.set('startDate', arr[0]);
     //   this.set('endDate', arr[1]);
     // } else if (this.rangeList.includes(this.type) && !value) {
-      // this.set('startDate', '');
-      // this.set('endDate', '');
+    // this.set('startDate', '');
+    // this.set('endDate', '');
     // }
     this.getDayList();
   }
@@ -531,18 +558,25 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
     if (this.rangeList.includes(this.type) && !this.startDate) {
       this.getTimeList(value, 'start');
       this.set('startDate', value);
+      this.set('startTimestamp', time);
       return
     }
     if (this.rangeList.includes(this.type) && this.startDate) {
       const timestamp = new Date(this.startDate.indexOf(':') > -1 ? this.startDate : this.startDate + ' 00:00');
       if (time >= timestamp) {
         this.getTimeList(value, 'end');
-        this.set('endDate', value)
+        this.set('endDate', value);
+        this.set('endTimestamp', time);
       } else {
         this.getTimeList(this.startDate, 'end');
         this.getTimeList(value, 'start');
         this.set('endDate', this.startDate);
+        this.set('endTimestamp', timestamp);
         this.set('startDate', value);
+        this.set('endTimestamp', time);
+      }
+      if (!this.type.includes('time')) {
+        this.endTimestamp = this.endTimestamp + 24 * 3600 * 1000 - 1;
       }
       this.set('value', `${this.startDate},${this.endDate}`);
       if (this.type !== 'datetimeRange') this.$.dateBox.close();
@@ -569,6 +603,12 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   clear(e) {
     e.stopPropagation();
+    if (this.rangeList.includes(this.type)) {
+      this.startDate = null;
+      this.endDate = null;
+      this.startTimestamp = null;
+      this.endTimestamp = null;
+    }
     this.value = '';
   }
 
@@ -727,6 +767,8 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.set('value', '');
       this.set('startDate', '');
       this.set('endDate', '');
+      this.set('startTimestamp', null);
+      this.set('endTimestamp', null);
       this.getDayList();
     }
     if (!this.rangeList.includes(this.type)) {
