@@ -120,7 +120,7 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
         padding: 0 5px;
       }
       
-      .item-date > span {
+      .item-date > span, .box-value > span {
         width: 100%;
         color: #ccc;
       }
@@ -195,7 +195,6 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
       .box-today {
-        /*width: 24px;*/
         padding: 0 5px;
         height: 24px;
         font-size: 14px;
@@ -284,17 +283,20 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       <iron-icon class="date-range" icon=icons:date-range></iron-icon>
       <template is="dom-if" if="[[ isOneOf(type, 'dateRange', 'datetimeRange') ]]">
         <div class="item-date">
-          {{startDate}}
-          <!--<template is="dom-if" if="[[ !toBoolean(startDate) ]]"><span>开始日期</span></template>-->
+          <template is="dom-if" if="[[ !toBoolean(startDate) ]]"><span>开始日期</span></template>
+          <template is="dom-if" if="[[ toBoolean(startDate) ]]">{{startDate}}</template>
         </div>
         <div class="separator">至</div>
         <div class="item-date">
-          {{endDate}}
-          <!--<template is="dom-if" if="[[ !toBoolean(endDate) ]]"><span>结束日期</span></template>-->
+          <template is="dom-if" if="[[ !toBoolean(endDate) ]]"><span>结束日期</span></template>
+          <template is="dom-if" if="[[ toBoolean(endDate) ]]">{{endDate}}</template>
         </div>
       </template>
       <template is="dom-if" if="[[ !isOneOf(type, 'dateRange', 'datetimeRange') ]]">
-        <div class="box-value">[[value]]</div>
+        <div class="box-value">
+          <template is="dom-if" if="[[ !toBoolean(value) ]]"><span>选择日期</span></template>
+          <template is="dom-if" if="[[ toBoolean(value) ]]">{{value}}</template>
+        </div>
       </template>
       <template is="dom-if" if="[[ toBoolean(value) ]]">
         <div class="clear" on-click="clear"><iron-icon class="icon-clear" icon=icons:clear></iron-icon></div>
@@ -307,19 +309,18 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       <div class="date-body">
         <template is="dom-if" if="[[ isEqual(type, 'datetimeRange') ]]">
           <div class="box-datetime">
-            <h2-select class="datetime" items="[[startDateTimeList]]" value="{{startDate}}"></h2-select>
+            <h2-select class="datetime" placeholder="开始日期时间" items="[[startDateTimeList]]" value="{{startDate}}"></h2-select>
           </div>
           <div class="box-datetime">
-            <h2-select class="datetime" items="[[endDateTimeList]]" value="{{endDate}}"></h2-select>
+            <h2-select class="datetime" placeholder="结束日期时间" items="[[endDateTimeList]]" value="{{endDate}}"></h2-select>
           </div>
         </template>
         <template is="dom-if" if="[[ isOneOf(type, 'datetime') ]]">
           <div class="box-datetime">
-            <h2-select class="datetime" items="[[startDateTimeList]]" value="{{value}}"></h2-select>
+            <h2-select class="datetime" placeholder="选择日期时间" items="[[startDateTimeList]]" value="{{value}}"></h2-select>
           </div>
         </template>
         <div class="date-header">
-          <div class="box-today" on-click="selectToday">今日</div>
           <div class="box-chevron">
             <iron-icon class="chevron-iron" icon="icons:chevron-left" on-click="yearMinus"></iron-icon>
             <span on-click="yearOpen">[[year]]年</span>
@@ -330,6 +331,7 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
             <span on-click="monthOpen">[[month]]月</span>
             <iron-icon class="chevron-iron" icon="icons:chevron-right" on-click="monthAdd"></iron-icon>
           </div>
+          <div class="box-today" on-click="selectToday">今日</div>
         </div>
         <div class="date-content">
           <template is="dom-if" if="[[!isOneOf(showDashboard, 'year', 'month')]]">
