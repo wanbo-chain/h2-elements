@@ -481,7 +481,8 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       '_startDateChanged(startDate)',
       '_endDateChanged(endDate)',
       '_startTimestampChanged(startTimestamp)',
-      '_endTimestampChanged(endTimestamp)'
+      '_endTimestampChanged(endTimestamp)',
+      '_minmaxChanged(min, max)'
     ];
   }
 
@@ -496,10 +497,26 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       return;
     }
     if (!this.rangeList.includes(this.type)) {
-      let time = new Date(`${value}${this.type === 'date' && value.indexOf(':') > -1 ? ' 00:00:00' : ''}`).getTime();
+      let time = new Date(`${value}${this.type.includes('time') ? '' : ' 00:00:00'}`).getTime();
       this.set("timestamp", time);
     }
     this.getDayList();
+  }
+
+  _minmaxChanged(min, max) {
+    if (min) {
+      const minTimestamp = typeof (this.min) === 'number' ? this.min : (this.min instanceof Object ? this.min : new Date(`${this.min}${this.type.includes('time') ? '' : ' 00:00:00'}`)).getTime();
+      this.set('min', this._getTimestampToDate(minTimestamp));
+    } else {
+      this.set('min', undefined);
+    }
+    if (max) {
+      const maxTimestamp = typeof (this.max) === 'number' ? this.max : (this.max instanceof Object ? this.max : new Date(`${this.max}${this.type.includes('time') ? '' : ' 23:59:59:999'}`)).getTime();
+      this.set('max', this._getTimestampToDate(maxTimestamp));
+    } else {
+      this.set('max', undefined);
+    }
+    this.__refreshUIState();
   }
 
   __refreshUIState() {
@@ -834,7 +851,15 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
    * @returns {boolean}
    */
   validate() {
-    const validate = !this.rangeList.includes(this.type) ? this.value && this.value.length > 0 : (this.startDate && this.endDate) || (this.startTimestamp && this.endTimestamp);
+    let validate = !this.rangeList.includes(this.type) ? this.value && this.value.length > 0 : (this.startDate && this.endDate) || (this.startTimestamp && this.endTimestamp);
+    if (this.min) {
+      const minTimestamp = new Date(`${this.min}${this.type.includes('time')?'' : ' 00:00:00'}`).getTime();
+      validate = validate && (!this.rangeList.includes(this.type) ? minTimestamp <= this.timestamp : minTimestamp <= this.startTimestamp);
+    }
+    if (this.max) {
+      const maxTimestamp = new Date(`${this.max}${this.type.includes('time')?'' : ' 00:00:00'}`).getTime();
+      validate = validate && (!this.rangeList.includes(this.type) ? maxTimestamp >= this.timestamp : maxTimestamp >= this.endTimestamp);
+    }
     return this.required ? validate : true;
   }
 }
