@@ -854,11 +854,11 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
     let validate = !this.rangeList.includes(this.type) ? this.value && this.value.length > 0 : (this.startDate && this.endDate) || (this.startTimestamp && this.endTimestamp);
     if (this.min) {
       const minTimestamp = new Date(`${this.min}${this.type.includes('time')?'' : ' 00:00:00'}`).getTime();
-      validate = validate && (!this.rangeList.includes(this.type) ? minTimestamp <= this.timestamp : minTimestamp <= this.startTimestamp);
+      validate = validate && (!this.rangeList.includes(this.type) ? minTimestamp < this.timestamp : minTimestamp < this.startTimestamp);
     }
     if (this.max) {
       const maxTimestamp = new Date(`${this.max}${this.type.includes('time')?'' : ' 00:00:00'}`).getTime();
-      validate = validate && (!this.rangeList.includes(this.type) ? maxTimestamp >= this.timestamp : maxTimestamp >= this.endTimestamp);
+      validate = validate && (!this.rangeList.includes(this.type) ? maxTimestamp > this.timestamp : maxTimestamp > this.endTimestamp);
     }
     return this.required ? validate : true;
   }
