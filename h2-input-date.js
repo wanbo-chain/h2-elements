@@ -289,7 +289,7 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
         <div class="separator">至</div>
         <div class="item-date">
           <template is="dom-if" if="[[ !toListBoolean(endDate, endTimestamp) ]]"><span>结束日期</span></template>
-          <template is="dom-if" if="[[ toBoolean(endDate, endTimestamp) ]]">{{endDate}}</template>
+          <template is="dom-if" if="[[ toListBoolean(endDate, endTimestamp) ]]">{{endDate}}</template>
         </div>
       </template>
       <template is="dom-if" if="[[ !isOneOf(type, 'dateRange', 'datetimeRange') ]]">
