@@ -178,6 +178,18 @@ export const BaseBehavior = {
   toBoolean(val) {
     return !!val;
   },
+
+
+  /**
+   * To boolean.
+   * @param {*} val
+   */
+  toListBoolean(...args) {
+    if (Array.isArray(args) && args.length > 0) {
+      return args.findIndex(val => val) > -1;
+    }
+    return false
+  },
   
   /**
    * Check if an array is empty.

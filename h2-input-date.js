@@ -283,22 +283,22 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       <iron-icon class="date-range" icon=icons:date-range></iron-icon>
       <template is="dom-if" if="[[ isOneOf(type, 'dateRange', 'datetimeRange') ]]">
         <div class="item-date">
-          <template is="dom-if" if="[[ !toBoolean(startDate) ]]"><span>开始日期</span></template>
-          <template is="dom-if" if="[[ toBoolean(startDate) ]]">{{startDate}}</template>
+          <template is="dom-if" if="[[ !toListBoolean(startDate, startTimestamp) ]]"><span>开始日期</span></template>
+          <template is="dom-if" if="[[ toListBoolean(startDate, startTimestamp) ]]">{{startDate}}</template>
         </div>
         <div class="separator">至</div>
         <div class="item-date">
-          <template is="dom-if" if="[[ !toBoolean(endDate) ]]"><span>结束日期</span></template>
-          <template is="dom-if" if="[[ toBoolean(endDate) ]]">{{endDate}}</template>
+          <template is="dom-if" if="[[ !toListBoolean(endDate, endTimestamp) ]]"><span>结束日期</span></template>
+          <template is="dom-if" if="[[ toBoolean(endDate, endTimestamp) ]]">{{endDate}}</template>
         </div>
       </template>
       <template is="dom-if" if="[[ !isOneOf(type, 'dateRange', 'datetimeRange') ]]">
         <div class="box-value">
-          <template is="dom-if" if="[[ !toBoolean(value) ]]"><span>选择日期</span></template>
-          <template is="dom-if" if="[[ toBoolean(value) ]]">{{value}}</template>
+          <template is="dom-if" if="[[ !toListBoolean(value, timestamp) ]]"><span>选择日期</span></template>
+          <template is="dom-if" if="[[ toListBoolean(value, timestamp) ]]">{{value}}</template>
         </div>
       </template>
-      <template is="dom-if" if="[[ toBoolean(value) ]]">
+      <template is="dom-if" if="[[ toListBoolean(value, timestamp, startDate, endDate, startTimestamp, endTimestamp) ]]">
         <div class="clear" on-click="clear"><iron-icon class="icon-clear" icon=icons:clear></iron-icon></div>
       </template>
       <div id="targetDate">
@@ -485,6 +485,8 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       '_minmaxChanged(min, max)'
     ];
   }
+
+
 
   /**
    * @param value
