@@ -224,22 +224,8 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   getElemPos(obj){
-    let pos = {"top":0, "left":0};
-    if (obj.offsetParent){
-      while (obj.offsetParent){
-        if (obj.scrollWidth - obj.clientWidth > 0) {
-          obj.addEventListener('scroll', e => {
-            this.close();
-          })
-        }
-        pos.top += obj.offsetTop - obj.scrollTop;
-        pos.left += obj.offsetLeft - obj.scrollLeft;
-        obj = obj.offsetParent;
-      }
-    }
-    pos.top -= document.documentElement.scrollTop - 2;
-    pos.left -= document.documentElement.scrollLeft;
-    return pos;
+    const {x, y} = obj.getBoundingClientRect();
+    return ({top: y + 2, left: x});
   }
 
   _onButtonDropdownClick(e) {
