@@ -161,8 +161,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         transition: max-height 200ms ease-in;
 
         max-height: 0;
-        position: absolute;
-        width: 100%;
+        position: fixed;
         overflow-y: auto;
         z-index: 99;
         margin-top: 1px;
@@ -184,13 +183,13 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         max-height: 300px;
       }
       
-      #select-collapse[data-collapse-open-top] {
-        top: 100%;
-      }
+      /*#select-collapse[data-collapse-open-top] {*/
+        /*top: 100%;*/
+      /*}*/
       
-      #select-collapse[data-collapse-open-bottom] {
-        bottom: 100%;
-      }
+      /*#select-collapse[data-collapse-open-bottom] {*/
+        /*bottom: 100%;*/
+      /*}*/
 
       .selector-panel {
         display: block;
@@ -442,20 +441,23 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
    * 点击事件
    */
   _onInputClick(e) {
-    const flag = e.clientY < window.innerHeight - this.items.length * 40;
-    if (flag) {
-      this.$['select-collapse'].style['top'] = '100%';
-      this.$['select-collapse'].style['bottom'] = null;
-    } else {
-      this.$['select-collapse'].style['top'] = null;
-      this.$['select-collapse'].style['bottom'] = '100%';
-    }
+    const {left, top} = this.getElemPos(this);
+    console.log(left, top);
+    this.$['select-collapse'].style['left'] = left + 'px';
+    this.$['select-collapse'].style['top'] = top + this.clientHeight + 'px';
+    this.$['select-collapse'].style['width'] = this.clientWidth + 'px';
     const classList = e.target.classList;
     if (classList.contains('tag-deleter') || classList.contains('tag-cursor')) {
       return;
     }
 
     this.toggleCollapse();
+  }
+
+  getElemPos(obj){
+    console.log(obj.getBoundingClientRect(), 'op');
+    const {x, y} = obj.getBoundingClientRect();
+    return ({top: y + 2, left: x});
   }
 
   _valueChanged(value, items = []) {
