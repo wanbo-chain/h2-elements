@@ -259,7 +259,7 @@
 </div>
 
 <div class="vertical-section-container centered">
-  <h3>可选表格</h3>
+  <h3>可多选全选表格</h3>
   <demo-snippet>
     <template>
       <style>
@@ -296,6 +296,51 @@
         });
         
         table31.addEventListener('rows-all-selection-changed', ({detail}) => {
+          console.log(detail);
+        })
+      </script>
+    </template>
+  </demo-snippet>
+</div>
+
+<div class="vertical-section-container centered">
+  <h3>只可单选表格</h3>
+  <demo-snippet>
+    <template>
+      <style>
+        #table {
+          width: 100%;
+        }
+
+        .summary {
+          display: flex;
+          flex-flow: row nowrap;
+          justify-content: space-evenly;
+        }
+
+      </style>
+      <h2-table id="table33" selectable radio>
+        <h2-table-column label="名称 / 性别" width="100" props="name, sex" separator=" / "></h2-table-column>
+        <h2-table-column prop="phone" label="电话号码" width="200"></h2-table-column>
+
+        <div slot="summarySlot" class="summary">
+          <div>总价： 4人</div>
+          <div>男： 2人</div>
+          <div>女： 2人</div>
+        </div>
+      </h2-table>
+      <script>
+        table33.data = [
+          {sex: '男', name: 'Wahson', phone: '1231231232', modify: true},
+          {sex: '女', name: 'Lucy', phone: '1231231233'},
+          {sex: '女', name: 'Rose', phone: '1231231234'},
+          {sex: '男', name: 'James', phone: '1231231235'}
+        ];
+        table33.addEventListener('row-selection-changed', ({detail}) => {
+          console.log(detail, table33.getSelectedRows());
+        });
+
+        table33.addEventListener('rows-all-selection-changed', ({detail}) => {
           console.log(detail);
         })
       </script>
