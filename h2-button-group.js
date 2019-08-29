@@ -70,7 +70,7 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
       .trigger:hover {
-        
+      
       }
 
       .trigger__label {
@@ -141,7 +141,7 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
     </iron-collapse>
 `;
   }
-
+  
   static get properties() {
     return {
       /**
@@ -160,7 +160,7 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
         value: false,
         reflectToAttribute: true
       },
-
+      
       /**
        * The dropdown items.
        * @type Array
@@ -168,7 +168,7 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       items: {
         type: Array
       },
-
+      
       /**
        * Attribute name for label.
        * @type {string}
@@ -186,32 +186,32 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
     };
   }
-
+  
   static get is() {
     return "h2-button-group";
   }
-
+  
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('scroll', e => {
       this.close();
     });
   }
-
+  
   /**
    * Expand the group.
    */
   open() {
     this.opened = true;
   }
-
+  
   /**
    * Collpase the group.
    */
   close() {
     this.opened = false;
   }
-
+  
   /**
    * Toggle the group.
    */
@@ -222,15 +222,15 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.$.collapse.style.width = this.clientWidth + 'px';
     this.opened = !this.opened;
   }
-
-  getElemPos(obj){
+  
+  getElemPos(obj) {
     const {x, y} = obj.getBoundingClientRect();
-    return ({top: y + 2, left: x});
+    return {top: y + 2, left: x};
   }
-
+  
   _onButtonDropdownClick(e) {
     const target = e.target,
-        bindItem = e.target.bindItem || e.target.getAttribute('bind-item');
+      bindItem = e.target.bindItem || e.target.getAttribute('bind-item');
     this.dispatchEvent(new CustomEvent('item-click', {detail: {target, bindItem}}));
   }
 }

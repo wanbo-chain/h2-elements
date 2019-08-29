@@ -38,6 +38,7 @@ import '@polymer/iron-selector/iron-selector';
 import './behaviors/base-behavior.js';
 import {BaseBehavior} from "./behaviors/base-behavior";
 import './behaviors/h2-elements-shared-styles.js';
+
 /**
  *
  * @customElement
@@ -481,7 +482,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   _selectedValuesChanged() {
-    if(this.selectedValues.length > 0) {
+    if (this.selectedValues.length > 0) {
       this.value = this.selectedValues.map(selected => selected[this.attrForValue]).join(',');
     } else {
       this.value = undefined;
