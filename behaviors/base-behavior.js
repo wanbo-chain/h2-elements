@@ -185,7 +185,7 @@ export const BaseBehavior = {
    * @param {*} val
    */
   isExistTruthy(...args) {
-    args.some(arg => !!arg)
+    return args.some(arg => !!arg)
   },
   
   /**
