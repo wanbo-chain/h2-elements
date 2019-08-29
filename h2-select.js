@@ -427,6 +427,10 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.closeCollapse();
     });
     this.isFocus = !this.classList.contains('size-selector');
+    // document.addEventListener('scroll', (e) => {
+    //   console.log(e, 'body');
+    //   this.getElemPos(this);
+    // })
   }
 
   __refreshUIState() {
@@ -441,11 +445,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
    * 点击事件
    */
   _onInputClick(e) {
-    const {left, top} = this.getElemPos(this);
-    console.log(left, top);
-    this.$['select-collapse'].style['left'] = left + 'px';
-    this.$['select-collapse'].style['top'] = top + this.clientHeight + 'px';
-    this.$['select-collapse'].style['width'] = this.clientWidth + 'px';
+    this.getElemPos(this);
     const classList = e.target.classList;
     if (classList.contains('tag-deleter') || classList.contains('tag-cursor')) {
       return;
@@ -455,9 +455,11 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   getElemPos(obj){
-    console.log(obj.getBoundingClientRect(), 'op');
     const {x, y} = obj.getBoundingClientRect();
-    return ({top: y + 2, left: x});
+    const {left, top} = {top: y + 2, left: x};
+    this.$['select-collapse'].style['left'] = left + this.clientWidth - this.$['select__container'].clientWidth + 'px';
+    this.$['select-collapse'].style['top'] = top + this.clientHeight + 'px';
+    this.$['select-collapse'].style['width'] = this.$['select__container'].clientWidth + 'px';
   }
 
   _valueChanged(value, items = []) {
