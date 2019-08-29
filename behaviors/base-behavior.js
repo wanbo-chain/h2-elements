@@ -181,14 +181,11 @@ export const BaseBehavior = {
 
 
   /**
-   * To boolean.
+   * check if there's a truthy in the giving args
    * @param {*} val
    */
-  toListBoolean(...args) {
-    if (Array.isArray(args) && args.length > 0) {
-      return args.findIndex(val => val) > -1;
-    }
-    return false
+  isExistTruthy(...args) {
+    args.some(arg => !!arg)
   },
   
   /**

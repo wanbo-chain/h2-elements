@@ -283,22 +283,22 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       <iron-icon class="date-range" icon=icons:date-range></iron-icon>
       <template is="dom-if" if="[[ isOneOf(type, 'dateRange', 'datetimeRange') ]]">
         <div class="item-date">
-          <template is="dom-if" if="[[ !toListBoolean(startDate, startTimestamp) ]]"><span>开始日期</span></template>
-          <template is="dom-if" if="[[ toListBoolean(startDate, startTimestamp) ]]">{{startDate}}</template>
+          <template is="dom-if" if="[[ !isExistTruthy(startDate, startTimestamp) ]]"><span>开始日期</span></template>
+          <template is="dom-if" if="[[ isExistTruthy(startDate, startTimestamp) ]]">{{startDate}}</template>
         </div>
         <div class="separator">至</div>
         <div class="item-date">
-          <template is="dom-if" if="[[ !toListBoolean(endDate, endTimestamp) ]]"><span>结束日期</span></template>
-          <template is="dom-if" if="[[ toListBoolean(endDate, endTimestamp) ]]">{{endDate}}</template>
+          <template is="dom-if" if="[[ !isExistTruthy(endDate, endTimestamp) ]]"><span>结束日期</span></template>
+          <template is="dom-if" if="[[ isExistTruthy(endDate, endTimestamp) ]]">{{endDate}}</template>
         </div>
       </template>
       <template is="dom-if" if="[[ !isOneOf(type, 'dateRange', 'datetimeRange') ]]">
         <div class="box-value">
-          <template is="dom-if" if="[[ !toListBoolean(value, timestamp) ]]"><span>选择日期</span></template>
-          <template is="dom-if" if="[[ toListBoolean(value, timestamp) ]]">{{value}}</template>
+          <template is="dom-if" if="[[ !isExistTruthy(value, timestamp) ]]"><span>选择日期</span></template>
+          <template is="dom-if" if="[[ isExistTruthy(value, timestamp) ]]">{{value}}</template>
         </div>
       </template>
-      <template is="dom-if" if="[[ toListBoolean(value, timestamp, startDate, endDate, startTimestamp, endTimestamp) ]]">
+      <template is="dom-if" if="[[ isExistTruthy(value, timestamp, startDate, endDate, startTimestamp, endTimestamp) ]]">
         <div class="clear" on-click="clear"><iron-icon class="icon-clear" icon=icons:clear></iron-icon></div>
       </template>
       <div id="targetDate">
@@ -485,9 +485,6 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       '_minmaxChanged(min, max)'
     ];
   }
-
-
-
   /**
    * @param value
    * @private
@@ -679,18 +676,22 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
     if (this.max) maxTimestamp = new Date(this.max).getTime();
     if (this.startDate) startDate = new Date(this.startDate.indexOf(':') > -1 ? this.startDate : this.startDate + ' 00:00');
     if (this.endDate) endDate = new Date(this.endDate.indexOf(':') > -1 ? this.endDate : this.endDate + ' 00:00');
+    const days = [];
     for (let i = min; i < max; i++) {
       const obj = new Date(this.year, this.month - 1, i);
       const startObj = new Date(this.year, this.month - 1, i + 1) - 1;
       const currMonth = i > 0 && i <= totalDays;
       let select = !this.rangeList.includes(this.type) ? obj.getDate() === this.date && this.value && currMonth : (this.startDate && startDate <= startObj && this.endDate && endDate >= obj);
-      this.push('dayList', {
+      days.push({
         date: obj.getDate(),
         currMonth,
         select,
         disabled: minTimestamp > obj.getTime() || maxTimestamp < obj.getTime()
-      })
+      });
     }
+    
+    this.push('dayList', days);
+  
     if (this.startDate && this.endDate && this.rangeList.includes(this.type)) {
       const dayList = this.dayList.slice();
       const startIndex = dayList.findIndex(val => val.select);
@@ -820,11 +821,11 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
         // 先判断选择第二个时间是否早于第一个
         let endTimestamp;
         if (this.startTimestamp >= timestamp) {
-          endTimestamp = this.type.includes('time') ? this.startTimestamp : (this.startTimestamp + 24 * 3600 * 1000  - 1);
+          endTimestamp = this.type.includes('time') ? this.startTimestamp : (this.startTimestamp + 86400000  - 1);
           this.set('startTimestamp', timestamp);
           this.set('endTimestamp', endTimestamp);
         } else {
-          endTimestamp = this.type.includes('time') ? timestamp : (timestamp + 24 * 3600 * 1000  - 1);
+          endTimestamp = this.type.includes('time') ? timestamp : (timestamp + 86400000  - 1);
           this.set('endTimestamp', endTimestamp);
         }
       }
