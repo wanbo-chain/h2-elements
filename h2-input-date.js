@@ -690,7 +690,7 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       });
     }
     
-    this.push('dayList', days);
+    this.set('dayList', days);
   
     if (this.startDate && this.endDate && this.rangeList.includes(this.type)) {
       const dayList = this.dayList.slice();
