@@ -372,8 +372,9 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   __rowSelecttion({model: {row, rowIndex}}) {
     if (this.radio) {
+      const findIndex = this.__tableData.findIndex(val => val.__selected);
       this.__tableData = this.__tableData.map(val => Object.assign({}, val, {__selected: false}));
-      this.set(`__tableData.${rowIndex}.__selected`, true);
+      this.set(`__tableData.${rowIndex}.__selected`, findIndex > -1);
     }
     if (!this.radio) this.__selectedState = this.__tableData.some(d => d.__selected);
     this.dispatchEvent(new CustomEvent('row-selection-changed', {detail: {row, selected: row.__selected}}));
