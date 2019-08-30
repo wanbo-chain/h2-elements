@@ -113,8 +113,8 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       #picker-collapse {
         display: flex;
-        position: absolute;
-        top: 100%;
+        position: fixed;
+        /*top: 100%;*/
         width: 100%;
         margin-top: 1px;
         border-radius: 4px;
@@ -126,7 +126,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
         visibility: visible;
         opacity: 1;
-        transition: all 150ms ease-in;
+        /*transition: all 150ms ease-in;*/
 
         @apply --h2-picker-dropdown;
       }
@@ -214,7 +214,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
        <div class="h2-label">[[label]]</div>
     </template>
     
-    <div class="input-wrap">
+    <div class="input-wrap" id="select__container">
       <div class="input-container">
         <div class="tags-input" on-click="__openCollapse">
           <div id="placeholder">[[placeholder]]</div>
@@ -503,8 +503,18 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.addEventListener("blur", e => {
       e.stopPropagation();
       if (!this.value) this.text = this._userInputKeyword;
-      this.displayCollapse(false);
+      setTimeout(() => {
+        this.displayCollapse(false);
+      }, 100);
     });
+
+    let parent = this.offsetParent;
+    while (parent) {
+      parent.addEventListener('scroll', e => {
+        this.__collapsePosition()
+      });
+      parent = parent.offsetParent;
+    }
   }
 
   __calcTagName(item) {
@@ -699,10 +709,27 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   __openCollapse({target: {classList}}) {
     if (classList.contains('tag-deleter')) return;
+    this.__collapsePosition();
 
     this.displayCollapse(true);
     this.__focusOnKeywordInput();
     this._switchFocusItemAt(0);
+  }
+
+  __collapsePosition() {
+    const {left, top} = this.__getElemPos(this);
+    this.$['picker-collapse'].style['left'] = left + this.clientWidth - this.$['select__container'].clientWidth + 'px';
+    this.$['picker-collapse'].style['top'] = top + this.clientHeight + 'px';
+    this.$['picker-collapse'].style['width'] = this.$['select__container'].clientWidth + 'px';
+  }
+
+
+  __getElemPos(obj){
+    const {x, y} = obj.getBoundingClientRect();
+    return {
+      left: x,
+      top: y + 2
+    }
   }
 
   __focusOnKeywordInput() {

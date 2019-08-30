@@ -428,10 +428,13 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.closeCollapse();
     });
     this.isFocus = !this.classList.contains('size-selector');
-    // document.addEventListener('scroll', (e) => {
-    //   console.log(e, 'body');
-    //   this.getElemPos(this);
-    // })
+    let parent = this.offsetParent;
+    while (parent) {
+      parent.addEventListener('scroll', e => {
+        this.getElemPos()
+      });
+      parent = parent.offsetParent;
+    }
   }
 
   __refreshUIState() {
