@@ -110,7 +110,7 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
       .item-date {
-        flex: 1;
+        width: 40%;
         padding: 0 5px;
         text-align: center;
       }
