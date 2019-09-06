@@ -72,13 +72,22 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
         display: flex;
         align-items: center;
         line-height: inherit;
-        min-width: 0;
+        min-width: 200px;
         border: 1px solid #ccc;
         border-radius: 4px;
         padding: 2px 5px;
         position: relative;
         cursor: pointer;
       }
+      
+      :host([type='dateRange']) .input__container {
+        min-width: 300px;
+      }
+      
+      :host([type='datetimeRange']) .input__container {
+        min-width: 360px;
+      }
+      
       
       .date-range {
         width: 16px;
@@ -110,7 +119,7 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
       .item-date {
-        width: 40%;
+        flex: 1;
         padding: 0 5px;
         text-align: center;
       }
@@ -298,9 +307,11 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
           <template is="dom-if" if="[[ isExistTruthy(value, timestamp) ]]">{{value}}</template>
         </div>
       </template>
-      <template is="dom-if" if="[[ isExistTruthy(value, timestamp, startDate, endDate, startTimestamp, endTimestamp) ]]">
-        <div class="clear" on-click="clear"><iron-icon class="icon-clear" icon=icons:clear></iron-icon></div>
-      </template>
+      <div class="clear">
+        <template is="dom-if" if="[[ isExistTruthy(value, timestamp, startDate, endDate, startTimestamp, endTimestamp) ]]">
+          <iron-icon class="icon-clear" icon=icons:clear on-click="clear"></iron-icon>
+        </template>
+      </div>
       <div id="targetDate">
       </div>
     </div>
@@ -438,7 +449,8 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       },
       type: {
         type: String,
-        value: 'date'
+        value: 'date',
+        reflectToAttribute: true
       },
       rangeList: {
         type: Array,
