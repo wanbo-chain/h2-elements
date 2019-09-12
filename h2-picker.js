@@ -477,6 +477,10 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       mode: {
         type: String,
         value: 'default'
+      },
+      shortcutKey: {
+        type: String,
+        value: 'Enter'
       }
     };
   }
@@ -750,7 +754,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     event.stopPropagation();
 
     const key = event.key;
-    if (event.altKey || key === 'Enter') {
+    if (event.altKey || key === this.shortcutKey) {
       event.preventDefault();
     }
 
@@ -773,7 +777,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
           }
           break;
 
-        case 'Enter':
+        case this.shortcutKey:
           if (collapseOpend && this._displayItems.length > 0 && this.__focusIndex < this._displayItems.length) {
             this._selectItemAt(this.__focusIndex);
           }

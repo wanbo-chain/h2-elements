@@ -477,6 +477,14 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       stepTime: {
         type: Number,
         value: 30
+      },
+      startTime: {
+        type: String,
+        value: '00:00:00'
+      },
+      endTime: {
+        type: String,
+        value: '23:30:00'
       }
     };
   }
@@ -544,9 +552,14 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   _getTimestampToDate(timestamp) {
     const date = new Date(timestamp);
-    let value = `${date.getFullYear()}-${this._preReplenish(date.getMonth() + 1, 2, "0")}-${this._preReplenish(date.getDate(), 2, "0")}`;
+    let value = this._getTimestampTo(timestamp);
     if (this.type.includes('time')) value += ` ${this.getTime(date)}`;
     return value;
+  }
+
+  _getTimestampTo(timestamp) {
+    const date = new Date(timestamp);
+    return `${date.getFullYear()}-${this._preReplenish(date.getMonth() + 1, 2, "0")}-${this._preReplenish(date.getDate(), 2, "0")}`;
   }
 
   _startDateChanged(startDate) {
@@ -572,6 +585,7 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
     }
     let value = this._getTimestampToDate(startTimestamp);
     this.getTimeList(value, 'start');
+    if (this.type.includes('time')) value = this.startDateTimeList.find(item => item.timestamp >= startTimestamp).value;
     this.set('startDate', value);
   }
 
@@ -583,6 +597,7 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
     }
     let value = this._getTimestampToDate(endTimestamp);
     this.getTimeList(value, 'end');
+    if (this.type.includes('time')) value = this.endDateTimeList.find(item => item.timestamp >= endTimestamp).value;
     this.set('endDate', value);
     if (this.type !== 'datetimeRange') this.$.dateBox.close();
   }
@@ -592,12 +607,16 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   getTimeList(date, type) {
-    const listLength = 24 / (this.stepTime / 60);
+    const endTimeArr = this.endTime.split(':');
+    const listLength = !this.type.includes('time') ? 24 / (this.stepTime / 60) : Math.ceil((endTimeArr[0] * 60 + +endTimeArr[1] + (+endTimeArr[2] / 60)) / this.stepTime);
+    const startTimeArr = this.startTime.split(':');
+    const timeI = !this.type.includes('time') ? 0 : Math.floor((startTimeArr[0] * 60 + +startTimeArr[1] + (+startTimeArr[2] / 60)) / this.stepTime);
     let startDateTimeList = [];
-    for (let i = 0; i < listLength; i++) {
+    for (let i = timeI; i <= listLength; i++) {
       const datetime = new Date(0, 0, 0, 0, i * this.stepTime);
       const value = `${date.split(' ')[0]} ${this.getTime(datetime)}`;
-      startDateTimeList.push({value, label: value})
+      const timestamp = new Date(value).getTime();
+      startDateTimeList.push({value, label: value, timestamp})
     }
     this.set(`${type}DateTimeList`, startDateTimeList);
   }
@@ -779,8 +798,9 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
     if (!this.rangeList.includes(this.type) && !item.currMonth) {
       item.date >= 24 ? this.monthMinus() : this.monthAdd();
     }
-    const timestamp = new Date(this.year, month, this.date).getTime();
-    this.setTimestamp(timestamp);
+    const transientDate = this._getTimestampTo(new Date(this.year, month, this.date));
+    // const timestamp = new Date(this.year, month, this.date).getTime();
+    this.setTimestamp(transientDate);
   }
 
   clearDate() {
@@ -815,23 +835,28 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.getDayList();
     const index = this.dayList.findIndex(val => val.date === this.date && val.currMonth);
     this.set(`dayList.${index}`, Object.assign({}, this.dayList[index], {select: true}));
-    const timestamp = new Date(this.year, this.month - 1, this.date).getTime();
-    this.setTimestamp(timestamp);
+    // const timestamp = new Date(this.year, this.month - 1, this.date).getTime();
+    const transientDate = this._getTimestampTo(new Date(this.year, this.month - 1, this.date));
+    this.setTimestamp(transientDate);
   }
 
   // 赋值
-  setTimestamp(timestamp) {
+  setTimestamp(date) {
+    let timestamp;
     // 判断日期时间选择是否为选择范围，是赋值给timestamp
     if (!this.rangeList.includes(this.type)) {
+      timestamp = new Date(date).getTime();
       this.set('timestamp', timestamp);
       if (!this.type.includes('time')) this.$.dateBox.close();
     } else {
       if ((this.startTimestamp && this.endTimestamp) || (!this.startTimestamp && !this.endTimestamp)) {
+        timestamp = (this.type.includes('time') ? new Date(date + ` ${this.startTime}`) : new Date(date + ` 00:00:00`)).getTime();
         this.set('startTimestamp', timestamp);
         this.set('endTimestamp', null);
       } else {
         // 先判断选择第二个时间是否早于第一个
         let endTimestamp;
+        timestamp = (this.type.includes('time') ? new Date(date + ` ${this.endTime}`) : new Date(date + ` 00:00:00`)).getTime();
         if (this.startTimestamp >= timestamp) {
           endTimestamp = this.type.includes('time') ? this.startTimestamp : (this.startTimestamp + 86400000  - 1);
           this.set('startTimestamp', timestamp);

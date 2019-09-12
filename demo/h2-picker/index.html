@@ -107,10 +107,12 @@ document.body.appendChild($_documentContainer.content);
           }
         ];
         picker.attrForLabel = ({category, designation, manufacturerName}) => `${category} | ${designation} | ${manufacturerName}`;
+        picker.shortcutKey = ' ';
         picker.pickerMeta = productPickerMeta;
         picker.items = products;
 
         picker1.attrForLabel = "label";
+        picker1.shortcutKey = ' ';
         picker1.items = items;
       </script>
     </template>
