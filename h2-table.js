@@ -203,6 +203,10 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         box-shadow: 10px 0 10px -10px rgba(0,0,0,.12);
       }
       
+      .table__fixed .table__body__container {
+        overflow-x: hidden;
+      }
+      
       .table__fixed__right {
         position: absolute;
         right: 0;
@@ -229,53 +233,53 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       <div class="table_box">
         <div class="table__scroll__head">
         <div class="table__scroll__head__inner"></div>
-        <table class="table__head" cellpadding="0" cellspacing="0" border="0">
-          <colgroup>
-            <template is="dom-if" if="[[ selectable ]]">
-              <col width="40">
-            </template>
-            <template is="dom-if" if="[[ __showExpansion ]]">
-              <col width="30">
-            </template>
-            <template is="dom-if" if="[[ showIndex ]]">
-              <col width="52">
-            </template>
-            <template is="dom-repeat" items="[[columnInfos]]">
-                <col width="[[item.width]]">
-            </template>
-          </colgroup>
-          <thead>
-            <tr>
+          <table class="table__head" cellpadding="0" cellspacing="0" border="0">
+            <colgroup>
               <template is="dom-if" if="[[ selectable ]]">
-                 <th id="selectable">
-                  <template is="dom-if" if="[[ !radio ]]">
-                    <paper-checkbox class="checkbox-item" noink checked="{{__selectedState}}" on-click="__rowSelecttionAll"></paper-checkbox>
-                  </template>
-                 </th>
+                <col width="40">
               </template>
               <template is="dom-if" if="[[ __showExpansion ]]">
-                 <th id="__showExpansion"></th>
+                <col width="30">
               </template>
               <template is="dom-if" if="[[ showIndex ]]">
-                 <th id="showIndex">序号</th>
+                <col width="52">
               </template>
-              <template is="dom-repeat" items="[[columnInfos]]" as="column">
-                <th class="table__column" style$="[[column.cellStyle]]" aria-frozen$="[[column.frozen]]">
-                  <div class="header__cell">
-                    <div class="table__cell">[[column.label]]</div>
-                    <template is="dom-if" if="[[ column.sortable ]]">
-                      <div class="table__sort__icons" on-tap="__sortTheColumn">
-                        <iron-icon class="table__sort__icon ascending" icon="icons:arrow-drop-up"></iron-icon>
-                        <iron-icon class="table__sort__icon descending" icon="icons:arrow-drop-down"></iron-icon>
-                      </div>
+              <template is="dom-repeat" items="[[columnInfos]]">
+                  <col width="[[item.width]]">
+              </template>
+            </colgroup>
+            <thead>
+              <tr>
+                <template is="dom-if" if="[[ selectable ]]">
+                   <th id="selectable">
+                    <template is="dom-if" if="[[ !radio ]]">
+                      <paper-checkbox class="checkbox-item" noink checked="{{__selectedState}}" on-click="__rowSelecttionAll"></paper-checkbox>
                     </template>
-                  </div>
-                </th>
-              </template>
-            </tr>
-          </thead>
-        </table>
-      </div>
+                   </th>
+                </template>
+                <template is="dom-if" if="[[ __showExpansion ]]">
+                   <th id="__showExpansion"></th>
+                </template>
+                <template is="dom-if" if="[[ showIndex ]]">
+                   <th id="showIndex">序号</th>
+                </template>
+                <template is="dom-repeat" items="[[columnInfos]]" as="column">
+                  <th class="table__column" style$="[[column.cellStyle]]" aria-frozen$="[[column.frozen]]">
+                    <div class="header__cell">
+                      <div class="table__cell">[[column.label]]</div>
+                      <template is="dom-if" if="[[ column.sortable ]]">
+                        <div class="table__sort__icons" on-tap="__sortTheColumn">
+                          <iron-icon class="table__sort__icon ascending" icon="icons:arrow-drop-up"></iron-icon>
+                          <iron-icon class="table__sort__icon descending" icon="icons:arrow-drop-down"></iron-icon>
+                        </div>
+                      </template>
+                    </div>
+                  </th>
+                </template>
+              </tr>
+            </thead>
+          </table>
+        </div>
         <div class="table__body__container" style$="[[tableBodyStyle]]" id="tableBody">
           <table class="table__body" cellpadding="0" cellspacing="0" border="0">
             <colgroup>
