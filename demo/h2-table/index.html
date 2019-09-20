@@ -124,6 +124,184 @@
 </div>
 
 <div class="vertical-section-container centered">
+  <h3>固定表头</h3>
+  <demo-snippet>
+    <template>
+      <style>
+        #table9991 {
+          width: 100%;
+        }
+
+      </style>
+      <h2-table id="table9991" tooltip height="300">
+        <h2-table-column prop="sex" label="性别" width="100" type="expand"  model-as="user">
+          <template>
+            <style>
+              .ext-container {
+                display: flex;
+                width: 550px;
+              }
+              .ext-container > div {
+                width: 250px;
+              }
+            </style>
+            <div class="ext-container">
+              <div>姓名：[[user.name]]</div>
+              <div>sex: [[user.sex]]</div>
+              <div>phone: [[user.phone]]</div>
+            </div>
+          </template>
+        </h2-table-column>
+        <h2-table-column prop="name" label="名称" width="100"></h2-table-column>
+        <h2-table-column prop="phone" label="电话号码" width="160" default-value="--" cell-style="text-align: right;"></h2-table-column>
+        <h2-table-column prop="phone" label="电话号码1" width="160" default-value="--" cell-style="text-align: right;"></h2-table-column>
+        <h2-table-column prop="phone" label="电话号码2" width="160" default-value="--" cell-style="text-align: right;"></h2-table-column>
+        <h2-table-column prop="phone" label="电话号码3" width="160" default-value="--" cell-style="text-align: right;"></h2-table-column>
+        <h2-table-column prop="phone" label="电话号码4" width="160" default-value="--" cell-style="text-align: right;"></h2-table-column>
+        <h2-table-column label="操作" width="300" type="operate" model-as="user" frozen>
+          <template>
+            <template is="dom-if" if="[[ isEqual(user.name, 'Wahson') ]]">
+              <h2-button class="action-bar" on-click="view">[[global.lookup]]</h2-button>
+            </template>
+
+            <template is="dom-if" if="[[ user.modify ]]">
+              <h2-button class="action-bar" on-click="modify">[[global.modify]]</h2-button>
+            </template>
+
+            <template is="dom-if" if="[[ user.actions ]]">
+              <h2-button-group label="[[global.more]]">
+                <template is="dom-repeat" items="[[user.actions]]" as="action">
+                  <div on-click="more">[[action]]</div>
+                </template>
+              </h2-button-group>
+            </template>
+
+          </template>
+        </h2-table-column>
+      </h2-table>
+      <script>
+
+        table9991.view = ({model}) => {
+          console.log("view", model.user);
+        };
+
+        table9991.modify = ({model}) => {
+          console.log("modify", model.user);
+        };
+
+        table9991.more = (e) => {
+          console.log(e.model.action, e.model.parentModel.user);
+        };
+
+        table9991.global = {
+          lookup: "查看",
+          modify: "修改",
+          more: "更多"
+        };
+
+        table9991.data = [
+          {sex: '男', name: 'Wahson', phone: '12341111116', modify: true},
+          {sex: '女', name: 'Rose', actions:['more']},
+          {sex: '女', name: 'Lucy', phone: '12390'},
+          {sex: '男', name: 'James', phone: '12326', modify: true},
+          {sex: '男', name: 'Cat', phone: '12349'},
+          {sex: '男', name: 'Apple', phone: '1211111111345', modify: true, actions:['more', 'more1']}
+        ]
+      </script>
+    </template>
+  </demo-snippet>
+</div>
+
+<div class="vertical-section-container centered">
+  <h3>固定列（固定左边列或固定右列）</h3>
+  <demo-snippet>
+    <template>
+      <style>
+        #table999 {
+          width: 100%;
+        }
+
+      </style>
+      <h2-table id="table999" tooltip>
+        <h2-table-column prop="sex" label="性别" width="100" type="expand"  model-as="user" fixed>
+          <template>
+            <style>
+              .ext-container {
+                display: flex;
+                width: 550px;
+              }
+              .ext-container > div {
+                width: 250px;
+              }
+            </style>
+            <div class="ext-container">
+              <div>姓名：[[user.name]]</div>
+              <div>sex: [[user.sex]]</div>
+              <div>phone: [[user.phone]]</div>
+            </div>
+          </template>
+        </h2-table-column>
+        <h2-table-column prop="name" label="名称" width="100"></h2-table-column>
+        <h2-table-column prop="phone" label="电话号码" width="160" default-value="--" cell-style="text-align: right;"></h2-table-column>
+        <h2-table-column prop="phone" label="电话号码1" width="160" default-value="--" cell-style="text-align: right;"></h2-table-column>
+        <h2-table-column prop="phone" label="电话号码2" width="160" default-value="--" cell-style="text-align: right;"></h2-table-column>
+        <h2-table-column prop="phone" label="电话号码3" width="160" default-value="--" cell-style="text-align: right;"></h2-table-column>
+        <h2-table-column prop="phone" label="电话号码4" width="160" default-value="--" cell-style="text-align: right;"></h2-table-column>
+        <h2-table-column label="操作" width="300" type="operate" model-as="user" frozen fixed="right">
+          <template>
+            <template is="dom-if" if="[[ isEqual(user.name, 'Wahson') ]]">
+              <h2-button class="action-bar" on-click="view">[[global.lookup]]</h2-button>
+            </template>
+
+            <template is="dom-if" if="[[ user.modify ]]">
+              <h2-button class="action-bar" on-click="modify">[[global.modify]]</h2-button>
+            </template>
+
+            <template is="dom-if" if="[[ user.actions ]]">
+              <h2-button-group label="[[global.more]]">
+                <template is="dom-repeat" items="[[user.actions]]" as="action">
+                  <div on-click="more">[[action]]</div>
+                </template>
+              </h2-button-group>
+            </template>
+
+          </template>
+        </h2-table-column>
+      </h2-table>
+      <script>
+
+        table999.view = ({model}) => {
+          console.log("view", model.user);
+        };
+
+        table999.modify = ({model}) => {
+          console.log("modify", model.user);
+        };
+
+        table999.more = (e) => {
+          console.log(e.model.action, e.model.parentModel.user);
+        };
+
+        table999.global = {
+          lookup: "查看",
+          modify: "修改",
+          more: "更多"
+        };
+
+        table999.data = [
+          {sex: '男', name: 'Wahson', phone: '12341111116', modify: true},
+          {sex: '女', name: 'Rose', actions:['more']},
+          {sex: '女', name: 'Lucy', phone: '12390'},
+          {sex: '男', name: 'James', phone: '12326', modify: true},
+          {sex: '男', name: 'Cat', phone: '12349'},
+          {sex: '男', name: 'Apple', phone: '1211111111345', modify: true, actions:['more', 'more1']}
+        ]
+      </script>
+    </template>
+  </demo-snippet>
+</div>
+
+<div class="vertical-section-container centered">
   <h3>带表框的表格</h3>
   <demo-snippet>
     <template>
@@ -191,12 +369,12 @@
         
       </style>
       <h2-table id="table2" show-summary show-index>
-        <h2-table-column prop="sex" label="性别" width="100" model-as="user"></h2-table-column>
-        <h2-table-column prop="name" label="名称" width="100"></h2-table-column>
+        <h2-table-column prop="sex" label="性别" width="100" model-as="user" fixed></h2-table-column>
+        <h2-table-column prop="name" label="名称" width="100" fixed></h2-table-column>
         <h2-table-column prop="phone2" label="电话号码2" width="100"></h2-table-column>
         <h2-table-column prop="phone1" label="电话号码1" width="200"></h2-table-column>
         <h2-table-column prop="phone" label="电话号码" width="200"></h2-table-column>
-        <h2-table-column prop="phone3" label="电话号码3" width="200"></h2-table-column>
+        <h2-table-column prop="phone3" label="电话号码3" width="200" fixed="right"></h2-table-column>
         <div slot="summarySlot" class="summary">
           <div>总价： 4人</div>
           <div>男： 2人</div>
