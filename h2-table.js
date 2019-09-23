@@ -121,6 +121,10 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         border-right: none;
       }
       
+      :host([height]) .table__scroll__head {
+        overflow: hidden;
+      }
+      
       .table__sort__icons {
         display: inline-flex;
         flex-direction: column;
@@ -231,7 +235,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     
     <div class="h2-table">
       <div class="table_box">
-        <div class="table__scroll__head">
+        <div class="table__scroll__head" id="tableHeader">
         <div class="table__scroll__head__inner"></div>
           <table class="table__head" cellpadding="0" cellspacing="0" border="0">
             <colgroup>
@@ -714,7 +718,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.set('__tableFixedRight', __tableFixedRight);
     });
     if (this.height) {
-      this.set('tableBodyStyle', `overflow-x: hidden; overflow-y: auto; height: ${this.height - 68}px;`)
+      this.set('tableBodyStyle', `overflow: auto; height: ${this.height - 68}px;`)
     }
   }
 
@@ -724,7 +728,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     setTimeout(() => {
       const tableBodyFixed = this.shadowRoot.querySelector('#tableBodyFixed');
       const tableBodyFixedRight = this.shadowRoot.querySelector('#tableBodyFixedRight');
-      (this.__tableFixed.length > 0 || this.__tableFixedRight.length > 0) && this.$.tableBody.addEventListener('scroll', () => {
+      this.$.tableBody.addEventListener('scroll', () => {
+        this.$.tableHeader.scrollLeft = this.$.tableBody.scrollLeft;
         if (tableBodyFixed) tableBodyFixed.scrollTop = this.$.tableBody.scrollTop;
         if (tableBodyFixedRight) tableBodyFixedRight.scrollTop = this.$.tableBody.scrollTop;
       });
