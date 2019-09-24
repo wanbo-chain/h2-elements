@@ -508,6 +508,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       e.stopPropagation();
       if (!this.value) this.text = this._userInputKeyword;
       setTimeout(() => {
+        if (this.shadowRoot.activeElement && this.shadowRoot.activeElement.id === 'keywordInput') return;
         this.displayCollapse(false);
       }, 100);
     });
