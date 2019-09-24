@@ -45,7 +45,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
       .h2-table td, .h2-table th {
-        /*padding: 10px;*/
+        padding: 0 10px;
         margin: 0;
         box-sizing: border-box;
         vertical-align: middle;
