@@ -226,7 +226,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
                 <iron-icon class="tag-deleter" icon="icons:clear" data-args="[[ getValueByKey(item, attrForValue) ]]" on-click="_deleteTag"></iron-icon>
             </span>
           </template>
-          <input id="keywordInput" value="{{ _userInputKeyword::input }}" autocomplete="off">
+          <input id="keywordInput" value="{{ _userInputKeyword::input }}" autocomplete="off" on-focus="__inputFocus">
         </div> <!-- class=tags-input -->
 
         <div class="mask"></div>
@@ -508,6 +508,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       e.stopPropagation();
       if (!this.value) this.text = this._userInputKeyword;
       setTimeout(() => {
+        if (this.shadowRoot.activeElement && this.shadowRoot.activeElement.id === 'keywordInput') return;
         this.displayCollapse(false);
       }, 100);
     });
@@ -713,10 +714,12 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   __openCollapse({target: {classList}}) {
     if (classList.contains('tag-deleter')) return;
-    this.__collapsePosition();
 
-    this.displayCollapse(true);
     this.__focusOnKeywordInput();
+  }
+
+  __inputFocus() {
+    this.displayCollapse(true);
     this._switchFocusItemAt(0);
   }
 
@@ -845,6 +848,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
    */
   displayCollapse(display) {
     this.$["picker-collapse"].hidden = !display;
+    if (this.$["picker-collapse"].hidden === false) this.__collapsePosition();
   }
 
   /**
