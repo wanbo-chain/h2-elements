@@ -207,6 +207,10 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         box-shadow: 10px 0 10px -10px rgba(0,0,0,.12);
       }
       
+      .table__fixed table {
+        width: 100%;
+      }
+      
       .table__fixed .table__body__container {
         overflow-x: hidden;
       }
@@ -439,12 +443,14 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                      <td>[[ calc(rowIndex, '+', 1) ]]</td>
                   </template>
                   <template is="dom-repeat" items="[[__tableFixed]]" index-as="columnIndex">
-                    <td style$="[[item.cellStyle]]" class="table__column" role$="[[item.type]]" id="fixed_row_[[rowIndex]]_column_[[columnIndex]]" aria-frozen$="[[item.frozen]]">
-                      <div class="td_cell">
-                        <div class="table__cell">[[ computeContentFixed(row, rowIndex, item, columnIndex) ]]</div>
-                        <paper-tooltip position="top" animation-delay="10" offset="5" fit-to-visible-bounds>[[ computeContentFixed(row, rowIndex, item, columnIndex) ]]</paper-tooltip>
-                      </div>
-                    </td>
+                    <template is="dom-if" if="[[ !isEqual(item.type, 'expand') ]]">
+                      <td style$="[[item.cellStyle]]" class="table__column" role$="[[item.type]]" id="fixed_row_[[rowIndex]]_column_[[columnIndex]]" aria-frozen$="[[item.frozen]]">
+                        <div class="td_cell">
+                          <div class="table__cell">[[ computeContentFixed(row, rowIndex, item, columnIndex) ]]</div>
+                          <paper-tooltip position="top" animation-delay="10" offset="5" fit-to-visible-bounds>[[ computeContentFixed(row, rowIndex, item, columnIndex) ]]</paper-tooltip>
+                        </div>
+                      </td>
+                    </template>
                   </template>
                 </tr>
            
