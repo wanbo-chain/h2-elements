@@ -754,7 +754,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
    * @private
    */
   _keyDownHandler(event) {
-    event.stopPropagation();
+    if (this.shortcutKey !== event.key && !this.$["picker-collapse"].hidden) event.stopPropagation();
 
     const key = event.key;
     if (event.altKey || key === this.shortcutKey) {
