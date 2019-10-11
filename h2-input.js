@@ -321,8 +321,7 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
   
   static get observers() {
     return [
-      '__refreshUIState(required)',
-      '__refreshUIState(value)',
+      '__refreshUIState(required, min, max, value)',
       '__allowedPatternChanged(allowedPattern)'
     ];
   }

@@ -628,7 +628,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   __rowSelecttionAll() {
     this.__tableData =
-      this.__tableData.map(d => Object.assign({}, d, {__selected: this.__selectedState}));
+        this.__tableData.map(d => Object.assign({}, d, {__selected: this.__selectedState}));
     this.dispatchEvent(new CustomEvent('rows-all-selection-changed', {detail: {selectedRows:  this.getSelectedRows()}}));
   }
 
@@ -643,6 +643,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   __dataChanged(data = []) {
     this.__tableData = data.slice();
+    this.domReady();
   }
 
   __calShowExpansion([first] = [{}]) {
@@ -728,8 +729,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     }
   }
 
-  ready() {
-    super.ready();
+  domReady() {
+    // super.ready();
     // 计算固定列总宽度
     setTimeout(() => {
       const tableBodyFixed = this.shadowRoot.querySelector('#tableBodyFixed');
@@ -743,7 +744,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       if (this.__tableFixed.length > 0) {
         let width = 0;
         for (let i = 0; i < this.__tableFixed.length; i++) {
-          width += this.shadowRoot.querySelector(`#row_0_column_${i}`).offsetWidth;
+          const domItem = this.shadowRoot.querySelector(`#row_0_column_${i}`);
+          width += (domItem && domItem.offsetWidth) || 0;
         }
         if (this.selectable) width += this.shadowRoot.querySelector('#selectable').offsetWidth;
         if (this.__showExpansion) width += this.shadowRoot.querySelector('#__showExpansion').offsetWidth;
@@ -759,7 +761,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       if (this.__tableFixedRight.length > 0) {
         let width = 0;
         for (let i = this.columnInfos.length - 1; i > this.columnInfos.length - this.__tableFixedRight.length - 1; i--) {
-          width += this.shadowRoot.querySelector(`#row_0_column_${i}`).offsetWidth;
+          const domItem = this.shadowRoot.querySelector(`#row_0_column_${i}`);
+          width += (domItem && domItem.offsetWidth) || 0;
         }
         const tableFixedRightStyle = `width: ${width}px`;
         this.set('tableFixedRightStyle', tableFixedRightStyle);
