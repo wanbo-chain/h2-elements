@@ -684,7 +684,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     }
 
     this.displayCollapse(false);
-    this.__focusOnKeywordInput();
+    if (this.multi) this.__focusOnKeywordInput();
     this._userInputKeyword = "";
   }
 
