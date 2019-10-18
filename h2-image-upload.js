@@ -24,16 +24,19 @@ import './behaviors/base-behavior.js';
 
 import {html, PolymerElement} from "@polymer/polymer";
 import {BaseBehavior} from "./behaviors/base-behavior";
+import {TipBehavior} from "./behaviors/tip-behavior";
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
 
 import './behaviors/h2-elements-shared-styles.js';
 import './h2-button.js';
+import './h2-dialog';
+import './h2-tip';
 /**
  * @customElement
  * @polymer
  * @demo demo/h2-image-upload/index.html
  */
-class H2ImageUpload extends mixinBehaviors([BaseBehavior], PolymerElement) {
+class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerElement) {
   static get template() {
     return html`
     <style include="h2-elements-shared-styles">
@@ -150,9 +153,9 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior], PolymerElement) {
         <div class="mask"></div>
       </div>
     </div>
-    <paper-dialog id="viewer-dialog" on-click="closeViewZoom" with-backdrop="">
+    <h2-dialog id="viewer-dialog" on-click="closeViewZoom" with-backdrop="">
       <div id="viewer-img"></div>
-    </paper-dialog>
+    </h2-dialog>
 `;
   }
 
@@ -317,7 +320,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   __loadFileData(blob) {
     if (this.__byteSize > 0 && blob.size > this.__byteSize) {
-      alert(`上传图片不能超过${this.sizeLimit}`);
+      this.h2Tip.error(`上传图片不能超过${this.sizeLimit}`, 3000);
       return;
     }
     const reader = new FileReader();

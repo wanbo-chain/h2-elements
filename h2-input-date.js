@@ -82,10 +82,12 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
       :host([type='dateRange']) .input__container {
         min-width: 300px;
+        box-sizing: border-box;
       }
       
       :host([type='datetimeRange']) .input__container {
         min-width: 360px;
+        box-sizing: border-box;
       }
       
       
