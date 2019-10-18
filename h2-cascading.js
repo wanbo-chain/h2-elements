@@ -124,6 +124,9 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
         padding: 0 12px;
         height: 30px;
         line-height: 30px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
       }
       .view-item:hover, .view-item-active {
         color: var(--h2-ui-color_skyblue);
@@ -149,12 +152,12 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
     </div>
     <paper-dialog id="boxDialog" no-overlap horizontal-align="auto" vertical-align="auto" on-iron-overlay-closed="__cancelClick">
       <div class="dialog-container">
-        <template is="dom-repeat" items="[[treeItems]]" as="tree" index-as="treeIndex">
+        <template is="dom-repeat" items="{{treeItems}}" as="tree" index-as="treeIndex">
           <div class="view-container">
             <div class="view-list">
               <template is="dom-repeat" items="[[tree]]">
                 <div class$="view-item [[__setViewClass(item.__select)]]" on-click="__viewItemClick">
-                  [[item.label]]
+                  [[getValueByKey(item, attrForLabel)]]
                   <iron-icon class="chevron-iron" icon="icons:chevron-right"></iron-icon>
                 </div>
               </template>
@@ -202,14 +205,6 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
         notify: true,
         value: []
       },
-      __value: {
-        type: Array,
-        value: []
-      },
-      __selectedValues: {
-        type: Array,
-        value: []
-      },
       valueLabel: String,
       lazy: Boolean,
       /**
@@ -252,9 +247,9 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
         selectedValues.push(treeItems[index][findIndex]);
         if (treeItems[index][findIndex].children) treeItems.push(treeItems[index][findIndex].children);
       });
-      this.set('treeItems', treeItems);
       this.set('selectedValues', selectedValues);
       this.set('valueLabel', selectedValues.map(itm => itm[this.attrForLabel]).join(this.separator));
+      this.set('treeItems', treeItems);
       this.$.placeholder.hidden = this.valueLabel;
     }
   };
@@ -267,9 +262,9 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
         treeItems[index][findIndex].__select = true;
         selectedValues.push(treeItems[index][findIndex]);
       });
-      this.set('treeItems', treeItems);
       this.set('selectedValues', selectedValues);
       this.set('valueLabel', selectedValues.map(itm => itm[this.attrForLabel]).join(this.separator));
+      this.set('treeItems', treeItems);
       this.$.placeholder.hidden = this.valueLabel;
     }
   };
@@ -290,24 +285,20 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   __viewItemClick({model}) {
     const {index, item, parentModel} = model;
-    const treeItem = this.treeItems[parentModel.treeIndex].map((itm, idx) => Object.assign({}, itm, {__select: idx === index}));
     let treeItems = this.treeItems.slice(0, parentModel.treeIndex + 1);
+    const treeItem = parentModel.tree.map((itm, idx) => Object.assign({}, itm, {__select: idx === index}));
     treeItems[parentModel.treeIndex] = treeItem;
     if (item.children) {
       parentModel.treeIndex + 1 >= this.treeItems.length ? treeItems.push(item.children) : treeItems.splice(parentModel.treeIndex + 1, 1, item.children);
     }
-    this.set('treeItems', treeItems);
-    let value = this.__value.slice(0, parentModel.treeIndex + 1);
-    value[parentModel.treeIndex] = item[this.attrForValue];
-    this.set('__value', value);
-    let selectedValues = this.__selectedValues.slice(0, parentModel.treeIndex + 1);
+    let selectedValues = this.selectedValues.slice(0, parentModel.treeIndex + 1);
     selectedValues[parentModel.treeIndex] = item;
-    this.set('__selectedValues', selectedValues);
+    this.set('selectedValues', selectedValues);
     if (!item.children) {
       this.set('valueLabel', selectedValues.map(itm => itm[this.attrForLabel]).join(this.separator));
-      this.set('value', this.__value);
-      this.set('selectedValues', selectedValues);
+      this.set('value', selectedValues.map(itm => itm[this.attrForValue]));
     }
+    this.set('treeItems', treeItems);
     this.$.placeholder.hidden = this.valueLabel;
   };
 
