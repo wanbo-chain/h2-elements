@@ -205,6 +205,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         overflow-y: hidden;
         background-color: rgba(255, 255, 255, 1);
         box-shadow: 10px 0 10px -10px rgba(0,0,0,.12);
+        width: 0;
       }
       
       .table__fixed table {
@@ -223,6 +224,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         overflow-y: hidden;
         background-color: rgba(255, 255, 255, 1);
         box-shadow: -10px 0 10px -10px rgba(0,0,0,.12);
+        width: 0;
       }
       
       .fixed_right_expansion > div {
