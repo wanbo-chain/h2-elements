@@ -133,7 +133,7 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
       .item-date > span, .box-value > span {
         width: 100%;
-        color: #ccc;
+        color: #999;
       }
       
       #targetDate {

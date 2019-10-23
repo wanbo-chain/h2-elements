@@ -611,11 +611,40 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.value = this.selectedValues.map(selected => selected[this.attrForValue]).join(',');
       this.selectedItem = this.selectedValues[this.selectedValues.length - 1];
     } else {
-      this.value = null;
+      if (this.mode === 'text') this.value = null;
+      if (this.mode !== 'text' && this._displayItems && this._displayItems.length && this.value) this._getSelectedForItems();
       this.selectedItem = undefined;
     }
-    this.text = this.value && !this.multi ? this.value : this._userInputKeyword;
+    if (this.mode === 'text') this.text = this.value && !this.multi ? this.value : this._userInputKeyword;
     this.displayCollapse(false);
+  }
+
+  _getSelectedForItems() {
+    let filterItems = this._displayItems.filter(item => item[this.attrForValue] === this.value);
+    if (filterItems.length) {
+      this.selectedValues = filterItems;
+      return
+    }
+
+    const requestObj = this.fetchParam;
+    const req = this.setValueByPath(this.mkObject(this.keywordPath, requestObj), this.keywordPath, this.value + '');
+    const request = this._mkRequest(req);
+    console.log(request);
+    this._fetchUtil.fetchIt(request)
+        .then(res => res.json())
+        .then(data => {
+          if (this.resultPath) {
+            this._displayItems = this.getValueByPath(data, this.resultPath, []).slice(0, 9);
+          } else {
+            this._displayItems = (data || []).slice(0, 9);
+          }
+          this._switchFocusItemAt(0);
+
+          filterItems = this._displayItems.filter(item => item[this.attrForValue] === this.value);
+          if (filterItems.length && this.value) this.selectedValues = filterItems;
+        })
+        .catch(err => console.error(err));
+
   }
 
   /**
