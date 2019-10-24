@@ -629,7 +629,6 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     const requestObj = this.fetchParam;
     const req = this.setValueByPath(this.mkObject(this.keywordPath, requestObj), this.keywordPath, this.value + '');
     const request = this._mkRequest(req);
-    console.log(request);
     this._fetchUtil.fetchIt(request)
         .then(res => res.json())
         .then(data => {
