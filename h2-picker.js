@@ -546,15 +546,38 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     if (!src) return;
     const request = this._mkRequest(this.fetchParam);
     this._fetchUtil.fetchIt(request)
-      .then(res => res.json())
-      .then(data => {
-        if (this.resultPath) {
-          this.items = this.getValueByPath(data, this.resultPath, []);
-        } else {
-          this.items = data || [];
-        }
-      })
-      .catch(console.error);
+        .then(res => res.json())
+        .then(data => {
+          let items;
+          if (this.resultPath) {
+            items = this.getValueByPath(data, this.resultPath, []);
+          } else {
+            items = data || [];
+          }
+          let filterItems = items.filter(item => item[this.attrForValue] == this.value);
+          if (filterItems.length) {
+            this.items = items;
+          } else {
+            this.value ? this._getSelectedForItems() : this.items = items;
+          }
+        })
+        .catch(console.error);
+  }
+
+  _getSelectedForItems() {
+    const requestObj = this.fetchParam;
+    const req = this.setValueByPath(this.mkObject(this.keywordPath, requestObj), this.keywordPath, this.value + '');
+    const request = this._mkRequest(req);
+    this._fetchUtil.fetchIt(request)
+        .then(res => res.json())
+        .then(data => {
+          if (this.resultPath) {
+            this.items = this.getValueByPath(data, this.resultPath, []);
+          } else {
+            this.items = data || [];
+          }
+        })
+        .catch(err => console.error(err));
   }
 
   _itemsChanged(items = []) {
@@ -611,39 +634,11 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.value = this.selectedValues.map(selected => selected[this.attrForValue]).join(',');
       this.selectedItem = this.selectedValues[this.selectedValues.length - 1];
     } else {
-      if (this.mode === 'text') this.value = null;
-      if (this.mode !== 'text' && this._displayItems && this._displayItems.length && this.value) this._getSelectedForItems();
+      this.value = null;
       this.selectedItem = undefined;
     }
     if (this.mode === 'text') this.text = this.value && !this.multi ? this.value : this._userInputKeyword;
     this.displayCollapse(false);
-  }
-
-  _getSelectedForItems() {
-    let filterItems = this._displayItems.filter(item => item[this.attrForValue] === this.value);
-    if (filterItems.length) {
-      this.selectedValues = filterItems;
-      return
-    }
-
-    const requestObj = this.fetchParam;
-    const req = this.setValueByPath(this.mkObject(this.keywordPath, requestObj), this.keywordPath, this.value + '');
-    const request = this._mkRequest(req);
-    this._fetchUtil.fetchIt(request)
-        .then(res => res.json())
-        .then(data => {
-          if (this.resultPath) {
-            this._displayItems = this.getValueByPath(data, this.resultPath, []).slice(0, 9);
-          } else {
-            this._displayItems = (data || []).slice(0, 9);
-          }
-          this._switchFocusItemAt(0);
-
-          filterItems = this._displayItems.filter(item => item[this.attrForValue] === this.value);
-          if (filterItems.length && this.value) this.selectedValues = filterItems;
-        })
-        .catch(err => console.error(err));
-
   }
 
   /**
@@ -651,10 +646,18 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
    */
   _valueChanged(value) {
     // 本地模式，或远程数据已经就位
-    if (this.items) {
+    if (this.items && this.items.length) {
       const flatValues = [...(new Set(String(value).split(",")))];
       const selectedValues = this.selectedValues || [];
       const dirty = selectedValues.map(selected => selected[this.attrForValue]).join(',');
+
+      const filterItems = this.items.filter(item => item[this.attrForValue] == this.value);
+
+      if (!filterItems.length && this.value && this.src) {
+        this._getSelectedForItems();
+        return
+      };
+
       if (dirty !== value) {
         const tmp = [...selectedValues, ...this.items];
         this.selectedValues =
