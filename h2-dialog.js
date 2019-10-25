@@ -111,6 +111,7 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
       entry-animation="scale-up-animation"
       exit-animation="fade-out-animation"
       no-cancel-on-esc-key="[[noCancelOnEscKey]]"
+      opened="{{opened}}"
       no-cancel-on-outside-click="[[noCancelOnOutsideClick]]" on-opened-changed="openedChanged">
       
       <div class="close-dialog" on-tap="close">
@@ -172,6 +173,9 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
         type: Boolean,
         value: false
       },
+      opened: {
+        type: Boolean
+      }
     };
   }
 

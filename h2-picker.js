@@ -558,8 +558,10 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
           } else {
             items = data || [];
           }
-          let filterItems = items.filter(item => item[this.attrForValue] == this.value);
-          if (filterItems.length) {
+          let findIndex = items.findIndex(item => item[this.attrForValue] == this.value);
+          if (findIndex >= 0) {
+            items = [items[findIndex]].concat(items);
+            items.splice(findIndex, 1);
             this.items = items;
           } else {
             this.value ? this._getSelectedForItems() : this.items = items;
