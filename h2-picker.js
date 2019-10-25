@@ -481,7 +481,8 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       shortcutKey: {
         type: String,
         value: 'Enter'
-      }
+      },
+      inputChinese: Boolean
     };
   }
 
@@ -504,6 +505,9 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     super.connectedCallback();
 
     this.$.keywordInput.addEventListener("keydown", this._keyDownHandler.bind(this));
+    this.$.keywordInput.addEventListener("compositionstart", () => this.inputChinese = true);
+    this.$.keywordInput.addEventListener("compositionend", () => this.inputChinese = false);
+
     this.addEventListener("blur", e => {
       e.stopPropagation();
       if (!this.value) this.text = this._userInputKeyword;
@@ -651,9 +655,9 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       const selectedValues = this.selectedValues || [];
       const dirty = selectedValues.map(selected => selected[this.attrForValue]).join(',');
 
-      const filterItems = this.items.filter(item => item[this.attrForValue] == this.value);
+      const filterItems = this.src ? this._displayItems.filter(item => item[this.attrForValue] == value) : this.items.filter(item => item[this.attrForValue] == value);
 
-      if (!filterItems.length && this.value && this.src) {
+      if (!filterItems.length && value && this.src) {
         this._getSelectedForItems();
         return
       };
@@ -785,6 +789,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
    * @private
    */
   _keyDownHandler(event) {
+    if (this.inputChinese) return;
     if (this.shortcutKey !== event.key && !this.$["picker-collapse"].hidden) event.stopPropagation();
 
     const key = event.key;
