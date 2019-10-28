@@ -661,8 +661,8 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       if (!filterItems.length && value && this.src) {
         this._getSelectedForItems();
-        return
-      };
+        return;
+      }
 
       if (dirty !== value) {
         const tmp = [...selectedValues, ...this.items];

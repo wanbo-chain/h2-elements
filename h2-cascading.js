@@ -236,7 +236,7 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   __itemsChanged() {
     if (this.items.length) this.set('treeItems', [this.items]);
-  };
+  }
 
   __valueChanged(value) {
     if (this.treeItems && this.treeItems.length && !this.lazy) {
@@ -252,7 +252,7 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.set('treeItems', treeItems);
       this.$.placeholder.hidden = this.valueLabel;
     }
-  };
+  }
 
   __treeItemsChanged(treeItems) {
     if (treeItems && treeItems.length && this.lazy && this.value && treeItems.length === this.value.length) {
@@ -267,21 +267,21 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.set('treeItems', treeItems);
       this.$.placeholder.hidden = this.valueLabel;
     }
-  };
+  }
 
   __setViewClass(select) {
     return select ? 'view-item-active' : ''
-  };
+  }
 
   _onInputClick() {
     this.opened = !this.opened;
     this.$.boxDialog.positionTarget = this.$.targetDialog;
     this.opened ? this.$.boxDialog.open() : this.$.boxDialog.close();
-  };
+  }
 
   __cancelClick() {
     this.opened = !this.opened;
-  };
+  }
 
   __viewItemClick({model}) {
     const {index, item, parentModel} = model;
@@ -300,7 +300,7 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
     }
     this.set('treeItems', treeItems);
     this.$.placeholder.hidden = this.valueLabel;
-  };
+  }
 
   close() {
     this.$.boxDialog.close()

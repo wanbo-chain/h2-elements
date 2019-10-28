@@ -140,7 +140,7 @@ class H2GridLayout extends mixinBehaviors([BaseBehavior], PolymerElement) {
         item.style['grid-row-end'] = `span ${item.getAttribute('layout-rowspan')}`
       });
 
-      const columnSpans = !this.templateColumns ? this.columns : this.templateColumns.split(' ').length;
+      const columnSpans = !this.templateColumns ? this.columns : this.templateColumns.split(/\s+/g).length;
       assignedElements.filter(_ => _.hasAttribute('full-colspan')).forEach(item => {
         item.style['grid-column-end'] = `span ${columnSpans}`
       });

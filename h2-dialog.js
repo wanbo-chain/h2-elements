@@ -174,7 +174,8 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
         value: false
       },
       opened: {
-        type: Boolean
+        type: Boolean,
+        reflectToAttribute: true
       }
     };
   }

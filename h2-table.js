@@ -547,7 +547,6 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     const DESCENDING = 'descending';
 
     const sortableContainers = this.shadowRoot.querySelectorAll('.table__sort__icons');
-    console.log(sortableContainers, 'sortableContainers');
 
     // clear other sortable states.
     Array.from(sortableContainers).filter(node => node !== container)
