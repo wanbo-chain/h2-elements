@@ -47,7 +47,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       #keywordInput {
         flex: 1;
-        min-width: 40px;
+        min-width: 10px;
         font-size: 14px;
         height: 22px;
         line-height: 22px;
