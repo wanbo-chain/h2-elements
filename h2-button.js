@@ -63,7 +63,6 @@ class H2Button extends mixinBehaviors(PaperButtonBehavior, PolymerElement) {
         border-radius: 4px;
         outline: none;
         height: 34px;
-        background: #fff;
       }
 
       :host([hidden]) {
