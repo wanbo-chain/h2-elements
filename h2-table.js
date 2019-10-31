@@ -51,8 +51,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         vertical-align: middle;
         text-align: left;
         border-bottom: 1px solid #ebeef5;
-        height: 50px;
-        line-height: 50px;
+        height: 40px;
+        line-height: 40px;
         @apply --h2-table-line-height;
       }
       
@@ -93,8 +93,9 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
       .row__expansion-col {
-        padding: 20px 50px !important;
+        padding: 10px 40px !important;
         color: #99a9bf;
+        line-height: 26px !important;
       }
       
       .expand-icon_opened {
@@ -129,8 +130,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         display: inline-flex;
         flex-direction: column;
         align-items: center;
-        height: 46px;
-        width: 20px;
+        height: 40px;
+        width: 18px;
         vertical-align: middle;
         cursor: pointer;
         overflow: initial;
@@ -773,7 +774,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
           if (tableBodyFixed) tableBodyFixed.scrollTop = tableBodyFixedRight.scrollTop;
         })
       }
-    }, 1000);
+    }, 300);
   }
 
   static get properties() {
