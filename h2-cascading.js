@@ -245,7 +245,10 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
         notify: true,
         value: []
       },
-      valueLabel: String,
+      valueLabel: {
+        ytype: String,
+        notify: true
+      },
       lazy: Boolean,
       /**
        * Attribute name for value.
@@ -288,7 +291,7 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   __valueChanged(value) {
     !this.validate() ? this.setAttribute("data-invalid", "") : this.removeAttribute("data-invalid");
-    if (this.treeItems && this.treeItems.length && !this.lazy) {
+    if (this.treeItems && this.treeItems.length && !this.lazy && value) {
       let treeItems = [].concat(this.treeItems), selectedValues = [];
       value.forEach((item, index) => {
         const findIndex = treeItems[index].findIndex(itm => itm[this.attrForValue] === item);
@@ -304,12 +307,14 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   __treeItemsChanged(treeItems) {
-    if (treeItems && treeItems.length && this.lazy && this.value && treeItems.length === this.value.length) {
+    if (treeItems && treeItems.length && this.lazy && this.value) {
       let selectedValues = [];
       this.value.forEach((item, index) => {
         const findIndex = treeItems[index].findIndex(itm => itm[this.attrForValue] === item);
-        treeItems[index][findIndex].__select = true;
-        selectedValues.push(treeItems[index][findIndex]);
+        if (treeItems[index] && treeItems[index].length && findIndex >= 0) {
+          treeItems[index][findIndex].__select = true;
+          selectedValues.push(treeItems[index][findIndex]);
+        }
       });
       this.set('selectedValues', selectedValues);
       this.set('valueLabel', selectedValues.map(itm => itm[this.attrForLabel]).join(this.separator));
