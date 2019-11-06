@@ -30,6 +30,12 @@ class H2GridLayout extends mixinBehaviors([BaseBehavior], PolymerElement) {
         font-weight: 700;
       }
       
+      .header-btn {
+        position: absolute;
+        right: 50px;
+        top: 0;
+      }
+      
       #caret {
         position: absolute;
         right: 10px;
@@ -52,6 +58,9 @@ class H2GridLayout extends mixinBehaviors([BaseBehavior], PolymerElement) {
     <template is="dom-if" if="[[accordion]]">
       <div class="header" on-click="__handler">
         <div class="title">[[title]]</div>
+        <div class="header-btn">
+          <slot name="header"></slot>
+        </div>
         <iron-icon id="caret" icon="icons:expand-more"></iron-icon>
       </div>
     </template>
@@ -131,6 +140,7 @@ class H2GridLayout extends mixinBehaviors([BaseBehavior], PolymerElement) {
     super.connectedCallback();
     this.$.layout.addEventListener('slotchange', e => {
       const assignedElements = e.target.assignedElements();
+      console.log(assignedElements);
 
       assignedElements.filter(_ => _.hasAttribute('layout-colspan')).forEach(item => {
         item.style['grid-column-end'] = `span ${item.getAttribute('layout-colspan')}`
