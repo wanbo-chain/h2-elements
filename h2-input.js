@@ -57,6 +57,12 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
         min-width: 0;
         position: relative;
       }
+      
+      :host([readonly]) .input__container {
+        pointer-events: none;
+        opacity: 0.5;
+        cursor: no-drop;
+      }
 
       #input {
         height: inherit;
@@ -203,7 +209,7 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
     
 `;
   }
-  
+
   static get properties() {
     return {
       /**
@@ -289,7 +295,7 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
       maxlength: {
         type: Number
       },
-      
+
       /**
        * The minimum value user can input or choose.
        * @type {string}
@@ -304,7 +310,7 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
       max: {
         type: String
       },
-      
+
       /**
        * The prompt tip to show when input is invalid.
        * @type {String}
@@ -314,25 +320,25 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
     };
   }
-  
+
   static get is() {
     return "h2-input";
   }
-  
+
   static get observers() {
     return [
       '__refreshUIState(required, min, max, value)',
       '__allowedPatternChanged(allowedPattern)'
     ];
   }
-  
+
   __allowedPatternChanged() {
     if (this.allowedPattern) {
-      this._patternRegExp = new RegExp(this.allowedPattern, "g");
+      this._patternRegExp = new RegExp(this.allowedPattern, "");
       this.__refreshUIState();
     }
   }
-  
+
   __refreshUIState() {
     if (!this.validate()) {
       this.setAttribute("data-invalid", "");
@@ -340,14 +346,14 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.removeAttribute("data-invalid");
     }
   }
-  
+
   /**
    * Set focus to input.
    */
   doFocus() {
     this.root.querySelector("#innerInput").focus();
   }
-  
+
   /**
    * Validates the input element.
    *
@@ -359,15 +365,15 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
    */
   validate() {
     let valid = this.root.querySelector("#input").validate();
-    
+
     if (this.required) {
       valid = valid && (this.value != undefined && this.value !== '');
     }
-    
+
     if (this._patternRegExp) {
       valid = valid && this._patternRegExp.test(this.value);
     }
-    
+
     return valid;
   }
 }

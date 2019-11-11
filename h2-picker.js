@@ -24,7 +24,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     <style include="h2-elements-shared-styles">
       :host {
         display: flex;
-        height: 34px;
+        height: 32px;
         line-height: 32px;
         width: 300px;
         font-family: var(--h2-ui-font-family), sans-serif;
@@ -657,11 +657,12 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       const selectedValues = this.selectedValues || [];
       const dirty = selectedValues.map(selected => selected[this.attrForValue]).join(',');
 
-      const filterItems = this.src ? this._displayItems.filter(item => item[this.attrForValue] == value) : this.items.filter(item => item[this.attrForValue] == value);
-
-      if (!filterItems.length && value && this.src) {
-        this._getSelectedForItems();
-        return;
+      if (value && this.src && !this.multi) {
+        const filterItems = this.src ? this._displayItems.filter(item => item[this.attrForValue] == value) : this.items.filter(item => item[this.attrForValue] == value);
+        if (!filterItems.length) {
+          this._getSelectedForItems();
+          return;
+        }
       }
 
       if (dirty !== value) {

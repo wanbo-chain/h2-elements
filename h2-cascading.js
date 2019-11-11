@@ -47,6 +47,13 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
         cursor: pointer;
       }
       
+      :host([readonly]) .cascading__container {
+        pointer-events: none;
+        opacity: 0.5;
+        z-index: 10;
+        cursor: no-drop;
+      }
+      
       #placeholder[hidden] {
         display: none;
       }
@@ -71,12 +78,12 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
         width: inherit;
       }
       
-      :host([opened]) #caret {
+      :host([opened]) .caret {
         transform: rotate(180deg);
         transition: transform .2s ease-in-out;
       }
       
-      #caret {
+      .caret {
         transition: transform .2s ease-in-out;
         color: var(--h2-ui-color_skyblue);
         position: absolute;
@@ -138,18 +145,51 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
         height: 30px;
         line-height: 30px;
       }
+      :host([required]) .cascading__container::before {
+        content: "*";
+        color: red;
+        position: absolute;
+        left: -10px;
+        line-height: inherit;
+      }
+      
+      :host([data-invalid]) .cascading__container {
+        border-color: var(--h2-ui-color_pink);
+      }
+      
+      .icon-clear {
+        position: absolute;
+        right: 5px;
+        width: 12px;
+        height: 12px;
+        line-height: 34px;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        color: #ccc;
+        display: none;
+      }
+      
+      .cascading__container:hover .icon-clear {
+        display: inline-block;
+      }
+      .cascading__container:hover .caret {
+        display: none;
+      }
     </style>
     
     <template is="dom-if" if="[[ toBoolean(label) ]]">
       <div class="h2-label">[[label]]</div>
     </template>
+    
     <div class="cascading__container" on-click="_onInputClick">
       <div id="placeholder">[[placeholder]]</div>
       <div class="box-value">[[valueLabel]]</div>
-      <iron-icon id="caret" icon="icons:expand-more"></iron-icon>
+      <iron-icon class="caret" icon="icons:expand-more"></iron-icon>
+      <iron-icon class="icon-clear" icon=icons:clear on-click="clear"></iron-icon>
       <div id="targetDialog">
       </div>
     </div>
+    
     <paper-dialog id="boxDialog" no-overlap horizontal-align="auto" vertical-align="auto" on-iron-overlay-closed="__cancelClick">
       <div class="dialog-container">
         <template is="dom-repeat" items="{{treeItems}}" as="tree" index-as="treeIndex">
@@ -205,7 +245,10 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
         notify: true,
         value: []
       },
-      valueLabel: String,
+      valueLabel: {
+        ytype: String,
+        notify: true
+      },
       lazy: Boolean,
       /**
        * Attribute name for value.
@@ -230,6 +273,14 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
       separator: {
         type: String,
         value: '/'
+      },
+      required: {
+        type: Boolean,
+        value: false
+      },
+      readonly: {
+        type: Boolean,
+        value: false
       }
     };
   }
@@ -239,7 +290,8 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   __valueChanged(value) {
-    if (this.treeItems && this.treeItems.length && !this.lazy) {
+    !this.validate() ? this.setAttribute("data-invalid", "") : this.removeAttribute("data-invalid");
+    if (this.treeItems && this.treeItems.length && !this.lazy && value) {
       let treeItems = [].concat(this.treeItems), selectedValues = [];
       value.forEach((item, index) => {
         const findIndex = treeItems[index].findIndex(itm => itm[this.attrForValue] === item);
@@ -255,12 +307,14 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   __treeItemsChanged(treeItems) {
-    if (treeItems && treeItems.length && this.lazy && this.value && treeItems.length === this.value.length) {
+    if (treeItems && treeItems.length && this.lazy && this.value) {
       let selectedValues = [];
       this.value.forEach((item, index) => {
         const findIndex = treeItems[index].findIndex(itm => itm[this.attrForValue] === item);
-        treeItems[index][findIndex].__select = true;
-        selectedValues.push(treeItems[index][findIndex]);
+        if (treeItems[index] && treeItems[index].length && findIndex >= 0) {
+          treeItems[index][findIndex].__select = true;
+          selectedValues.push(treeItems[index][findIndex]);
+        }
       });
       this.set('selectedValues', selectedValues);
       this.set('valueLabel', selectedValues.map(itm => itm[this.attrForLabel]).join(this.separator));
@@ -304,6 +358,20 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   close() {
     this.$.boxDialog.close()
+  }
+
+  clear(e) {
+    e.stopPropagation();
+    this.set('value', []);
+    this.set('valueLabel', null);
+  }
+
+  /**
+   * Validate, true if the select is set to be required and this.selectedValues.length > 0, or else false.
+   * @returns {boolean}
+   */
+  validate() {
+    return this.required ? this.value && this.value.length : true;
   }
 
   static get is() {
