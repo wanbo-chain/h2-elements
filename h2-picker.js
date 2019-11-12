@@ -261,7 +261,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     </div>
 `;
   }
-
+  
   static get properties() {
     return {
       /**
@@ -412,7 +412,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         type: Boolean,
         value: false
       },
-
+      
       /**
        * Set to true, if the selection is required.
        * @type {boolean}
@@ -456,16 +456,16 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         type: Boolean,
         value: false
       },
-
+      
       fetchParam: {
         type: Object
       },
-
+      
       keywordPath: {
         type: String,
         value: "keyword"
       },
-
+      
       resultPath: {
         type: String
       },
@@ -485,11 +485,11 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       inputChinese: Boolean
     };
   }
-
+  
   static get is() {
     return "h2-picker";
   }
-
+  
   static get observers() {
     return [
       '_srcChanged(src)',
@@ -500,14 +500,14 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       '__refreshUIState(required)'
     ]
   }
-
+  
   connectedCallback() {
     super.connectedCallback();
-
+    
     this.$.keywordInput.addEventListener("keydown", this._keyDownHandler.bind(this));
     this.$.keywordInput.addEventListener("compositionstart", () => this.inputChinese = true);
     this.$.keywordInput.addEventListener("compositionend", () => this.inputChinese = false);
-
+    
     this.addEventListener("blur", e => {
       e.stopPropagation();
       if (!this.value) this.text = this._userInputKeyword;
@@ -516,7 +516,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         this.displayCollapse(false);
       }, 100);
     });
-
+    
     let parent = this.offsetParent;
     while (parent) {
       parent.addEventListener('scroll', e => {
@@ -525,14 +525,14 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       parent = parent.offsetParent;
     }
   }
-
+  
   __calcTagName(item) {
     if (Function.prototype.isPrototypeOf(this.attrForLabel)) {
       return this.attrForLabel.call(this, item);
     }
     return this.getValueByKey(item, this.attrForLabel);
   }
-
+  
   _mkRequest(data) {
     return {
       url: this.src,
@@ -545,72 +545,75 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       body: JSON.stringify(data)
     };
   }
-
+  
   _srcChanged(src) {
     if (!src) return;
     const request = this._mkRequest(this.fetchParam);
     this._fetchUtil.fetchIt(request)
-        .then(res => res.json())
-        .then(data => {
-          let items;
-          if (this.resultPath) {
-            items = this.getValueByPath(data, this.resultPath, []);
-          } else {
-            items = data || [];
-          }
-          let findIndex = items.findIndex(item => item[this.attrForValue] == this.value);
-          if (findIndex >= 0) {
-            items = [items[findIndex]].concat(items);
-            items.splice(findIndex + 1, 1);
-            this.items = items;
-          } else {
-            this.value ? this._getSelectedForItems() : this.items = items;
-          }
-        })
-        .catch(console.error);
+      .then(res => res.json())
+      .then(data => {
+        let items;
+        if (this.resultPath) {
+          items = this.getValueByPath(data, this.resultPath, []);
+        } else {
+          items = data || [];
+        }
+        let findIndex = items.findIndex(item => item[this.attrForValue] == this.value);
+        if (findIndex >= 0) {
+          items = [items[findIndex]].concat(items);
+          items.splice(findIndex + 1, 1);
+          this.items = items;
+        } else {
+          this.value ? this._getSelectedForItems() : this.items = items;
+        }
+      })
+      .catch(console.error);
   }
-
+  
   _getSelectedForItems() {
     const requestObj = this.fetchParam;
     const req = this.setValueByPath(this.mkObject(this.keywordPath, requestObj), this.keywordPath, this.value + '');
     const request = this._mkRequest(req);
     this._fetchUtil.fetchIt(request)
-        .then(res => res.json())
-        .then(data => {
-          if (this.resultPath) {
-            this.items = this.getValueByPath(data, this.resultPath, []);
-          } else {
-            this.items = data || [];
-          }
-        })
-        .catch(err => console.error(err));
+      .then(res => res.json())
+      .then(data => {
+        const items = this.items || [];
+        if (this.resultPath) {
+          data = this.getValueByPath(data, this.resultPath, []);
+        }
+        
+        const addItems = data.filter(d => !items.find(i => i[this.attrForValue] === d[this.attrForValue]));
+        this.items = items.concat(addItems);
+        
+      })
+      .catch(err => console.error(err));
   }
-
+  
   _itemsChanged(items = []) {
     this._displayItems = items.slice(0, 9);
     // 初始化一次选中项
     this._valueChanged(this.value);
     // 清空缓存插件的缓存
     this._cacheSearchUtil.resetCache();
-
+    
     items.forEach(item => this._cacheSearchUtil.addCacheItem(item, this._loadPinyinKeys(item, this.fieldsForIndex)));
   }
-
+  
   _userInputKeywordChanged() {
-
+    
     if (this._userInputKeyword.length > 0) {
       this.displayCollapse(true);
     }
-
+    
     const matched = this._cacheSearchUtil.search(this._userInputKeyword);
     if (matched.length === 0 && this.src) {
-
+      
       if (!this.__fetchByKeyword) {
         this.__fetchByKeyword = throttle(() => {
           const requestObj = this.fetchParam;
-
+          
           const req = this.setValueByPath(this.mkObject(this.keywordPath, requestObj), this.keywordPath, this._userInputKeyword);
-
+          
           const request = this._mkRequest(req);
           this._fetchUtil.fetchIt(request)
             .then(res => res.json())
@@ -625,16 +628,16 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
             .catch(err => console.error(err));
         }, 1000);
       }
-
+      
       this.__fetchByKeyword();
-
+      
     } else {
       this._displayItems = matched.slice(0, 9);
       this._switchFocusItemAt(0);
     }
     this._displayPlaceholder();
   }
-
+  
   _selectedValuesChanged() {
     if (this.selectedValues.length > 0) {
       this.value = this.selectedValues.map(selected => selected[this.attrForValue]).join(',');
@@ -646,7 +649,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     if (this.mode === 'text') this.text = this.value && !this.multi ? this.value : this._userInputKeyword;
     this.displayCollapse(false);
   }
-
+  
   /**
    * value属性变化监听函数
    */
@@ -656,28 +659,34 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       const flatValues = [...(new Set(String(value).split(",")))];
       const selectedValues = this.selectedValues || [];
       const dirty = selectedValues.map(selected => selected[this.attrForValue]).join(',');
-
+      
       if (value && this.src && !this.multi) {
-        const filterItems = this.src ? this._displayItems.filter(item => item[this.attrForValue] == value) : this.items.filter(item => item[this.attrForValue] == value);
-        if (!filterItems.length) {
+        let _selectedItem = this.items.filter(item => item[this.attrForValue] == value);
+        // if (this.src) {
+        //   _selectedItem = this._displayItems.filter(item => item[this.attrForValue] == value);
+        // } else {
+        //   _selectedItem = this.items.filter(item => item[this.attrForValue] == value);
+        // }
+        
+        if (!_selectedItem.length) {
           this._getSelectedForItems();
           return;
         }
       }
-
+      
       if (dirty !== value) {
         const tmp = [...selectedValues, ...this.items];
         this.selectedValues =
           flatValues.map(val => tmp.find(item => item[this.attrForValue] == val))
             .filter(selected => !!selected);
       }
-
+      
       this._displayPlaceholder();
     }
-
+    
     this.__refreshUIState(value);
   }
-
+  
   __refreshUIState() {
     if (!this.validate()) {
       this.setAttribute("data-invalid", "");
@@ -685,7 +694,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.removeAttribute("data-invalid");
     }
   }
-
+  
   __textChanged(text) {
     if (this.items && this.items.some(val => val[this.attrForValue] == text)) {
       this.set('value', text)
@@ -695,18 +704,18 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     }
     this.__refreshUIState();
   }
-
+  
   _displayPlaceholder() {
     this.$.placeholder.hidden = this.value || (this.mode && this.text) || this._userInputKeyword;
   }
-
+  
   _selectItemAt(index) {
     if (index >= 0 && index < this._displayItems.length) {
       this._switchFocusItemAt(index);
       this._selectItem(this._displayItems[index]);
     }
   }
-
+  
   /**
    * 选择选项
    * @param item
@@ -720,12 +729,12 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         this.selectedValues = [item];
       }
     }
-
+    
     this.displayCollapse(false);
     if (this.multi) this.__focusOnKeywordInput();
     this._userInputKeyword = "";
   }
-
+  
   /**
    * 切换焦点到第n个元素，从0开始
    * @param index
@@ -737,7 +746,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       const newIndex = (maxIndex + index) % maxIndex;
       this.root.querySelectorAll("tr.candidate-item--focus")
         .forEach(e => e.classList.remove('candidate-item--focus'));
-
+      
       const newFocusItem = this.root.querySelector(`#candidate-item__${newIndex}`);
       if (newFocusItem != null) {
         newFocusItem.classList.add('candidate-item--focus');
@@ -745,47 +754,47 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
     }, 0);
   }
-
+  
   _isPickerCollapseHidden() {
     return this.$["picker-collapse"].hidden;
   }
-
+  
   __openCollapse({target: {classList}}) {
     if (classList.contains('tag-deleter')) return;
-
+    
     this.__focusOnKeywordInput();
   }
-
+  
   __inputFocus() {
     this.displayCollapse(true);
     this._switchFocusItemAt(0);
   }
-
+  
   __collapsePosition() {
     const {left, top} = this.__getElemPos(this);
     this.$['picker-collapse'].style['left'] = left + this.clientWidth - this.$['select__container'].clientWidth + 'px';
     this.$['picker-collapse'].style['top'] = top + this.clientHeight + 'px';
     this.$['picker-collapse'].style['width'] = this.$['select__container'].clientWidth + 'px';
   }
-
-
-  __getElemPos(obj){
+  
+  
+  __getElemPos(obj) {
     const {x, y} = obj.getBoundingClientRect();
     return {
       left: x,
       top: y + 2
     }
   }
-
+  
   __focusOnKeywordInput() {
     this.$.keywordInput.focus();
   }
-
+  
   _selectCollapseItem(event) {
     event.stopPropagation();
     this._selectItem(event.model.row);
   }
-
+  
   /**
    * 输入框键盘按键事件
    * @param event
@@ -794,12 +803,12 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
   _keyDownHandler(event) {
     if (this.inputChinese) return;
     if (this.shortcutKey !== event.key && !this.$["picker-collapse"].hidden) event.stopPropagation();
-
+    
     const key = event.key;
     if (event.altKey || key === this.shortcutKey) {
       event.preventDefault();
     }
-
+    
     const collapseOpend = !this._isPickerCollapseHidden();
     if (collapseOpend && this.enableHotkey && event.altKey) {
       const ind = event.code.replace(/[A-Za-z]*/g, '') - 1;
@@ -809,7 +818,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         case 'ArrowUp':
           collapseOpend && this._switchFocusItemAt(this.__focusIndex - 1);
           break;
-
+        
         case 'ArrowDown':
           if (collapseOpend) {
             this._switchFocusItemAt(this.__focusIndex + 1);
@@ -818,31 +827,31 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
             this.displayCollapse(true);
           }
           break;
-
+        
         case this.shortcutKey:
           if (collapseOpend && this._displayItems.length > 0 && this.__focusIndex < this._displayItems.length) {
             this._selectItemAt(this.__focusIndex);
           }
           break;
-
+        
         case 'Backspace':
           if (this._userInputKeyword == undefined || this._userInputKeyword.length === 0) {
             this.deleteLastTag();
           }
-
+          
           break;
       }
     }
   }
-
+  
   /**
    * 给对象根据fieldsForIndex给对应的字段做拼音缓存（字段值，字段值全拼和拼音首字母）
    */
   _loadPinyinKeys(item, fieldsForIndex = []) {
     let keys = [], values = fieldsForIndex.map(sf => item[sf]);
-
+    
     values = values.length === 0 ? Object.values(item) : values;
-
+    
     if (this.disablePinyinSearch) {
       keys = values.map(value => String(value));
     } else {
@@ -856,17 +865,17 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         }
       );
     }
-
+    
     return keys;
   }
-
+  
   /**
    * Delete the last selected tag.
    */
   deleteLastTag() {
     this.pop("selectedValues");
   }
-
+  
   /**
    * 删除Tag项，事件处理函数
    */
@@ -876,11 +885,11 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.splice("selectedValues", ind, 1);
     if (!this.multi || (this.multi && this.selectedValues.length === 0)) this._userInputKeyword = '';
   }
-
+  
   _getHotKey(index) {
     return 'Alt+' + (index + 1);
   }
-
+  
   /**
    * Open or close the collapse
    * @param {boolean} display  true to open the collapse.
@@ -889,7 +898,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.$["picker-collapse"].hidden = !display;
     if (this.$["picker-collapse"].hidden === false) this.__collapsePosition();
   }
-
+  
   /**
    * Toggle collapse. Side effect: the picker input will get a focus.
    */
@@ -898,14 +907,14 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.$["picker-collapse"].hidden = !hidden;
     this.__focusOnKeywordInput();
   }
-
+  
   /**
    * Set focus to picker.
    */
   doFocus() {
     this.__focusOnKeywordInput();
   }
-
+  
   /**
    * Validate, true if the select is set to be required and this.selectedValues.length > 0, or else false.
    * @returns {boolean}

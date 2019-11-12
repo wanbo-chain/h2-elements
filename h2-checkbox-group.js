@@ -56,6 +56,7 @@ class H2CheckboxGroup extends mixinBehaviors(BaseBehavior, PolymerElement) {
         display: flex;
         align-items: center;
         flex-direction: row;
+        @apply --h2-checkbox-group-container;
       }
 
       :host([direction=column]) #checkbox-container {
@@ -74,7 +75,7 @@ class H2CheckboxGroup extends mixinBehaviors(BaseBehavior, PolymerElement) {
       
       
     </style>
-    [[label]]
+    <div class="h2-label">[[label]]</div>
     <div id="checkbox-container">
       <template is="dom-repeat" items="[[ _items ]]">
         <paper-checkbox noink class="checkbox-item" checked="{{ item.checked }}" on-change="__checkedChangeHandler" value="[[ getValueByKey(item, attrForValue) ]]">

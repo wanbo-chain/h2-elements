@@ -94,6 +94,9 @@ const template = html`
       
       .h2-label {
         margin-right: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         @apply --h2-label;
       }
     </style>
