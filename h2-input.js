@@ -334,7 +334,7 @@ class H2Input extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   __allowedPatternChanged() {
     if (this.allowedPattern) {
-      this._patternRegExp = new RegExp(this.allowedPattern, "");
+      this._patternRegExp = new RegExp(this.allowedPattern);
       this.__refreshUIState();
     }
   }

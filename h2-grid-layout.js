@@ -140,7 +140,6 @@ class H2GridLayout extends mixinBehaviors([BaseBehavior], PolymerElement) {
     super.connectedCallback();
     this.$.layout.addEventListener('slotchange', e => {
       const assignedElements = e.target.assignedElements();
-      console.log(assignedElements);
 
       assignedElements.filter(_ => _.hasAttribute('layout-colspan')).forEach(item => {
         item.style['grid-column-end'] = `span ${item.getAttribute('layout-colspan')}`

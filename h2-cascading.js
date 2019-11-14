@@ -246,7 +246,7 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
         value: []
       },
       valueLabel: {
-        ytype: String,
+        type: String,
         notify: true
       },
       lazy: Boolean,
