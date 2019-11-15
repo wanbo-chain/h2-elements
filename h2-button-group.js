@@ -95,6 +95,10 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
         @apply --h2-button-group-dropdown;
       }
       
+      .dropdown-menu::-webkit-scrollbar {
+        display: none;
+      }
+      
       .container {
         border-radius: var(--h2-ui-border-radius);
         border: 1px solid var(--h2-ui-color_skyblue);
@@ -217,7 +221,15 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
    */
   toggle(e) {
     const {top, left} = this.getElemPos(this);
-    this.$.collapse.style.top = top + this.clientHeight + 'px';
+    const collapseHeight = this.items.length * 30 + 2;
+    const totalHeight = top + collapseHeight;
+    let _top;
+    if(totalHeight > document.documentElement.clientHeight) {
+      _top = top - collapseHeight - 4;
+    } else {
+      _top = top + this.clientHeight;
+    }
+    this.$.collapse.style.top = _top + 'px';
     this.$.collapse.style.left = left + 'px';
     this.$.collapse.style.width = this.clientWidth + 'px';
     this.opened = !this.opened;

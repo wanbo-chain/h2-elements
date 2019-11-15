@@ -1,6 +1,5 @@
 import {html, PolymerElement} from "@polymer/polymer";
 import './behaviors/h2-elements-shared-styles.js';
-// import './h2-col';
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
 import {BaseBehavior} from "./behaviors/base-behavior";
 import '@polymer/iron-icon/iron-icon';
@@ -50,7 +49,7 @@ class H2GridLayout extends mixinBehaviors([BaseBehavior], PolymerElement) {
       :host([opened]) .h2-grid-layout {
         padding: 0;
         max-height: 0;
-        transition: max-height .6s ease-in-out;
+        transition: max-height .3s ease-in-out;
         overflow: hidden;
       }
       

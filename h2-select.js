@@ -103,6 +103,10 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         overflow-y: auto;
         padding: 2px;
       }
+      
+      #tag-content::-webkit-scrollbar, #select-collapse::-webkit-scrollbar {
+        display: none;
+      }
 
       .tag {
         color: #fff;
@@ -294,7 +298,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
     </div>
 `;
   }
-
+  
   static get properties() {
     return {
       /**
@@ -306,7 +310,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         type: String,
         notify: true
       },
-
+      
       /**
        * The selected value objects of this select.
        * @type {array}
@@ -315,7 +319,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         type: Array,
         notify: true
       },
-
+      
       /**
        *
        * The candidate selection of this select.
@@ -327,12 +331,12 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         type: Array,
         value: []
       },
-
+      
       selectedItem: {
         type: Object,
         notify: true
       },
-
+      
       /**
        *
        * @attribute label
@@ -357,7 +361,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         type: Boolean,
         value: false
       },
-
+      
       opened: {
         type: Boolean,
         value: false,
@@ -407,11 +411,11 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
       isFocus: Boolean
     };
   }
-
+  
   static get is() {
     return "h2-select";
   }
-
+  
   static get observers() {
     return [
       '_valueChanged(value, items)',
@@ -421,7 +425,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
       '__refreshUIState(value)'
     ];
   }
-
+  
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('blur', e => {
@@ -431,12 +435,12 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
     let parent = this.offsetParent;
     while (parent) {
       parent.addEventListener('scroll', e => {
-        this.getElemPos()
+        this.refreshElemPos();
       });
       parent = parent.offsetParent;
     }
   }
-
+  
   __refreshUIState() {
     if (!this.validate()) {
       this.setAttribute("data-invalid", "");
@@ -444,46 +448,55 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.removeAttribute("data-invalid");
     }
   }
-
+  
   /**
    * 点击事件
    */
   _onInputClick(e) {
-    this.getElemPos(this);
+    this.refreshElemPos(this);
     const classList = e.target.classList;
     if (classList.contains('tag-deleter') || classList.contains('tag-cursor')) {
       return;
     }
-
+    
     this.toggleCollapse();
   }
-
-  getElemPos(obj){
+  
+  refreshElemPos(obj){
     const {x, y} = obj.getBoundingClientRect();
-    const {left, top} = {top: y + 2, left: x};
+    
+    const collapseHeight = this.items.length * 26;
+    const totalHeight = y + collapseHeight;
+    let top, left = x;
+    if(totalHeight > document.documentElement.clientHeight) {
+      top = y - collapseHeight - 4;
+    } else {
+      top = y + this.clientHeight;
+    }
+    
     this.$['select-collapse'].style['left'] = left + this.clientWidth - this.$['select__container'].clientWidth + 'px';
-    this.$['select-collapse'].style['top'] = top + this.clientHeight + 'px';
+    this.$['select-collapse'].style['top'] = top + 'px';
     this.$['select-collapse'].style['width'] = this.$['select__container'].clientWidth + 'px';
   }
-
+  
   _valueChanged(value, items = []) {
     const values = String(value).split(",").map(str => str.trim());
     const flatValues = [...(new Set(values))];
-
+    
     const dirty = (this.selectedValues || []).map(selected => selected[this.attrForValue]).join(',');
     if (dirty !== value) {
       this.selectedValues =
         flatValues.map(val => items.find(item => item[this.attrForValue] == val))
           .filter(selected => typeof selected !== 'undefined');
-
+      
       if (!this.multi) {
         this.selectedItem = items.find(item => item[this.attrForValue] == flatValues[0]);
       }
     }
-
+    
     this._displayPlaceholder(this.selectedValues.length === 0)
   }
-
+  
   _selectedValuesChanged() {
     if (this.selectedValues.length > 0) {
       this.value = this.selectedValues.map(selected => selected[this.attrForValue]).join(',');
@@ -492,11 +505,11 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
     }
     this.closeCollapse();
   }
-
+  
   selectedItemChanged() {
     this.selectedValues = this.selectedItem ? [this.selectedItem] : [];
   }
-
+  
   /**
    * 删除Tag项，事件处理函数
    */
@@ -505,7 +518,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
     const ind = this.selectedValues.findIndex(selected => selected[this.attrForValue] == value);
     this.splice("selectedValues", ind, 1);
   }
-
+  
   /**
    * @param event
    * @private
@@ -527,20 +540,20 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         cursorIndex = cursorIndex > 0 ? --cursorIndex : -1;
         break;
     }
-
+    
     const currCursor = this.shadowRoot.querySelector(`#tag-cursor__${cursorIndex}`);
     currCursor && currCursor.focus();
   }
-
+  
   __focusOnLast() {
     const lastCursor = this.shadowRoot.querySelector(`#tag-cursor__${this.selectedValues.length - 1}`);
     lastCursor && lastCursor.focus();
   }
-
+  
   _displayPlaceholder(display) {
     this.$.placeholder.hidden = !display;
   }
-
+  
   /**
    * Open collapse.
    */
@@ -548,7 +561,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.$["select-collapse"].setAttribute('data-collapse-open', '');
     this.opened = true;
   }
-
+  
   /**
    * Close collapse.
    */
@@ -556,7 +569,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.$["select-collapse"].removeAttribute('data-collapse-open');
     this.opened = false;
   }
-
+  
   /**
    * Toggle collapse.
    */
@@ -569,14 +582,14 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.opened = !this.opened;
     this.__focusOnLast();
   }
-
+  
   /**
    * Set focus to select.
    */
   doFocus() {
     this.__focusOnLast();
   }
-
+  
   /**
    * Validate, true if the select is set to be required and this.selectedValues.length > 0, or else false.
    * @returns {boolean}
@@ -584,7 +597,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
   validate() {
     return this.required ? (this.selectedValues && this.selectedValues.length > 0) : true;
   }
-
+  
 }
 
 window.customElements.define(H2Select.is, H2Select);

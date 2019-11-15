@@ -74,7 +74,11 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         border: 1px solid #CCC;
         border-radius: 4px;
       }
-
+      
+      .tags-input::-webkit-scrollbar {
+        display: none;
+      }
+      
       .tag {
         color: #fff;
         background: var(--h2-ui-bg);
