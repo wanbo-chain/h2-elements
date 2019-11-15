@@ -68,7 +68,7 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
         overflow-x: hidden;
         overflow-y: auto;
         margin: 0;
-        padding: 16px;
+        padding: 12px;
         @apply --h2-dialog-content;
       }
 
@@ -88,7 +88,7 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
       .title {
         font-size: 26px;
         font-weight: bold;
-        margin: 24px 0 10px 0;
+        margin: 20px 0 10px;
         text-align: left;
         padding: 0 16px;
         @apply --h2-dialog-title;

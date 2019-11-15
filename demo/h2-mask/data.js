@@ -1,5 +1,5 @@
 const banks = [
-    {"id": 1, "label": "快塑网银行", "business": "银行"},
+    {"id": 1, "label": "天猫银行", "business": "银行"},
     {"id": 2, "label": "唯品会银行", "business": "银行"},
     {"id": 3, "label": "腾讯银行", "business": "银行"},
     {"id": 4, "label": "京东银行", "business": "银行"},
@@ -14,7 +14,7 @@ const banks = [
 ];
 
 const companies = [
-    {"id": 13, "label": "快塑网", "business": "塑料"},
+    {"id": 13, "label": "天猫", "business": "塑料"},
     {"id": 14, "label": "唯品会", "business": "电商"},
     {"id": 15, "label": "腾讯", "business": "游戏"},
     {"id": 16, "label": "京东", "business": "电商"},

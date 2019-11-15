@@ -32978,7 +32978,7 @@
       "name": "PinyinUtil"
     },
     {
-      "description": "缓存搜索的插件\n\n缓存数据结构_cacheItems:\n[{item: {label:\"快塑网\",business:\"塑料\"}, searches: [\"快塑网\",\"KUAISUWANG\",\"KSW\",\"塑料\",\"SULIAO\",\"SL\"],matchCount:0},\n {item: {label:\"京东\",business:\"电商\"}, searches: [\"京东\",\"JINGDONG\",\"JD\",\"电商\",\"DIANSHANG\",\"DS\"],matchCount:0 }]",
+      "description": "缓存搜索的插件\n\n缓存数据结构_cacheItems:\n[{item: {label:\"天猫\",business:\"塑料\"}, searches: [\"天猫\",\"KUAISUWANG\",\"KSW\",\"塑料\",\"SULIAO\",\"SL\"],matchCount:0},\n {item: {label:\"京东\",business:\"电商\"}, searches: [\"京东\",\"JINGDONG\",\"JD\",\"电商\",\"DIANSHANG\",\"DS\"],matchCount:0 }]",
       "summary": "",
       "path": "resource/plugin/cacheSearchUtil.js",
       "properties": [],
@@ -33027,11 +33027,11 @@
           "params": [
             {
               "name": "item",
-              "description": "缓存对象POJO 如:{label:\"快塑网\",business:\"塑料\"}"
+              "description": "缓存对象POJO 如:{label:\"天猫\",business:\"塑料\"}"
             },
             {
               "name": "searches",
-              "description": "缓存对象搜索关键字符串数组，包含了item的特定字段值，特定字段的全拼、简拼字符串,如：[\"快塑网\",\"KUAISUWANG\",\"KSW\",\"塑料\",\"SULIAO\",\"SL\"]"
+              "description": "缓存对象搜索关键字符串数组，包含了item的特定字段值，特定字段的全拼、简拼字符串,如：[\"天猫\",\"KUAISUWANG\",\"KSW\",\"塑料\",\"SULIAO\",\"SL\"]"
             }
           ]
         },

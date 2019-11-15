@@ -587,8 +587,9 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         }
         
         const addItems = data.filter(d => !items.find(i => i[this.attrForValue] === d[this.attrForValue]));
-        this.items = items.concat(addItems);
-        
+        if(addItems.length > 0) {
+          this.items = items.concat(addItems);
+        }
       })
       .catch(err => console.error(err));
   }
@@ -596,7 +597,9 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
   _itemsChanged(items = []) {
     this._displayItems = items.slice(0, 9);
     // 初始化一次选中项
-    this._valueChanged(this.value);
+    if(this.value) {
+      this._valueChanged(this.value);
+    }
     // 清空缓存插件的缓存
     this._cacheSearchUtil.resetCache();
     
@@ -609,7 +612,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.displayCollapse(true);
     }
     
-    const matched = this._cacheSearchUtil.search(this._userInputKeyword);
+    const matched = this._cacheSearchUtil.search(this._userInputKeyword, " ");
     if (matched.length === 0 && this.src) {
       
       if (!this.__fetchByKeyword) {
@@ -622,11 +625,17 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
           this._fetchUtil.fetchIt(request)
             .then(res => res.json())
             .then(data => {
+              let candidateItems = data || [];
               if (this.resultPath) {
-                this._displayItems = this.getValueByPath(data, this.resultPath, []).slice(0, 9);
-              } else {
-                this._displayItems = (data || []).slice(0, 9);
+                candidateItems = this.getValueByPath(data, this.resultPath, []);
               }
+              candidateItems = candidateItems.filter(i => this.items.every(old => old[this.attrForValue] != i[this.attrForValue]));
+              if(candidateItems.length > 0) {
+                this.items = candidateItems.concat(this.items);
+              } else {
+                this._displayItems = [];
+              }
+              
               this._switchFocusItemAt(0);
             })
             .catch(err => console.error(err));
@@ -666,11 +675,6 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
       if (value && this.src && !this.multi) {
         let _selectedItem = this.items.filter(item => item[this.attrForValue] == value);
-        // if (this.src) {
-        //   _selectedItem = this._displayItems.filter(item => item[this.attrForValue] == value);
-        // } else {
-        //   _selectedItem = this.items.filter(item => item[this.attrForValue] == value);
-        // }
         
         if (!_selectedItem.length) {
           this._getSelectedForItems();
@@ -877,7 +881,9 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
    * Delete the last selected tag.
    */
   deleteLastTag() {
-    this.pop("selectedValues");
+    if(this.selectedValues && this.selectedValues.length > 0) {
+      this.pop("selectedValues");
+    }
   }
   
   /**
