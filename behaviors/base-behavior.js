@@ -240,7 +240,7 @@ export const BaseBehavior = {
       loadingDiv.setAttribute("id", "h2-loading");
       loadingDiv.noCancelOnOutsideClick = true;
       loadingDiv.noCancelOnEscKey = true;
-      loadingDiv.withBackdrop = true;
+      // loadingDiv.withBackdrop = true;
       document.body.appendChild(loadingDiv);
     }
     this.async(function () {

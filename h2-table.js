@@ -228,6 +228,9 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         width: 0;
       }
       
+      .table__body__container > table {
+        width: 100%;
+      }
       .fixed_right_expansion > div {
         opacity: 0;
       }
@@ -725,23 +728,23 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.set('columnInfos', columnInfosSort);
       this.set('__tableFixed', __tableFixed);
       this.set('__tableFixedRight', __tableFixedRight);
-  
+      
       const tableBodyFixed = this.shadowRoot.querySelector('#tableBodyFixed');
       const tableBodyFixedRight = this.shadowRoot.querySelector('#tableBodyFixedRight');
-  
+      
       this.$.tableBody.addEventListener('scroll', () => {
         this.$.tableHeader.scrollLeft = this.$.tableBody.scrollLeft;
         if (tableBodyFixed) tableBodyFixed.scrollTop = this.$.tableBody.scrollTop;
         if (tableBodyFixedRight) tableBodyFixedRight.scrollTop = this.$.tableBody.scrollTop;
       });
-  
+      
       if (__tableFixed.length > 0) {
         tableBodyFixed && tableBodyFixed.addEventListener('scroll', () => {
           this.$.tableBody.scrollTop = tableBodyFixed.scrollTop;
           if (tableBodyFixedRight) tableBodyFixedRight.scrollTop = tableBodyFixed.scrollTop;
         });
       }
-  
+      
       if (__tableFixedRight.length > 0) {
         tableBodyFixedRight && tableBodyFixedRight.addEventListener('scroll', () => {
           this.$.tableBody.scrollTop = tableBodyFixedRight.scrollTop;

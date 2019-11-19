@@ -52,7 +52,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         height: 22px;
         line-height: 22px;
         padding: 0;
-        margin: 3px 2px;
+        margin: 2px;
 
         border: none;
         outline: none;
@@ -73,6 +73,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
         border: 1px solid #CCC;
         border-radius: 4px;
+        
       }
       
       .tags-input::-webkit-scrollbar {
@@ -84,11 +85,11 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         background: var(--h2-ui-bg);
         border-radius: 4px;
 
-        margin: 3px 2px;
+        margin: 2px;
         padding: 0 4px;
         height: 22px;
         line-height: 22px;
-        max-width: 200px;
+        max-width: max-width: calc(100% - 30px);
 
         display: flex;
         font-size: 14px;
@@ -629,7 +630,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
               if (this.resultPath) {
                 candidateItems = this.getValueByPath(data, this.resultPath, []);
               }
-              candidateItems = candidateItems.filter(i => this.items.every(old => old[this.attrForValue] != i[this.attrForValue]));
+              candidateItems = candidateItems.filter(i => (this.items || []).every(old => old[this.attrForValue] != i[this.attrForValue]));
               if(candidateItems.length > 0) {
                 this.items = candidateItems.concat(this.items);
               } else {
