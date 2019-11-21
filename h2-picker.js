@@ -588,7 +588,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         }
         
         const addItems = data.filter(d => !items.find(i => i[this.attrForValue] === d[this.attrForValue]));
-        if(addItems.length > 0) {
+        if (addItems.length > 0) {
           this.items = items.concat(addItems);
         }
       })
@@ -598,7 +598,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
   _itemsChanged(items = []) {
     this._displayItems = items.slice(0, 9);
     // 初始化一次选中项
-    if(this.value) {
+    if (this.value) {
       this._valueChanged(this.value);
     }
     // 清空缓存插件的缓存
@@ -631,7 +631,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
                 candidateItems = this.getValueByPath(data, this.resultPath, []);
               }
               candidateItems = candidateItems.filter(i => (this.items || []).every(old => old[this.attrForValue] != i[this.attrForValue]));
-              if(candidateItems.length > 0) {
+              if (candidateItems.length > 0) {
                 this.items = candidateItems.concat(this.items);
               } else {
                 this._displayItems = [];
@@ -732,7 +732,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
   _selectItem(item) {
     // not yet selected
     if (!~(this.selectedValues || []).findIndex(selected => selected[this.attrForValue] == item[this.attrForValue])) {
-      if (this.multi) {
+      if (this.multi && this.selectedValues) {
         this.push('selectedValues', item);
       } else {
         this.selectedValues = [item];
@@ -882,7 +882,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
    * Delete the last selected tag.
    */
   deleteLastTag() {
-    if(this.selectedValues && this.selectedValues.length > 0) {
+    if (this.selectedValues && this.selectedValues.length > 0) {
       this.pop("selectedValues");
     }
   }
