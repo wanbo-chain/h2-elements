@@ -630,11 +630,13 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
               if (this.resultPath) {
                 candidateItems = this.getValueByPath(data, this.resultPath, []);
               }
+              let _displayItems = candidateItems;
               candidateItems = candidateItems.filter(i => (this.items || []).every(old => old[this.attrForValue] != i[this.attrForValue]));
               if (candidateItems.length > 0) {
+                // _displayItems will reset when items changed.
                 this.items = candidateItems.concat(this.items);
               } else {
-                this._displayItems = [];
+                this._displayItems = _displayItems;
               }
               
               this._switchFocusItemAt(0);
