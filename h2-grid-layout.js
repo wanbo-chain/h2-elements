@@ -16,6 +16,7 @@ class H2GridLayout extends mixinBehaviors([BaseBehavior], PolymerElement) {
       .h2-grid-layout {
         display: grid;
         max-height: 2000px;
+        overflow: auto;
         @apply --h2-grid-layout;
       }
       

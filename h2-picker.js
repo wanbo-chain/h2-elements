@@ -26,7 +26,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         display: flex;
         height: 32px;
         line-height: 32px;
-        width: 300px;
+        width: var(--h2-picker-width, 300px);
         font-family: var(--h2-ui-font-family), sans-serif;
         font-size: var(--h2-ui-font-size);
         position: relative;
@@ -89,7 +89,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         padding: 0 4px;
         height: 22px;
         line-height: 22px;
-        max-width: max-width: calc(100% - 30px);
+        /*max-width: calc(var(--h2-picker-width)- 30px);*/
 
         display: flex;
         font-size: 14px;
