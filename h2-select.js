@@ -117,7 +117,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         padding: 0 4px;
         height: 22px;
         line-height: 22px;
-        max-width: 200px;
+        /*max-width: 200px;*/
 
         display: flex;
         font-size: 14px;
