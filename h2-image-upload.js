@@ -26,11 +26,12 @@ import {html, PolymerElement} from "@polymer/polymer";
 import {BaseBehavior} from "./behaviors/base-behavior";
 import {TipBehavior} from "./behaviors/tip-behavior";
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
-
+import '@polymer/paper-dialog';
 import './behaviors/h2-elements-shared-styles.js';
 import './h2-button.js';
 import './h2-dialog';
 import './h2-tip';
+
 /**
  * @customElement
  * @polymer
@@ -92,12 +93,12 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
         overflow: hidden;
         width: 90%;
         height: 90%;
-        background: transparent;
         padding: 0;
       }
 
       #viewer-img {
         cursor: zoom-out;
+        display: flex;
         padding: 0;
         margin: auto;
         width: 100%;
@@ -153,12 +154,12 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
         <div class="mask"></div>
       </div>
     </div>
-    <h2-dialog id="viewer-dialog" on-click="closeViewZoom" with-backdrop="">
+    <paper-dialog id="viewer-dialog" on-click="closeViewZoom">
       <div id="viewer-img"></div>
-    </h2-dialog>
+    </paper-dialog>
 `;
   }
-
+  
   static get properties() {
     return {
       /**
@@ -174,14 +175,14 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
         type: Object,
         notify: true
       },
-
+      
       /**
        * The label of the uploader.
        */
       label: {
         type: String
       },
-
+      
       /**
        * Set to true, if the select is required.
        * @type {boolean}
@@ -200,7 +201,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
         type: Boolean,
         value: false
       },
-
+      
       /**
        * The max size/length of image allowed to upload.
        * Support pattern:  /^((?:\d*\.)?\d+)([GgMmKk][Bb]?$)/
@@ -210,12 +211,12 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
       sizeLimit: {
         type: String
       },
-
+      
       __byteSize: {
         type: Number,
         computed: '__parseSizeLimit(sizeLimit)'
       },
-
+      
       /**
        * Bound to input's `accept` attribute.
        * @default 'image/gif, image/jpeg, image/png'
@@ -226,25 +227,25 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
       }
     };
   }
-
+  
   static get is() {
     return "h2-image-upload";
   }
-
+  
   static get observers() {
     return [
       '__srcChanged(src)'
     ]
   }
-
+  
   connectedCallback() {
     super.connectedCallback();
     const ele = this.$['paste-panel'];
-
+    
     const dragHandler = (e) => {
       e.preventDefault();
       e.stopPropagation();
-
+      
       if (this.readonly) return;
       if (e.type === "drop") {
         this.__readDataTransfer(e.dataTransfer);
@@ -252,40 +253,40 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
         this.__readDataTransfer(e.clipboardData);
       }
     };
-
+    
     ele.addEventListener("dragenter", dragHandler, false);
     ele.addEventListener("dragleave", dragHandler, false);
     ele.addEventListener('dragover', dragHandler, false);
     ele.addEventListener('drop', dragHandler, false);
     ele.addEventListener('paste', dragHandler, false);
   }
-
-
+  
+  
   __srcChanged(src) {
     const style = this.$["img__container"].style;
     const viewerStyle = this.$['viewer-img'].style;
-
+    
     if (src) {
       this.setAttribute('data-has-src', '');
-
+      
       style.background = `url(${src}) no-repeat center`;
       style.backgroundSize = "contain";
       viewerStyle.background = `url(${src}) no-repeat center`;
       viewerStyle.backgroundSize = "contain";
-
+      
     } else {
       this.removeAttribute('data-has-src');
-
+      
       style.background = "none";
       viewerStyle.background = "none";
     }
   }
-
+  
   __parseSizeLimit(sizeLimit) {
     const reg = /^((?:\d*\.)?\d+)([GgMmKk][Bb]?$)/g;
-
+    
     if (!reg.test(sizeLimit)) return 0;
-
+    
     const bits = sizeLimit.replace(reg, (match, size, unit) => {
       switch (unit.toUpperCase()) {
         case 'GB':
@@ -299,25 +300,25 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
           return size * 1024;
       }
     });
-
+    
     return bits | 0;
   }
-
+  
   _triggerChooseFile() {
     const fileChooser = this.$['file-chooser'];
     fileChooser && fileChooser.click();
   }
-
+  
   _chooseFile(e) {
     const file = e.target.files[0];
     file && this.__loadFileData(file);
   }
-
+  
   __readDataTransfer(dataTransfer) {
     const source = [].find.call(dataTransfer.items, item => item.kind === 'file' && item.type.startsWith("image"));
     source && this.__loadFileData(source.getAsFile());
   }
-
+  
   __loadFileData(blob) {
     if (this.__byteSize > 0 && blob.size > this.__byteSize) {
       this.h2Tip.error(`上传图片不能超过${this.sizeLimit}`, 3000);
@@ -330,7 +331,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
     };
     reader.readAsDataURL(blob);
   }
-
+  
   /**
    * Cancel selection of the image.It will clear the `src` and `value`.
    * */
@@ -339,7 +340,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
     this.value = null;
     this.$['file-chooser'].value = '';
   }
-
+  
   /**
    * Open the view zoom
    */
@@ -348,14 +349,14 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
       this.$['viewer-dialog'].open();
     }
   }
-
+  
   /**
    * Close the view zoom.
    */
   closeViewZoom() {
     this.$['viewer-dialog'].close();
   }
-
+  
   /**
    * Validate, true if the select is set to be required and this.value is a truth-value or else false.
    * @returns {boolean}
