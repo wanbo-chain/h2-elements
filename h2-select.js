@@ -465,7 +465,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
   refreshElemPos(obj){
     const {x: left, y} = obj.getBoundingClientRect();
     
-    const collapseHeight = this.items.length * 26;
+    const collapseHeight = Math.min(this.items.length * 26, 300);
     const totalHeight = y + collapseHeight;
     let top;
     if(totalHeight > document.documentElement.clientHeight) {
@@ -474,9 +474,9 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
       top = y + this.clientHeight;
     }
     
-    this.$['select-collapse'].style['left'] = left + this.clientWidth - this.$['select__container'].clientWidth + 'px';
+    this.$['select-collapse'].style['left'] = left + 'px';
     this.$['select-collapse'].style['top'] = top + 'px';
-    this.$['select-collapse'].style['width'] = this.$['select__container'].clientWidth + 'px';
+    this.$['select-collapse'].style['width'] = this.clientWidth + 'px';
   }
   
   _valueChanged(value, items = []) {
