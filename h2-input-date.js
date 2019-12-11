@@ -168,7 +168,6 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
       .datetime {
-        padding: 0 6px;
         height: 26px;
         line-height: 26px;
         outline: none;

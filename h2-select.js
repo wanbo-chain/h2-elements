@@ -453,7 +453,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
    * 点击事件
    */
   _onInputClick(e) {
-    this.refreshElemPos(this);
+    this.refreshElemPos();
     const classList = e.target.classList;
     if (classList.contains('tag-deleter') || classList.contains('tag-cursor')) {
       return;
@@ -462,8 +462,9 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.toggleCollapse();
   }
   
-  refreshElemPos(obj){
-    const {x: left, y} = obj.getBoundingClientRect();
+  refreshElemPos(){
+    const anchor = this.$['select__container'];
+    const {x: left, y} = anchor.getBoundingClientRect();
     
     const collapseHeight = Math.min(this.items.length * 26, 300);
     const totalHeight = y + collapseHeight;
@@ -476,7 +477,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
     
     this.$['select-collapse'].style['left'] = left + 'px';
     this.$['select-collapse'].style['top'] = top + 'px';
-    this.$['select-collapse'].style['width'] = this.clientWidth + 'px';
+    this.$['select-collapse'].style['width'] = this.$['select__container'].clientWidth + 'px';
   }
   
   _valueChanged(value, items = []) {
