@@ -221,7 +221,7 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
    */
   toggle(e) {
     const {top, left} = this.getElemPos(this);
-    const collapseHeight = this.items.length * 30 + 2;
+    const collapseHeight = (this.items || []).length * 30 + 2;
     const totalHeight = top + collapseHeight;
     let _top;
     if(totalHeight > document.documentElement.clientHeight) {
