@@ -799,12 +799,14 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.set(`dayList.${index}`, Object.assign({}, item, {select: true}));
     this.date = item.date;
     const month = item.currMonth ? this.month - 1 : item.date >= 24 ? this.month - 2 : this.month;
-    if (!this.rangeList.includes(this.type) && !item.currMonth) {
-      item.date >= 24 ? this.monthMinus() : this.monthAdd();
-    }
+  
     const transientDate = this._getTimestampTo(new Date(this.year, month, this.date));
     // const timestamp = new Date(this.year, month, this.date).getTime();
     this.setTimestamp(transientDate);
+    
+    if (!this.rangeList.includes(this.type) && !item.currMonth) {
+      item.date >= 24 ? this.monthMinus() : this.monthAdd();
+    }
   }
   
   clearDate() {
