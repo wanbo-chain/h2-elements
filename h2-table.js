@@ -657,7 +657,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   
   isDisabledSelection(row) {
     if(!this.selectionFilter) return false;
-    return this.selectionFilter(row);
+    return !this.selectionFilter(row);
   }
   
   /**
