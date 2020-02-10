@@ -598,7 +598,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
   _itemsChanged(items = []) {
     this._displayItems = items.slice(0, 9);
     // 初始化一次选中项
-    if (this.value) {
+    if (this.value !== undefined && this.value !== null) {
       this._valueChanged(this.value);
     }
     // 清空缓存插件的缓存

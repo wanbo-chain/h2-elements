@@ -322,7 +322,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
               <template is="dom-repeat" items="[[__tableData]]" as="row" index-as="rowIndex">
                 <tr class="table__row">
                   <template is="dom-if" if="[[ selectable ]]">
-                    <td><paper-checkbox class="checkbox-item" noink checked="{{ row.__selected }}" on-change="__rowSelecttion"></paper-checkbox></td>
+                    <td><paper-checkbox class="checkbox-item" noink disabled="[[isDisabledSelection(row)]]" checked="{{ row.__selected }}" on-change="__rowSelecttion"></paper-checkbox></td>
                   </template>
                   <template is="dom-if" if="[[ __showExpansion ]]">
                     <td><iron-icon class="expand-icon" icon="icons:chevron-right" on-click="__openExpanderHandler"></iron-icon></td>
@@ -653,6 +653,11 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   
   __calShowExpansion([first] = [{}]) {
     return first.type === 'expand';
+  }
+  
+  isDisabledSelection(row) {
+    if(!this.selectionFilter) return false;
+    return this.selectionFilter(row);
   }
   
   /**

@@ -28,7 +28,29 @@ export const BaseBehavior = {
     return Object.is(left, right);
   },
   
+  /**
+   * 判断传入参数两两是否全部相等
+   * @param args
+   * @return {boolean}
+   */
+  allEqual(...args) {
+    for(let i = 0, len = args.length; i < len; i = i + 2) {
+      if(i + 1 >= len || !Object.is(args[i], args[i + 1])) return false;
+    }
+    return true;
+  },
   
+  /**
+   * 判断传入参数两两是否存在一对相等
+   * @param args
+   * @return {boolean}
+   */
+  someEqual(...args) {
+    for(let i = 0, len = args.length - 1; i < len; i = i + 2) {
+      if(Object.is(args[i], args[i + 1])) return true;
+    }
+    return false;
+  },
   /**
    * 函数判断
    * @param {*} fn
