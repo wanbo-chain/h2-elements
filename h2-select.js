@@ -428,9 +428,13 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
   
   connectedCallback() {
     super.connectedCallback();
-    this.addEventListener('blur', e => {
-      this.closeCollapse();
+    this.addEventListener('blur', () => {
+      setTimeout(() => {
+        if (this.shadowRoot.activeElement && this.shadowRoot.activeElement.id && this.shadowRoot.activeElement.id.startsWith('tag-cursor__')) return;
+        this.closeCollapse();
+      }, 100);
     });
+    
     this.isFocus = !this.classList.contains('size-selector');
     let parent = this.offsetParent;
     while (parent) {

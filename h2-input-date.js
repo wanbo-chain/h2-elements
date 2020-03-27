@@ -60,7 +60,8 @@ class H2InputDate extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
       :host([readonly]) .input__container {
         pointer-events: none;
-        cursor: default;
+        opacity: 0.5;
+        cursor: no-drop;
       }
 
       :host([data-invalid]) .input__container {
