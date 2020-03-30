@@ -15,9 +15,10 @@ export class CacheSearchUtil {
    * 查询
    * @param keyword 关键字
    * @param separator
+   * @param sortByPopularity
    * @returns {Array.<*>}
    */
-  search(keyword = "", separator = ",") {
+  search(keyword = "", separator = ",", noSortByPopularity = false) {
     let parts = keyword.toUpperCase().trim().split(separator);
     /**
      * 匹配的结果集
@@ -31,10 +32,10 @@ export class CacheSearchUtil {
     ).map(cacheItem => {
       cacheItem.matchCount++;
       return cacheItem
-    }).sort((prev, next) => next.matchCount - prev.matchCount
-    ).map(
-      cacheItem => cacheItem.item
-    );
+    }).sort((prev, next) => noSortByPopularity ? 1 : next.matchCount - prev.matchCount)
+      .map(
+        cacheItem => cacheItem.item
+      );
   }
   
   /**

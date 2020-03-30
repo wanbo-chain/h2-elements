@@ -491,6 +491,10 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       keywordSeparator: {
         type: String,
         value: /(\s)+/g
+      },
+      noSortByPopularity: {
+        type: Boolean,
+        value: false
       }
     };
   }
@@ -617,7 +621,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.displayCollapse(true);
     }
     
-    const matched = this._cacheSearchUtil.search(this._userInputKeyword, " ");
+    const matched = this._cacheSearchUtil.search(this._userInputKeyword, " ", this.noSortByPopularity);
     if (this.src) {
       
       if (!this.__fetchByKeyword) {
@@ -817,7 +821,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
    */
   _keyDownHandler(event) {
     if (this.inputChinese) return;
-    if (this.shortcutKey !== event.key && !this.$["picker-collapse"].hidden) event.stopPropagation();
+    // if (this.shortcutKey !== event.key && !this.$["picker-collapse"].hidden) event.stopPropagation();
     
     const key = event.key;
     if (event.altKey || key === this.shortcutKey) {

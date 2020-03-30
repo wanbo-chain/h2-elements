@@ -75,6 +75,7 @@ class H2Radio extends mixinBehaviors([BaseBehavior], PolymerElement) {
         background-color: #ffffff;
         text-overflow: ellipsis;
         overflow: hidden;
+        white-space: nowrap;
       }
 
       .candidate__item:not(:last-of-type) {
