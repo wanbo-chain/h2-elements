@@ -604,7 +604,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
   
   _itemsChanged(items = []) {
-    this._displayItems = items.slice(0, 9);
+    this._setDisplayItems(items);
     // 初始化一次选中项
     if (this.value !== undefined && this.value !== null) {
       this._valueChanged(this.value);
@@ -644,7 +644,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
                 // _displayItems will reset when items changed.
                 this.items = candidateItems.concat(this.items);
               } else {
-                this._displayItems = _displayItems.slice(0, 9);
+                this._setDisplayItems(_displayItems);
               }
               
               this._switchFocusItemAt(0);
@@ -656,7 +656,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.__fetchByKeyword();
       
     } else {
-      this._displayItems = matched.slice(0, 9);
+      this._setDisplayItems(matched);
       this._switchFocusItemAt(0);
     }
     this._displayPlaceholder();
@@ -671,6 +671,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.selectedItem = undefined;
     }
     if (this.mode === 'text') this.text = this.value && !this.multi ? this.value : this._userInputKeyword;
+    this._setDisplayItems(this.selectedValues.length > 0 ? []: this.items);
     this.displayCollapse(false);
   }
   
@@ -735,6 +736,12 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     }
   }
   
+  _setDisplayItems(items) {
+    const selected = this.items.filter(item => (this.selectedValues || []).find(i => i[this.attrForValue] == item[this.attrForValue]));
+    const unselected = items.filter(item => !(this.selectedValues || []).includes(item));
+    
+    this._displayItems = selected.concat(unselected).slice(0, 9);
+  }
   /**
    * 选择选项
    * @param item
@@ -894,6 +901,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
   deleteLastTag() {
     if (this.selectedValues && this.selectedValues.length > 0) {
       this.pop("selectedValues");
+      this.displayCollapse(true);
     }
   }
   
@@ -905,6 +913,8 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     const ind = this.selectedValues.findIndex(selected => selected[this.attrForValue] == value);
     this.splice("selectedValues", ind, 1);
     if (!this.multi || (this.multi && this.selectedValues.length === 0)) this._userInputKeyword = '';
+    this.displayCollapse(true);
+    this.__focusOnKeywordInput();
   }
   
   _getHotKey(index) {
