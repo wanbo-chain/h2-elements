@@ -738,7 +738,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
   
   _setDisplayItems(items) {
     const selected = this.items.filter(item => (this.selectedValues || []).find(i => i[this.attrForValue] == item[this.attrForValue]));
-    const unselected = items.filter(item => !(this.selectedValues || []).includes(item));
+    const unselected = items.filter(item => !(this.selectedValues || []).find(i => i[this.attrForValue] == item[this.attrForValue]));
     
     this._displayItems = selected.concat(unselected).slice(0, 9);
   }
