@@ -44,6 +44,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         overflow-y: hidden;
       }
       
+      
       .h2-table td, .h2-table th {
         padding: 0 10px;
         margin: 0;
@@ -90,6 +91,10 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         cursor:pointer;
         color: grey;
         transition: transform .2s ease-in-out
+      }
+      
+      .expand-icon-td {
+        padding: 0 !important;
       }
       
       .row__expansion-col {
@@ -253,7 +258,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                 <col width="40">
               </template>
               <template is="dom-if" if="[[ __showExpansion ]]">
-                <col width="30">
+                <col width="20">
               </template>
               <template is="dom-if" if="[[ showIndex ]]">
                 <col width="52">
@@ -301,7 +306,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                  <col width="40">
               </template>
               <template is="dom-if" if="[[ __showExpansion ]]">
-                 <col width="30">
+                 <col width="20">
               </template>
               <template is="dom-if" if="[[ showIndex ]]">
                  <col width="52">
@@ -325,7 +330,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                     <td><paper-checkbox class="checkbox-item" noink disabled="[[isDisabledSelection(row)]]" checked="{{ row.__selected }}" on-change="__rowSelecttion"></paper-checkbox></td>
                   </template>
                   <template is="dom-if" if="[[ __showExpansion ]]">
-                    <td><iron-icon class="expand-icon" icon="icons:chevron-right" on-click="__openExpanderHandler"></iron-icon></td>
+                    <td class="expand-icon-td"><iron-icon class="expand-icon" icon="icons:chevron-right" on-click="__openExpanderHandler"></iron-icon></td>
                   </template>
                   <template is="dom-if" if="[[ showIndex ]]">
                      <td>[[ calc(rowIndex, '+', 1) ]]</td>
@@ -371,7 +376,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                   <col width="40">
                 </template>
                 <template is="dom-if" if="[[ __showExpansion ]]">
-                  <col width="30">
+                  <col width="20">
                 </template>
                 <template is="dom-if" if="[[ showIndex ]]">
                   <col width="52">
@@ -419,7 +424,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                  <col width="40">
               </template>
               <template is="dom-if" if="[[ __showExpansion ]]">
-                 <col width="30">
+                 <col width="20">
               </template>
               <template is="dom-if" if="[[ showIndex ]]">
                  <col width="52">
@@ -443,7 +448,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                     <td><paper-checkbox class="checkbox-item" noink checked="{{ row.__selected }}" on-change="__rowSelecttion"></paper-checkbox></td>
                   </template>
                   <template is="dom-if" if="[[ __showExpansion ]]">
-                    <td><iron-icon class="expand-icon" icon="icons:chevron-right" on-click="__openExpanderHandlerFixed"></iron-icon></td>
+                    <td class="expand-icon-td"><iron-icon class="expand-icon" icon="icons:chevron-right" on-click="__openExpanderHandlerFixed"></iron-icon></td>
                   </template>
                   <template is="dom-if" if="[[ showIndex ]]">
                      <td>[[ calc(rowIndex, '+', 1) ]]</td>
@@ -659,7 +664,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     if(!this.selectionFilter) return false;
     return !this.selectionFilter(row);
   }
-
+  
   /**
    * 触发全选
    */
