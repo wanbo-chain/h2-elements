@@ -523,7 +523,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     
     this.addEventListener("blur", e => {
       e.stopPropagation();
-      if (!this.value) this.text = this._userInputKeyword;
+      if (!this.selectedItem) this.text = this._userInputKeyword;
       setTimeout(() => {
         if (this.shadowRoot.activeElement && this.shadowRoot.activeElement.id === 'keywordInput') return;
         this.displayCollapse(false);

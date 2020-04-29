@@ -158,8 +158,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
       .td_cell {
-        position: relative
-        display: inline-block;
+        /*position: relative;*/
+        /*display: inline-block;*/
       }
       
       .table__cell {
@@ -272,7 +272,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                 <template is="dom-if" if="[[ selectable ]]">
                    <th id="selectable">
                     <template is="dom-if" if="[[ !radio ]]">
-                      <paper-checkbox class="checkbox-item" noink checked="{{__selectedState}}" on-click="__rowSelecttionAll"></paper-checkbox>
+                      <paper-checkbox class="checkbox-item" noink checked="{{__selectedState}}" on-click="__rowSelectionAll"></paper-checkbox>
                     </template>
                    </th>
                 </template>
@@ -327,7 +327,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
               <template is="dom-repeat" items="[[__tableData]]" as="row" index-as="rowIndex">
                 <tr class="table__row">
                   <template is="dom-if" if="[[ selectable ]]">
-                    <td><paper-checkbox class="checkbox-item" noink disabled="[[isDisabledSelection(row)]]" checked="{{ row.__selected }}" on-change="__rowSelecttion"></paper-checkbox></td>
+                    <td><paper-checkbox class="checkbox-item" noink disabled="[[isDisabledSelection(row)]]" checked="{{ row.__selected }}" on-change="__rowSelection"></paper-checkbox></td>
                   </template>
                   <template is="dom-if" if="[[ __showExpansion ]]">
                     <td class="expand-icon-td"><iron-icon class="expand-icon" icon="icons:chevron-right" on-click="__openExpanderHandler"></iron-icon></td>
@@ -390,7 +390,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                   <template is="dom-if" if="[[ selectable ]]">
                      <th>
                       <template is="dom-if" if="[[ !radio ]]">
-                        <paper-checkbox class="checkbox-item" noink checked="{{__selectedState}}" on-click="__rowSelecttionAll"></paper-checkbox>
+                        <paper-checkbox class="checkbox-item" noink checked="{{__selectedState}}" on-click="__rowSelectionAll"></paper-checkbox>
                       </template>
                      </th>
                   </template>
@@ -445,7 +445,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
               <template is="dom-repeat" items="[[__tableData]]" as="row" index-as="rowIndex">
                 <tr class="table__row">
                   <template is="dom-if" if="[[ selectable ]]">
-                    <td><paper-checkbox class="checkbox-item" noink checked="{{ row.__selected }}" on-change="__rowSelecttion"></paper-checkbox></td>
+                    <td><paper-checkbox class="checkbox-item" noink checked="{{ row.__selected }}" on-change="__rowSelection"></paper-checkbox></td>
                   </template>
                   <template is="dom-if" if="[[ __showExpansion ]]">
                     <td class="expand-icon-td"><iron-icon class="expand-icon" icon="icons:chevron-right" on-click="__openExpanderHandlerFixed"></iron-icon></td>
@@ -626,7 +626,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.__shareOpenExpanderHandler(icon, rowIndex, `#fixed_right_row_${rowIndex}`);
   }
   
-  __rowSelecttion({model: {row, rowIndex}}) {
+  __rowSelection({model: {row, rowIndex}}) {
     if (this.radio) {
       const findIndex = this.__tableData.findIndex(val => val.__selected);
       this.__tableData = this.__tableData.map(val => Object.assign({}, val, {__selected: false}));
@@ -636,7 +636,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.dispatchEvent(new CustomEvent('row-selection-changed', {detail: {row, selected: row.__selected}}));
   }
   
-  __rowSelecttionAll() {
+  __rowSelectionAll() {
     this.__tableData =
       this.__tableData.map(d => Object.assign({}, d, {__selected: this.__selectedState}));
     this.dispatchEvent(new CustomEvent('rows-all-selection-changed', {detail: {selectedRows: this.getSelectedRows()}}));
@@ -670,7 +670,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
    */
   selectAll() {
     this.__selectedState = true;
-    this.__rowSelecttionAll();
+    this.__rowSelectionAll();
   }
   
   /**
@@ -781,10 +781,6 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     // super.ready();
     // 计算固定列总宽度
     setTimeout(() => {
-      
-      // const tableBodyFixed = this.shadowRoot.querySelector('#tableBodyFixed');
-      // const tableBodyFixedRight = this.shadowRoot.querySelector('#tableBodyFixedRight');
-      
       if (this.__tableFixed.length > 0) {
         let width = 0;
         for (let i = 0; i < this.__tableFixed.length; i++) {
@@ -797,10 +793,6 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         const tableFixedStyle = `width: ${width}px`;
         this.set('tableFixedStyle', tableFixedStyle);
         
-        // tableBodyFixed && tableBodyFixed.addEventListener('scroll', () => {
-        //   this.$.tableBody.scrollTop = tableBodyFixed.scrollTop;
-        //   if (tableBodyFixedRight) tableBodyFixedRight.scrollTop = tableBodyFixed.scrollTop;
-        // });
       }
       if (this.__tableFixedRight.length > 0) {
         let width = 0;
@@ -811,10 +803,6 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         const tableFixedRightStyle = `width: ${width}px`;
         this.set('tableFixedRightStyle', tableFixedRightStyle);
         
-        // tableBodyFixedRight && tableBodyFixedRight.addEventListener('scroll', () => {
-        //   this.$.tableBody.scrollTop = tableBodyFixedRight.scrollTop;
-        //   if (tableBodyFixed) tableBodyFixed.scrollTop = tableBodyFixedRight.scrollTop;
-        // })
       }
     }, 10);
   }
