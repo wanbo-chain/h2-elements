@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>h2-tree demo</title>
+
+  <script type="module">
+    import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    import '../../node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
+    import '../../h2-tree';
+    import '../../h2-button';
+  </script>
+
+  <script type="module">
+    const $_documentContainer = document.createElement('template');
+
+    $_documentContainer.innerHTML = `<custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+      .centered {
+        min-width: 800px;
+      }
+
+      demo-snippet {
+        --demo-snippet-code: {
+          max-height: 500px;
+        }
+      }
+    </style>
+  </custom-style>`;
+
+    document.body.appendChild($_documentContainer.content);
+  </script>
+</head>
+<body>
+<div class="vertical-section-container centered">
+  <h3>h2-tree</h3>
+  <demo-snippet>
+    <template>
+      <h2-tree id="tree"></h2-tree>
+      <script>
+        tree.items = [
+          {
+            label: '一级1',
+            value: '1',
+            opened: false,
+            children: [
+              {
+                label: '二级1-1',
+                value: '1-1',
+                opened: false,
+                children: [
+                  {
+                    label: '三级1-1-1',
+                    value: '1-1-1',
+                    opened: false
+                  },
+                  {
+                    label: '三级1-1-2',
+                    value: '1-1-2',
+                    opened: false
+                  },
+                ]
+              },
+              {
+                label: '二级1-2',
+                value: '1-2',
+                opened: false
+              }
+            ]
+          },
+          {
+            label: '一级2',
+            value: '2',
+            opened: false,
+            children: [
+              {
+                label: '二级2-1',
+                value: '2-1',
+                opened: false
+              },
+              {
+                label: '二级2-2',
+                value: '2-2',
+                opened: false
+              },
+              {
+                label: '二级2-3',
+                value: '2-3',
+                opened: false
+              }
+            ]
+          }
+        ];
+      </script>
+    </template>
+  </demo-snippet>
+
+  <h3>支持勾选，添加show-check-box（'uncheck'、'checked'、'partial-checked'三个值分别代表未选中、选中、部分选中）</h3>
+  <demo-snippet>
+    <template>
+      <h2-tree id="tree2" show-check-box></h2-tree>
+      <script>
+        tree2.items = [
+          {
+            label: '一级1',
+            value: '1',
+            checked: 'uncheck',
+            opened: false,
+            children: [
+              {
+                label: '二级1-1',
+                value: '1-1',
+                checked: 'uncheck',
+                opened: false,
+                children: [
+                  {
+                    label: '三级1-1-1',
+                    value: '1-1-1',
+                    checked: 'uncheck',
+                    opened: false
+                  },
+                  {
+                    label: '三级1-1-2',
+                    value: '1-1-2',
+                    checked: 'uncheck',
+                    opened: false
+                  },
+                ]
+              },
+              {
+                label: '二级1-2',
+                value: '1-2',
+                checked: 'uncheck',
+                opened: false
+              }
+            ]
+          },
+          {
+            label: '一级2',
+            value: '2',
+            checked: 'uncheck',
+            opened: false,
+            children: [
+              {
+                label: '二级2-1',
+                value: '2-1',
+                checked: 'uncheck',
+                opened: false
+              },
+              {
+                label: '二级2-2',
+                value: '2-2',
+                checked: 'uncheck',
+                opened: false
+              },
+              {
+                label: '二级2-3',
+                value: '2-3',
+                checked: 'uncheck',
+                opened: false
+              }
+            ]
+          }
+        ];
+      </script>
+    </template>
+  </demo-snippet>
+
+  <h3>支持只读属性，节点disabled属性为true时无法勾选</h3>
+  <demo-snippet>
+    <template>
+      <h2-tree id="tree3" show-check-box></h2-tree>
+      <script>
+        tree3.items = [
+          {
+            label: '一级1',
+            value: '1',
+            checked: 'uncheck',
+            opened: true,
+            children: [
+              {
+                label: '二级1-1',
+                value: '1-1',
+                checked: 'uncheck',
+                opened: true,
+                children: [
+                  {
+                    label: '三级1-1-1',
+                    value: '1-1-1',
+                    checked: 'uncheck',
+                    disabled: true
+                  },
+                  {
+                    label: '三级1-1-2',
+                    value: '1-1-2',
+                    checked: 'uncheck'
+                  },
+                ]
+              },
+              {
+                label: '二级1-2',
+                value: '1-2',
+                checked: 'uncheck',
+                opened: false
+              }
+            ]
+          },
+          {
+            label: '一级2',
+            value: '2',
+            checked: 'uncheck',
+            opened: false,
+            children: [
+              {
+                label: '二级2-1',
+                value: '2-1',
+                checked: 'uncheck',
+                opened: false
+              },
+              {
+                label: '二级2-2',
+                value: '2-2',
+                checked: 'uncheck',
+                opened: false
+              },
+              {
+                label: '二级2-3',
+                value: '2-3',
+                checked: 'uncheck',
+                opened: false
+              }
+            ]
+          }
+        ];
+      </script>
+    </template>
+  </demo-snippet>
+
+  <h3>支持默认展开, 添加default-open</h3>
+  <demo-snippet>
+    <template>
+      <h2-tree id="tree4" show-check-box default-open></h2-tree>
+      <script>
+        tree4.items = [
+          {
+            label: '一级1',
+            value: '1',
+            checked: 'uncheck',
+            opened: false,
+            children: [
+              {
+                label: '二级1-1',
+                value: '1-1',
+                checked: 'uncheck',
+                opened: false,
+                children: [
+                  {
+                    label: '三级1-1-1',
+                    value: '1-1-1',
+                    checked: 'uncheck',
+                    opened: false
+                  },
+                  {
+                    label: '三级1-1-2',
+                    value: '1-1-2',
+                    checked: 'uncheck',
+                    opened: false
+                  },
+                ]
+              },
+              {
+                label: '二级1-2',
+                value: '1-2',
+                checked: 'uncheck',
+                opened: false
+              }
+            ]
+          },
+          {
+            label: '一级2',
+            value: '2',
+            checked: 'uncheck',
+            opened: false,
+            children: [
+              {
+                label: '二级2-1',
+                value: '2-1',
+                checked: 'uncheck',
+                opened: false
+              },
+              {
+                label: '二级2-2',
+                value: '2-2',
+                checked: 'uncheck',
+                opened: false
+              },
+              {
+                label: '二级2-3',
+                value: '2-3',
+                checked: 'uncheck',
+                opened: false
+              }
+            ]
+          }
+        ];
+      </script>
+    </template>
+  </demo-snippet>
+
+  <h3>手风琴模式，对于同一级的节点，每次只能展开一个，添加accordion</h3>
+  <demo-snippet>
+    <template>
+      <h2-tree id="tree5" accordion></h2-tree>
+      <script>
+        tree5.items = [
+          {
+            label: '一级1',
+            value: '1',
+            checked: 'uncheck',
+            opened: false,
+            children: [
+              {
+                label: '二级1-1',
+                value: '1-1',
+                checked: 'uncheck',
+                opened: false,
+                children: [
+                  {
+                    label: '三级1-1-1',
+                    value: '1-1-1',
+                    checked: 'uncheck',
+                    opened: false
+                  },
+                  {
+                    label: '三级1-1-2',
+                    value: '1-1-2',
+                    checked: 'uncheck',
+                    opened: false
+                  },
+                ]
+              },
+              {
+                label: '二级1-2',
+                value: '1-2',
+                checked: 'uncheck',
+                opened: false,
+                children: [
+                  {
+                    label: '三级1-2-1',
+                    value: '1-2-1',
+                    checked: 'uncheck',
+                    opened: false
+                  },
+                  {
+                    label: '三级1-2-2',
+                    value: '1-2-2',
+                    checked: 'uncheck',
+                    opened: false
+                  },
+                ]
+              }
+            ]
+          },
+          {
+            label: '一级2',
+            value: '2',
+            checked: 'uncheck',
+            opened: false,
+            children: [
+              {
+                label: '二级2-1',
+                value: '2-1',
+                checked: 'uncheck',
+                opened: false
+              },
+              {
+                label: '二级2-2',
+                value: '2-2',
+                checked: 'uncheck',
+                opened: false
+              },
+              {
+                label: '二级2-3',
+                value: '2-3',
+                checked: 'uncheck',
+                opened: false
+              }
+            ]
+          }
+        ];
+      </script>
+    </template>
+  </demo-snippet>
+
+  <h3>支持关键字过滤，添加show-filter</h3>
+  <demo-snippet>
+    <template>
+      <h2-tree id="tree6" default-open show-filter></h2-tree>
+      <script>
+        tree6.items = [
+          {
+            label: '一级1',
+            value: '1',
+            checked: 'uncheck',
+            opened: false,
+            children: [
+              {
+                label: '二级1-1',
+                value: '1-1',
+                checked: 'uncheck',
+                opened: false
+              },
+              {
+                label: '二级1-2',
+                value: '1-2',
+                checked: 'uncheck',
+                opened: false
+              }
+            ]
+          },
+          {
+            label: '一级2',
+            value: '2',
+            checked: 'uncheck',
+            opened: false,
+            children: [
+              {
+                label: '二级2-1',
+                value: '2-1',
+                checked: 'uncheck',
+                opened: false
+              },
+              {
+                label: '二级2-2',
+                value: '2-2',
+                checked: 'uncheck',
+                opened: false
+              },
+              {
+                label: '二级2-3',
+                value: '2-3',
+                checked: 'uncheck',
+                opened: false
+              }
+            ]
+          }
+        ];
+      </script>
+    </template>
+  </demo-snippet>
+
+  <h3>可通过attr-for-label设置用哪个属性进行显示，通过attr-for-value设置勾选后取哪个属性的值，添加include-partial-checked可以将部分选中也作为选择的值</h3>
+  <demo-snippet>
+    <template>
+      <h2-tree id="tree7" show-check-box attr-for-label="name" attr-for-value="id" include-partial-checked default-open></h2-tree>
+      <script>
+        tree7.items = [
+          {
+            name: '一级1',
+            id: '1',
+            checked: 'uncheck',
+            opened: false,
+            children: [
+              {
+                name: '二级1-1',
+                id: '1-1',
+                checked: 'uncheck',
+                opened: false
+              },
+              {
+                name: '二级1-2',
+                id: '1-2',
+                checked: 'uncheck',
+                opened: false
+              }
+            ]
+          },
+          {
+            name: '一级2',
+            id: '2',
+            checked: 'uncheck',
+            opened: false,
+            children: [
+              {
+                name: '二级2-1',
+                id: '2-1',
+                checked: 'uncheck',
+                opened: false
+              },
+              {
+                name: '二级2-2',
+                id: '2-2',
+                checked: 'uncheck',
+                opened: false
+              },
+              {
+                name: '二级2-3',
+                id: '2-3',
+                checked: 'uncheck',
+                opened: false
+              }
+            ]
+          }
+        ];
+      </script>
+    </template>
+  </demo-snippet>
+</div>
+</body>
+</html>
