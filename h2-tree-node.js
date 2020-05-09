@@ -336,15 +336,17 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   filterByKeyword(value) {
     if (this.item[this.attrForLabel].includes(value)) {
-      return;
+      return this.set('item.isIncludeKeyword', true);
     } else if (!this.item[this.attrForLabel].includes(value)) {
       if (this.item.children && this.item.children.length) {
-        if (this.item.children.some(item => item[this.attrForLabel].includes(value))) {
-          return;
+        if (this.item.children.some(item => item.isIncludeKeyword)) {
+          return this.set('item.isIncludeKeyword', true);
         } else {
+          this.set('item.isIncludeKeyword', false);
           this.$.navItem.classList.add('display-none');
         }
       } else if (!this.item.children) {
+        this.set('item.isIncludeKeyword', false);
         this.$.navItem.classList.add('display-none');
       }
     }

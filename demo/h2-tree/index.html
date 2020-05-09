@@ -203,8 +203,7 @@
               {
                 label: '二级1-2',
                 value: '1-2',
-                checked: 'uncheck',
-                opened: false
+                checked: 'uncheck'
               }
             ]
           },
@@ -249,33 +248,28 @@
             label: '一级1',
             value: '1',
             checked: 'uncheck',
-            opened: false,
             children: [
               {
                 label: '二级1-1',
                 value: '1-1',
                 checked: 'uncheck',
-                opened: false,
                 children: [
                   {
                     label: '三级1-1-1',
                     value: '1-1-1',
-                    checked: 'uncheck',
-                    opened: false
+                    checked: 'uncheck'
                   },
                   {
                     label: '三级1-1-2',
                     value: '1-1-2',
-                    checked: 'uncheck',
-                    opened: false
+                    checked: 'uncheck'
                   },
                 ]
               },
               {
                 label: '二级1-2',
                 value: '1-2',
-                checked: 'uncheck',
-                opened: false
+                checked: 'uncheck'
               }
             ]
           },
@@ -283,25 +277,21 @@
             label: '一级2',
             value: '2',
             checked: 'uncheck',
-            opened: false,
             children: [
               {
                 label: '二级2-1',
                 value: '2-1',
-                checked: 'uncheck',
-                opened: false
+                checked: 'uncheck'
               },
               {
                 label: '二级2-2',
                 value: '2-2',
-                checked: 'uncheck',
-                opened: false
+                checked: 'uncheck'
               },
               {
                 label: '二级2-3',
                 value: '2-3',
-                checked: 'uncheck',
-                opened: false
+                checked: 'uncheck'
               }
             ]
           }
@@ -319,25 +309,21 @@
           {
             label: '一级1',
             value: '1',
-            checked: 'uncheck',
             opened: false,
             children: [
               {
                 label: '二级1-1',
                 value: '1-1',
-                checked: 'uncheck',
                 opened: false,
                 children: [
                   {
                     label: '三级1-1-1',
                     value: '1-1-1',
-                    checked: 'uncheck',
                     opened: false
                   },
                   {
                     label: '三级1-1-2',
                     value: '1-1-2',
-                    checked: 'uncheck',
                     opened: false
                   },
                 ]
@@ -345,19 +331,16 @@
               {
                 label: '二级1-2',
                 value: '1-2',
-                checked: 'uncheck',
                 opened: false,
                 children: [
                   {
                     label: '三级1-2-1',
                     value: '1-2-1',
-                    checked: 'uncheck',
                     opened: false
                   },
                   {
                     label: '三级1-2-2',
                     value: '1-2-2',
-                    checked: 'uncheck',
                     opened: false
                   },
                 ]
@@ -367,25 +350,21 @@
           {
             label: '一级2',
             value: '2',
-            checked: 'uncheck',
             opened: false,
             children: [
               {
                 label: '二级2-1',
                 value: '2-1',
-                checked: 'uncheck',
                 opened: false
               },
               {
                 label: '二级2-2',
                 value: '2-2',
-                checked: 'uncheck',
                 opened: false
               },
               {
                 label: '二级2-3',
                 value: '2-3',
-                checked: 'uncheck',
                 opened: false
               }
             ]
@@ -404,46 +383,58 @@
           {
             label: '一级1',
             value: '1',
-            checked: 'uncheck',
-            opened: false,
             children: [
               {
                 label: '二级1-1',
                 value: '1-1',
-                checked: 'uncheck',
-                opened: false
+                children: [
+                  {
+                    label: '三级1-1-1',
+                    value: '1-1-1',
+                    children: [
+                      {
+                        label: '四级1-1-1-1',
+                        value: '1-1-1-1'
+                      }
+                    ]
+                  },
+                  {
+                    label: '三级1-1-2',
+                    value: '1-1-2',
+                  }
+                ]
               },
               {
                 label: '二级1-2',
                 value: '1-2',
-                checked: 'uncheck',
-                opened: false
+                children: [
+                  {
+                    label: '三级1-2-1',
+                    value: '1-2-1',
+                  },
+                  {
+                    label: '三级1-2-2',
+                    value: '1-2-2'
+                  }
+                ]
               }
             ]
           },
           {
             label: '一级2',
             value: '2',
-            checked: 'uncheck',
-            opened: false,
             children: [
               {
                 label: '二级2-1',
-                value: '2-1',
-                checked: 'uncheck',
-                opened: false
+                value: '2-1'
               },
               {
                 label: '二级2-2',
-                value: '2-2',
-                checked: 'uncheck',
-                opened: false
+                value: '2-2'
               },
               {
                 label: '二级2-3',
-                value: '2-3',
-                checked: 'uncheck',
-                opened: false
+                value: '2-3'
               }
             ]
           }
@@ -455,26 +446,24 @@
   <h3>可通过attr-for-label设置用哪个属性进行显示，通过attr-for-value设置勾选后取哪个属性的值，添加include-partial-checked可以将部分选中也作为选择的值</h3>
   <demo-snippet>
     <template>
-      <h2-tree id="tree7" show-check-box attr-for-label="name" attr-for-value="id" include-partial-checked default-open></h2-tree>
+      <h2-tree id="tree7" show-check-box attr-for-label="name" attr-for-value="id" include-partial-checked
+               default-open></h2-tree>
       <script>
         tree7.items = [
           {
             name: '一级1',
             id: '1',
             checked: 'uncheck',
-            opened: false,
             children: [
               {
                 name: '二级1-1',
                 id: '1-1',
-                checked: 'uncheck',
-                opened: false
+                checked: 'uncheck'
               },
               {
                 name: '二级1-2',
                 id: '1-2',
-                checked: 'uncheck',
-                opened: false
+                checked: 'uncheck'
               }
             ]
           },
@@ -482,25 +471,21 @@
             name: '一级2',
             id: '2',
             checked: 'uncheck',
-            opened: false,
             children: [
               {
                 name: '二级2-1',
                 id: '2-1',
-                checked: 'uncheck',
-                opened: false
+                checked: 'uncheck'
               },
               {
                 name: '二级2-2',
                 id: '2-2',
-                checked: 'uncheck',
-                opened: false
+                checked: 'uncheck'
               },
               {
                 name: '二级2-3',
                 id: '2-3',
-                checked: 'uncheck',
-                opened: false
+                checked: 'uncheck'
               }
             ]
           }
