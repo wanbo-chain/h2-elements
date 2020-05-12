@@ -710,11 +710,9 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         const checkbox = fragment.querySelector('paper-checkbox');
         if (checkbox) {
           
-          // <paper-checkbox class="checkbox-item" noink disabled="[[isDisabledSelection(row)]]" checked="{{ row.__selected }}" on-change="__rowSelection"></paper-checkbox>
           this.isDisabledSelection(row) && checkbox.setAttribute("disabled", true);
           row.__selected && checkbox.setAttribute("checked", true)
           row.checkbox = checkbox;
-          // todo 双向绑定
           checkbox.addEventListener('change', (e) => this.__rowSelection(e, row, rowIndex));
         }
         const expandIcon = fragment.querySelector('iron-icon');
@@ -732,7 +730,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
             <paper-tooltip position="top" animation-delay="10" offset="5" fit-to-visible-bounds></paper-tooltip>
           </div>
         </td>
-      `
+      `;
       
       columnFrag.append(tmpContainer);
       
@@ -759,6 +757,9 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       fragment.appendChild(columnFrag.querySelector('td'));
     });
     
+    for(let i = 0, len = this.colspan - fragment.querySelectorAll('td').length; i < len; i++) {
+      fragment.appendChild(document.createElement('td'));
+    }
     
     setTimeout(() => {
       const parent = this.shadowRoot.querySelector(`#${prefix ? prefix + '_' : ''}row_ctn_${rowIndex}`);
