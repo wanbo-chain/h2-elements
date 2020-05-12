@@ -493,6 +493,62 @@
       </script>
     </template>
   </demo-snippet>
+
+  <h3>可通过设置树节点的tagName字段来显示标签，通过tagType字段设置标签类型，标签类型有普通（默认）、警告（warning）、危险（danger）</h3>
+  <demo-snippet>
+    <template>
+      <h2-tree id="tree8" show-check-box attr-for-label="name" attr-for-value="id" default-open></h2-tree>
+      <script>
+        tree8.items = [
+          {
+            name: '一级1',
+            id: '1',
+            checked: 'uncheck',
+            children: [
+              {
+                name: '二级1-1',
+                id: '1-1',
+                checked: 'uncheck',
+                tagName: '普通'
+              },
+              {
+                name: '二级1-2',
+                id: '1-2',
+                checked: 'uncheck',
+                tagName: '普通'
+              }
+            ]
+          },
+          {
+            name: '一级2',
+            id: '2',
+            checked: 'uncheck',
+            children: [
+              {
+                name: '二级2-1',
+                id: '2-1',
+                checked: 'uncheck',
+                tagName: '警告',
+                tagType: 'warning'
+              },
+              {
+                name: '二级2-2',
+                id: '2-2',
+                checked: 'uncheck',
+                tagName: '危险',
+                tagType: 'danger'
+              },
+              {
+                name: '二级2-3',
+                id: '2-3',
+                checked: 'uncheck'
+              }
+            ]
+          }
+        ];
+      </script>
+    </template>
+  </demo-snippet>
 </div>
 </body>
 </html>

@@ -169,13 +169,34 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
       .display-none{
         display: none;
       }
-
+      
+      .tag{
+        background: var(--h2-ui-bg);
+        color: #fff;
+        margin-left: 5px;
+        border-radius: 5px;
+        font-size: 8px;
+        padding: 2px 5px;
+        box-sizing: border-box;
+      }
+      
+      .tag-danger{
+        background: var(--h2-ui-red);
+      }
+      
+      .tag-warning{
+        background: var(--h2-ui-orange);
+      }
     </style>
     <ul>
       <li id="navItem" class="nav-item">
         <div id="childrenToggle" class$="[[getToggleClass(item)]]" on-click="onToggle"></div>
         <div id="checkbox" class$="checkbox [[optional(showCheckBox,'','display-none')]] [[optional(item.disabled,'disabled','')]]" on-click="onCheck"></div>
-        <div class$="[[getTextClass(item)]]">[[getValueByKey(item, attrForLabel)]]</div>
+        <div class$="[[getTextClass(item)]]">[[getValueByKey(item, attrForLabel)]]
+          <template is="dom-if" if="[[item.tagName]]">
+            <span class$="tag tag-[[item.tagType]]">[[item.tagName]]</span>
+          </template>
+        </div>
       </li>
       <li id="children">
         <template is="dom-repeat" items="[[item.children]]" as="itm">
