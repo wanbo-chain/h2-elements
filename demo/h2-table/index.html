@@ -49,7 +49,7 @@
         
       </style>
       <h2-table id="table" tooltip>
-        <h2-table-column prop="sex" label="性别" width="100" type="expand"  model-as="user">
+        <h2-table-column type="expand"  model-as="user">
             <template>
               <style>
                 .ext-container {
@@ -446,9 +446,9 @@
           width: 100%;
         }
         
-        .summary {
+        .summary1 {
           display: flex;
-          flex-flow: row nowrap;
+          flex-flow: column nowrap;
           justify-content: space-evenly;
         }
       
@@ -457,8 +457,8 @@
         <h2-table-column label="名称 / 性别" width="100" props="name, sex" separator=" / "></h2-table-column>
         <h2-table-column prop="phone" label="电话号码" width="200"></h2-table-column>
 
-        <div slot="summarySlot" class="summary">
-          <div>总价： 4人</div>
+        <div slot="summarySlot" class="summary1">
+          <div>总计： 4人</div>
           <div>男： 2人</div>
           <div>女： 2人</div>
         </div>

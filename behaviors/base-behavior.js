@@ -85,7 +85,7 @@ export const BaseBehavior = {
    * @returns {*}
    */
   getValueByKey(model, key, defVal = "") {
-    return (model && (key in model)) ? model[key] : defVal;
+    return (model && (key in model) && model[key] !== undefined) ? model[key] : defVal;
   },
   
   /**

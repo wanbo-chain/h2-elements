@@ -83,7 +83,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         border-collapse: separate;
       }
       
-      .table__row:hover > td, .table__summary {
+      .table__row:hover, .table__summary {
         background: #ecf5ff;
       }
       
@@ -108,6 +108,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         transition: transform .2s ease-in-out
       }
       
+      .row__expansion {
+      }
       .row__expansion-hidden {
         /*visibility: collapse;*/
         display: none;
@@ -176,12 +178,6 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       .table__column[role=operate] {
         overflow: unset;
       }
-      
-      /*.table__column[aria-frozen] {*/
-        /*position: absolute;*/
-        /*background: white;*/
-        /*width: 4em;*/
-      /*}*/
       
       :host paper-tooltip {
         display: none;
@@ -264,7 +260,9 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                 <col width="52">
               </template>
               <template is="dom-repeat" items="[[columnInfos]]">
-                  <col width="[[item.width]]">
+                  <template is="dom-if" if="[[!isEqual(item.type, 'expand')]]">
+                    <col width="[[item.width]]">
+                  </template>
               </template>
             </colgroup>
             <thead>
@@ -282,7 +280,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                 <template is="dom-if" if="[[ showIndex ]]">
                    <th id="showIndex">序号</th>
                 </template>
-                <template is="dom-repeat" items="[[columnInfos]]" as="column">
+                <template is="dom-repeat" items="[[__columnInfos(columnInfos)]]" as="column">
                   <th class="table__column" style$="[[column.cellStyle]]" aria-frozen$="[[column.frozen]]">
                     <div class="header__cell">
                       <div class="table__cell">[[column.label]]</div>
@@ -313,38 +311,23 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
               </template>
               
               <template is="dom-repeat" items="[[columnInfos]]">
-                <col width="[[item.width]]">
+                <template is="dom-if" if="[[!isEqual(item.type, 'expand')]]">
+                    <col width="[[item.width]]">
+                  </template>
               </template>
             </colgroup>
             
-            <tbody>
+            <tbody id="content-body">
               <template is="dom-if" if="[[ isArrayEmpty(data) ]]">
                 <tr class="table__row">
                   <td class="table__nodata" colspan$="[[ colspan ]]">无数据</td>
                 </tr>
               </template>
-              
               <template is="dom-repeat" items="[[__tableData]]" as="row" index-as="rowIndex">
-                <tr class="table__row">
-                  <template is="dom-if" if="[[ selectable ]]">
-                    <td><paper-checkbox class="checkbox-item" noink disabled="[[isDisabledSelection(row)]]" checked="{{ row.__selected }}" on-change="__rowSelection"></paper-checkbox></td>
-                  </template>
-                  <template is="dom-if" if="[[ __showExpansion ]]">
-                    <td class="expand-icon-td"><iron-icon class="expand-icon" icon="icons:chevron-right" on-click="__openExpanderHandler"></iron-icon></td>
-                  </template>
-                  <template is="dom-if" if="[[ showIndex ]]">
-                     <td>[[ calc(rowIndex, '+', 1) ]]</td>
-                  </template>
-                  <template is="dom-repeat" items="[[columnInfos]]" index-as="columnIndex">
-                    <td style$="[[item.cellStyle]]" class="table__column" role$="[[item.type]]" id="row_[[rowIndex]]_column_[[columnIndex]]" aria-frozen$="[[item.frozen]]">
-                      <div class="td_cell">
-                        <div class="table__cell">[[ computeContent(row, rowIndex, item, columnIndex) ]]</div>
-                        <paper-tooltip position="top" animation-delay="10" offset="5" fit-to-visible-bounds>[[ computeContent(row, rowIndex, item, columnIndex) ]]</paper-tooltip>
-                      </div>
-                    </td>
-                  </template>
-                </tr>
-                
+              <tr class="table__row" id="row_ctn_[[rowIndex]]">
+                  [[ __generateRowContent(columnInfos, row, rowIndex) ]]
+               </tr>
+              
                 <template is="dom-if" if="[[ __showExpansion ]]">
                   <tr class="row__expansion row__expansion-hidden">
                     <td id="row_[[rowIndex]]" class="row__expansion-col" colspan$="[[ colspan ]]">
@@ -443,25 +426,9 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
               </template>
               
               <template is="dom-repeat" items="[[__tableData]]" as="row" index-as="rowIndex">
-                <tr class="table__row">
-                  <template is="dom-if" if="[[ selectable ]]">
-                    <td><paper-checkbox class="checkbox-item" noink checked="{{ row.__selected }}" on-change="__rowSelection"></paper-checkbox></td>
-                  </template>
-                  <template is="dom-if" if="[[ __showExpansion ]]">
-                    <td class="expand-icon-td"><iron-icon class="expand-icon" icon="icons:chevron-right" on-click="__openExpanderHandlerFixed"></iron-icon></td>
-                  </template>
-                  <template is="dom-if" if="[[ showIndex ]]">
-                     <td>[[ calc(rowIndex, '+', 1) ]]</td>
-                  </template>
+                <tr class="table__row" id="fixed_row_ctn_[[rowIndex]]">
                   <template is="dom-repeat" items="[[__tableFixed]]" index-as="columnIndex">
-                    <template is="dom-if" if="[[ !isEqual(item.type, 'expand') ]]">
-                      <td style$="[[item.cellStyle]]" class="table__column" role$="[[item.type]]" id="fixed_row_[[rowIndex]]_column_[[columnIndex]]" aria-frozen$="[[item.frozen]]">
-                        <div class="td_cell">
-                          <div class="table__cell">[[ computeContentFixed(row, rowIndex, item, columnIndex) ]]</div>
-                          <paper-tooltip position="top" animation-delay="10" offset="5" fit-to-visible-bounds>[[ computeContentFixed(row, rowIndex, item, columnIndex) ]]</paper-tooltip>
-                        </div>
-                      </td>
-                    </template>
+                    [[ __generateRowContent(__tableFixed, row, rowIndex, 'fixed') ]]
                   </template>
                 </tr>
            
@@ -523,15 +490,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
               </template>
               
               <template is="dom-repeat" items="[[__tableData]]" as="row" index-as="rowIndex">
-                <tr class="table__row">
-                  <template is="dom-repeat" items="[[__tableFixedRight]]" index-as="columnIndex">
-                    <td style$="[[item.cellStyle]]" class="table__column" role$="[[item.type]]" id="fixed_right_row_[[rowIndex]]_column_[[columnIndex]]" aria-frozen$="[[item.frozen]]">
-                      <div class="td_cell">
-                        <div class="table__cell">[[ computeContentFixedRight(row, rowIndex, item, columnIndex) ]]</div>
-                        <paper-tooltip position="top" animation-delay="10" offset="5" fit-to-visible-bounds>[[ computeContentFixedRight(row, rowIndex, item, columnIndex) ]]</paper-tooltip>
-                      </div>
-                    </td>
-                  </template>
+                <tr class="table__row" id="fixed_right_row_ctn_[[rowIndex]]">
+                  [[ __generateRowContent(__tableFixedRight, row, rowIndex, 'fixed_right') ]]
                 </tr>
            
                 <template is="dom-if" if="[[ __showExpansion ]]">
@@ -600,10 +560,14 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     const [first] = columnInfos;
     let length = columnInfos.length;
     
-    if (first.type === 'expand' || this.selectable) length += 1;
-    if (this.showIndex) length += 1;
+    if (first.type === 'expand') length -= 1;
+    if (this.showIndex || this.selectable) length += 1;
     
     return length;
+  }
+  
+  __columnInfos(columnInfos) {
+    return columnInfos.filter(col => col.type !== 'expand')
   }
   
   __shareOpenExpanderHandler(icon, rowIndex, target) {
@@ -612,27 +576,31 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.toggleClass(expansion, 'row__expansion-hidden');
   }
   
-  __openExpanderHandler({path: [icon], model: {rowIndex}}) {
+  __openExpanderHandler(icon, rowIndex, prefix = '') {
+    
     this.__shareOpenExpanderHandler(icon, rowIndex, `#row_${rowIndex}`);
-  }
-  
-  __openExpanderHandlerFixed({path: [icon], model: {rowIndex}}) {
-    this.__shareOpenExpanderHandler(icon, rowIndex, `#row_${rowIndex}`);
-    if (this.__tableFixed.length) this.__shareOpenExpanderHandler(icon, rowIndex, `#fixed_row_${rowIndex}`);
-    if (this.__tableFixedRight.length) this.__shareOpenExpanderHandler(icon, rowIndex, `#fixed_right_row_${rowIndex}`);
-  }
-  
-  __openExpanderHandlerFixedRight({path: [icon], model: {rowIndex}}) {
-    this.__shareOpenExpanderHandler(icon, rowIndex, `#fixed_right_row_${rowIndex}`);
-  }
-  
-  __rowSelection({model: {row, rowIndex}}) {
-    if (this.radio) {
-      const findIndex = this.__tableData.findIndex(val => val.__selected);
-      this.__tableData = this.__tableData.map(val => Object.assign({}, val, {__selected: false}));
-      this.set(`__tableData.${rowIndex}.__selected`, findIndex > -1);
+    if(prefix === 'fixed') {
+      if (this.__tableFixed.length) this.__shareOpenExpanderHandler(icon, rowIndex, `#fixed_row_${rowIndex}`);
+      if (this.__tableFixedRight.length) this.__shareOpenExpanderHandler(icon, rowIndex, `#fixed_right_row_${rowIndex}`);
     }
+  }
+  
+  __rowSelection(e, row) {
+    
+    if (this.radio) {
+      const selectedRow = this.__tableData.find(val => val.__selected);
+      
+      if(selectedRow && selectedRow.checkbox) {
+        selectedRow.checkbox.checked = false;
+        selectedRow.__selected = false;
+      }
+      if(row.checkbox) {
+        row.checkbox.checked = e.currentTarget.checked;
+      }
+    }
+    row.__selected = e.currentTarget.checked;
     if (!this.radio) this.__selectedState = this.__tableData.some(d => d.__selected);
+    
     this.dispatchEvent(new CustomEvent('row-selection-changed', {detail: {row, selected: row.__selected}}));
   }
   
@@ -656,12 +624,12 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.domReady();
   }
   
-  __calShowExpansion([first] = [{}]) {
-    return first.type === 'expand';
+  __calShowExpansion(columnMetas = []) {
+    return columnMetas.some(meta => meta.type === 'expand');
   }
   
   isDisabledSelection(row) {
-    if(!this.selectionFilter) return false;
+    if (!this.selectionFilter) return false;
     return !this.selectionFilter(row);
   }
   
@@ -682,8 +650,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
   
   shareComputeExpansion(row, rowIndex, targetSelect) {
-    const [column] = this.columnInfos || [];
-    if (column && column.type === 'expand') {
+    const column = (this.columnInfos || []).find(col => col.type === 'expand');
+    if (column) {
       setTimeout(() => {
         this.__appendTmplContent(targetSelect, row, rowIndex, column);
       }, 0, this);
@@ -727,22 +695,89 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     return this.shareComputeContent(row, rowIndex, column, `#row_${rowIndex}_column_${columnIndex}`)
   }
   
-  computeContentFixed(row, rowIndex, column, columnIndex) {
-    return this.shareComputeContent(row, rowIndex, column, `#fixed_row_${rowIndex}_column_${columnIndex}`);
+  __generateRowContent(columns = [], row, rowIndex, prefix = '') {
+    const fragment = document.createDocumentFragment();
+    
+    if(prefix !== 'fixed_right') {
+      
+      const tmpOpContainer = document.createElement('tr');
+      tmpOpContainer.innerHTML = this.optional(this.selectable, `<td><paper-checkbox class="checkbox-item" noink ></paper-checkbox></td>`)
+        + this.optional(this.__showExpansion, `<td class="expand-icon-td"><iron-icon class="expand-icon" icon="icons:chevron-right"></iron-icon></td>`)
+        + this.optional(this.showIndex, `<td>${rowIndex + 1}</td>`);
+      
+      if (tmpOpContainer.innerHTML !== '') {
+        fragment.append(...tmpOpContainer.querySelectorAll('td'));
+        const checkbox = fragment.querySelector('paper-checkbox');
+        if (checkbox) {
+          
+          // <paper-checkbox class="checkbox-item" noink disabled="[[isDisabledSelection(row)]]" checked="{{ row.__selected }}" on-change="__rowSelection"></paper-checkbox>
+          this.isDisabledSelection(row) && checkbox.setAttribute("disabled", true);
+          row.__selected && checkbox.setAttribute("checked", true)
+          row.checkbox = checkbox;
+          // todo 双向绑定
+          checkbox.addEventListener('change', (e) => this.__rowSelection(e, row, rowIndex));
+        }
+        const expandIcon = fragment.querySelector('iron-icon');
+        expandIcon && expandIcon.addEventListener('click', (e) => this.__openExpanderHandler(e.currentTarget, rowIndex, prefix));
+      }
+    }
+    columns.filter(column => column.type !== 'expand').forEach((column, columnIndex) => {
+      
+      const columnFrag = document.createDocumentFragment();
+      const tmpContainer = document.createElement('tr');
+      tmpContainer.innerHTML = `
+        <td style="${column.cellStyle || ''}" class="table__column" role="${column.type}" id="${prefix ? prefix + '_' : ''}row_${rowIndex}_column_${columnIndex}" aria-frozen="${column.frozen}">
+          <div class="td_cell">
+            <div class="table__cell"></div>
+            <paper-tooltip position="top" animation-delay="10" offset="5" fit-to-visible-bounds></paper-tooltip>
+          </div>
+        </td>
+      `
+      
+      columnFrag.append(tmpContainer);
+      
+      let content = document.createDocumentFragment();
+      let tip = document.createDocumentFragment();
+      if (column.tmpl && column.type === 'operate') {
+        content.append((column.stampTemplate(row) || {}).root);
+      } else if (column.props) {
+        const text = column.props.split(",").map(p => this.getValueByKey(row, p.trim())).join(column.separator || ',')
+        content.append(text);
+        tip.append(text);
+      } else if (Function.prototype.isPrototypeOf(column.formatter)) {
+        const text = column.formatter.call(this, this.getValueByKey(row, column.prop, column.defaultValue));
+        content.append(text);
+        tip.append(text);
+      } else {
+        const text = this.getValueByKey(row, column.prop, column.defaultValue);
+        content.append(text);
+        tip.append(text);
+      }
+      
+      columnFrag.querySelector('.table__cell').append(content);
+      columnFrag.querySelector('paper-tooltip').append(tip);
+      fragment.appendChild(columnFrag.querySelector('td'));
+    });
+    
+    
+    setTimeout(() => {
+      const parent = this.shadowRoot.querySelector(`#${prefix ? prefix + '_' : ''}row_ctn_${rowIndex}`);
+      if (parent) {
+        parent.innerHTML = '';
+        parent.appendChild(fragment);
+      }
+    }, 0);
   }
   
-  computeContentFixedRight(row, rowIndex, column, columnIndex) {
-    return this.shareComputeContent(row, rowIndex, column, `#fixed_right_row_${rowIndex}_column_${columnIndex}`);
-  }
   
   connectedCallback() {
     super.connectedCallback();
     this.$.columnSlot.addEventListener('slotchange', e => {
       const columnInfos = e.target.assignedElements()
         .filter(_ => _.tagName.toLowerCase() === 'h2-table-column');
-      const __tableFixed = columnInfos.filter(itm => itm.fixed === "");
-      const __tableFixedRight = columnInfos.filter(itm => itm.fixed === "right");
-      const columnInfosSort = __tableFixed.concat(columnInfos.filter(itm => itm.fixed !== '' && itm.fixed !== 'right')).concat(__tableFixedRight);
+      const __tableFixed = columnInfos.filter(itm => itm.fixed === "" && itm.type !== 'expand');
+      const __tableFixedRight = columnInfos.filter(itm => itm.fixed === "right" && itm.type !== 'expand');
+      const columnInfosSort = __tableFixed.concat(columnInfos.filter(itm => __tableFixed.concat(__tableFixedRight).indexOf(itm) === -1)).concat(__tableFixedRight);
       this.set('columnInfos', columnInfosSort);
       this.set('__tableFixed', __tableFixed);
       this.set('__tableFixedRight', __tableFixedRight);
@@ -778,7 +813,6 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
   
   domReady() {
-    // super.ready();
     // 计算固定列总宽度
     setTimeout(() => {
       if (this.__tableFixed.length > 0) {
@@ -796,7 +830,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       if (this.__tableFixedRight.length > 0) {
         let width = 0;
-        for (let i = this.columnInfos.length - 1; i > this.columnInfos.length - this.__tableFixedRight.length - 1; i--) {
+        const colCount = this.__columnInfos(this.columnInfos).length
+        for (let i = colCount - 1; i > colCount - this.__tableFixedRight.length - 1; i--) {
           const domItem = this.shadowRoot.querySelector(`#row_0_column_${i}`);
           width += (domItem && domItem.offsetWidth) || 0;
         }
@@ -804,7 +839,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         this.set('tableFixedRightStyle', tableFixedRightStyle);
         
       }
-    }, 10);
+    }, 50);
   }
   
   static get properties() {

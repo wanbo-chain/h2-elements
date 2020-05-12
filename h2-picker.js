@@ -671,7 +671,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.selectedItem = undefined;
     }
     if (this.mode === 'text') this.text = this.value && !this.multi ? this.value : this._userInputKeyword;
-    this._setDisplayItems(this.selectedValues.length > 0 ? []: this.items);
+    this._setDisplayItems(this.selectedValues.length > 0 ? [] : this.items);
     this.displayCollapse(false);
   }
   
@@ -685,7 +685,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       const selectedValues = this.selectedValues || [];
       const dirty = selectedValues.map(selected => selected[this.attrForValue]).join(',');
       
-      if (value!=null && this.src && !this.multi) {
+      if (value != null && this.src && !this.multi) {
         let _selectedItem = this.items.filter(item => item[this.attrForValue] == value);
         
         if (!_selectedItem.length) {
@@ -720,7 +720,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.set('value', text)
     } else if (this.mode === 'text') {
       this.set('_userInputKeyword', text ? text : '');
-      this.set('value', text ? text : '');
+      this.set('value', text ? text : undefined);
     }
     this.__refreshUIState();
   }
@@ -742,6 +742,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     
     this._displayItems = selected.concat(unselected).slice(0, 9);
   }
+  
   /**
    * 选择选项
    * @param item
