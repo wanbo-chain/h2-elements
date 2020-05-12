@@ -15,6 +15,7 @@ const template = html`
         --h2-ui-color_pink: #e91d62;
         --h2-ui-color_white: white;
         --h2-ui-color_skyblue: #2196F3;
+        --h2-ui-color_purple: #BF2FE5;
         --h2-ui-color_lightblue: #8FCDFF;
         --h2-ui-font-family: 'Microsoft YaHei';
         --h2-ui-font-size: 14px;
