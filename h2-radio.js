@@ -87,6 +87,18 @@ class H2Radio extends mixinBehaviors([BaseBehavior], PolymerElement) {
         background: var(--h2-ui-bg);
         color: #fff;
       }
+      
+      .candidate__item.warning:hover,
+      .candidate__item.warning.iron-selected {
+        background: var(--h2-ui-orange);
+        color: #fff;
+      }
+      
+      .candidate__item.danger:hover,
+      .candidate__item.danger.iron-selected {
+        background: var(--h2-ui-red);
+        color: #fff;
+      }
 
     </style>
     <div class="radio-wrapper">
@@ -96,8 +108,8 @@ class H2Radio extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
       <div class="candidate-wrapper">
         <iron-selector class="candidate-items" selected="{{value}}" attr-for-selected="radio-item">
-          <template is="dom-repeat" items="[[items]]">
-            <span class="candidate__item" radio-item="[[ getValueByKey(item, attrForValue) ]]">
+          <template is="dom-repeat" items="[[items]]"> 
+            <span class$="candidate__item [[item.selectedBgColor]]" radio-item="[[ getValueByKey(item, attrForValue) ]]">
               [[ getValueByKey(item, attrForLabel) ]]
             </span>
           </template>
