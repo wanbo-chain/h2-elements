@@ -34,16 +34,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
       .h2-table {
-        /*overflow-x: auto;*/
-        /*overflow-y: hidden;*/
         position: relative;
       }
-      
-      .table_box {
-        overflow-x: auto;
-        overflow-y: hidden;
-      }
-      
       
       .h2-table td, .h2-table th {
         padding: 0 10px;
@@ -203,8 +195,6 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         position: absolute;
         left: 0;
         top: 0;
-        overflow-x: hidden;
-        overflow-y: hidden;
         background-color: rgba(255, 255, 255, 1);
         box-shadow: 10px 0 10px -10px rgba(0,0,0,.12);
         width: 0;
@@ -212,6 +202,10 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
       .table__fixed table {
         width: 100%;
+      }
+      
+      .table__body__container{
+        overflow: auto;
       }
       
       .table__fixed .table__body__container {
@@ -222,8 +216,6 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         position: absolute;
         right: 0;
         top: 0;
-        overflow-x: hidden;
-        overflow-y: hidden;
         background-color: rgba(255, 255, 255, 1);
         box-shadow: -10px 0 10px -10px rgba(0,0,0,.12);
         width: 0;
@@ -240,13 +232,27 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         display: none;
       }
       
+      .table__scroll__head {
+        overflow: auto;
+      }
+      
+      .table__scroll__head::-webkit-scrollbar{
+        display: none!important;
+      }
+      
+      .table__scroll__head_fixed {
+        position: sticky;
+        top: 0;
+        background-color: rgba(255, 255, 255, 1);
+        z-index: 1;
+      }
     </style>
     
     <slot id="columnSlot"></slot>
     
     <div class="h2-table">
       <div class="table_box">
-        <div class="table__scroll__head" id="tableHeader">
+        <div class$="table__scroll__head [[optional(unsetHeadFixed,'','table__scroll__head_fixed')]]" id="tableHeader">
         <div class="table__scroll__head__inner"></div>
           <table class="table__head" cellpadding="0" cellspacing="0" border="0">
             <colgroup>
@@ -351,7 +357,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       </div>
       <template is="dom-if" if="[[!isArrayEmpty(__tableFixed)]]">
         <div class="table__fixed" style$="[[tableFixedStyle]]">
-          <div class="table__scroll__head">
+          <div class$="table__scroll__head [[optional(unsetHeadFixed,'','table__scroll__head_fixed')]]">
             <div class="table__scroll__head__inner"></div>
             <table class="table__head" cellpadding="0" cellspacing="0" border="0">
               <colgroup>
@@ -447,7 +453,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       </template>
       <template is="dom-if" if="[[!isArrayEmpty(__tableFixedRight)]]">
         <div class="table__fixed__right" style$="[[tableFixedRightStyle]]">
-          <div class="table__scroll__head">
+          <div class$="table__scroll__head [[optional(unsetHeadFixed,'','table__scroll__head_fixed')]]">
             <div class="table__scroll__head__inner"></div>
             <table class="table__head" cellpadding="0" cellspacing="0" border="0">
               <colgroup>
@@ -510,17 +516,17 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     </div>
 `;
   }
-  
+
   __sortTheColumn({currentTarget: container, model}) {
     const ASCENDING = 'ascending';
     const DESCENDING = 'descending';
-    
+
     const sortableContainers = this.shadowRoot.querySelectorAll('.table__sort__icons');
-    
+
     // clear other sortable states.
     Array.from(sortableContainers).filter(node => node !== container)
-      .forEach(node => node.classList.remove(ASCENDING, DESCENDING));
-    
+        .forEach(node => node.classList.remove(ASCENDING, DESCENDING));
+
     let direction;
     if (container.classList.contains(ASCENDING)) {
       container.classList.remove(ASCENDING);
@@ -533,7 +539,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       container.classList.add(ASCENDING);
       direction = ASCENDING;
     }
-    
+
     let cmpFn;
     switch (direction) {
       case DESCENDING:
@@ -550,46 +556,46 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         cmpFn = () => undefined;
         break;
     }
-    
+
     const cache = this.data.slice();
     cache.sort(cmpFn(model.column.prop));
     this.__tableData = cache;
   }
-  
+
   __calColspan(columnInfos = []) {
     const [first] = columnInfos;
     let length = columnInfos.length;
-    
+
     if (first.type === 'expand') length -= 1;
     if (this.showIndex || this.selectable) length += 1;
-    
+
     return length;
   }
-  
+
   __columnInfos(columnInfos) {
     return columnInfos.filter(col => col.type !== 'expand')
   }
-  
+
   __shareOpenExpanderHandler(icon, rowIndex, target) {
     this.toggleClass(icon, 'expand-icon_opened');
     const expansion = this.shadowRoot.querySelector(target).parentElement;
     this.toggleClass(expansion, 'row__expansion-hidden');
   }
-  
+
   __openExpanderHandler(icon, rowIndex, prefix = '') {
-    
+
     this.__shareOpenExpanderHandler(icon, rowIndex, `#row_${rowIndex}`);
     if(prefix === 'fixed') {
       if (this.__tableFixed.length) this.__shareOpenExpanderHandler(icon, rowIndex, `#fixed_row_${rowIndex}`);
       if (this.__tableFixedRight.length) this.__shareOpenExpanderHandler(icon, rowIndex, `#fixed_right_row_${rowIndex}`);
     }
   }
-  
+
   __rowSelection(e, row) {
-    
+
     if (this.radio) {
       const selectedRow = this.__tableData.find(val => val.__selected);
-      
+
       if(selectedRow && selectedRow.checkbox) {
         selectedRow.checkbox.checked = false;
         selectedRow.__selected = false;
@@ -600,16 +606,16 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     }
     row.__selected = e.currentTarget.checked;
     if (!this.radio) this.__selectedState = this.__tableData.some(d => d.__selected);
-    
+
     this.dispatchEvent(new CustomEvent('row-selection-changed', {detail: {row, selected: row.__selected}}));
   }
-  
+
   __rowSelectionAll() {
     this.__tableData =
-      this.__tableData.map(d => Object.assign({}, d, {__selected: this.__selectedState}));
+        this.__tableData.map(d => Object.assign({}, d, {__selected: this.__selectedState}));
     this.dispatchEvent(new CustomEvent('rows-all-selection-changed', {detail: {selectedRows: this.getSelectedRows()}}));
   }
-  
+
   __appendTmplContent(targetSelector, model, rowIndex, columnTag) {
     const parent = this.shadowRoot.querySelector(targetSelector);
     const {root} = columnTag.stampTemplate(model) || {};
@@ -618,21 +624,21 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       parent.appendChild(root);
     }
   }
-  
+
   __dataChanged(data = []) {
     this.__tableData = data.slice();
     this.domReady();
   }
-  
+
   __calShowExpansion(columnMetas = []) {
     return columnMetas.some(meta => meta.type === 'expand');
   }
-  
+
   isDisabledSelection(row) {
     if (!this.selectionFilter) return false;
     return !this.selectionFilter(row);
   }
-  
+
   /**
    * 触发全选
    */
@@ -640,7 +646,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.__selectedState = true;
     this.__rowSelectionAll();
   }
-  
+
   /**
    * 获取选中的行
    * @return {any}
@@ -648,7 +654,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   getSelectedRows() {
     return this.selectable ? (this.__tableData || []).filter(d => d.__selected) : [];
   }
-  
+
   shareComputeExpansion(row, rowIndex, targetSelect) {
     const column = (this.columnInfos || []).find(col => col.type === 'expand');
     if (column) {
@@ -657,59 +663,59 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }, 0, this);
     }
   }
-  
+
   computeExpansion(row, rowIndex) {
     this.shareComputeExpansion(row, rowIndex, `#row_${rowIndex}`);
   }
-  
+
   computeExpansionFixed(row, rowIndex) {
     this.shareComputeExpansion(row, rowIndex, `#fixed_row_${rowIndex}`);
   }
-  
+
   computeExpansionFixedRight(row, rowIndex) {
     this.shareComputeExpansion(row, rowIndex, `#fixed_right_row_${rowIndex}`);
   }
-  
+
   shareComputeContent(row, rowIndex, column, targetSelect) {
     if (column.tmpl && column.type === 'operate') {
-      
+
       setTimeout(() => {
         this.__appendTmplContent(targetSelect, row, rowIndex, column);
       }, 0, this);
-      
+
       return null;
     }
-    
+
     if (column.props) {
       return column.props.split(",").map(p => this.getValueByKey(row, p.trim())).join(column.separator || ',');
     }
-    
+
     if (Function.prototype.isPrototypeOf(column.formatter)) {
       return column.formatter.call(this, this.getValueByKey(row, column.prop, column.defaultValue));
     }
-    
+
     return this.getValueByKey(row, column.prop, column.defaultValue);
   }
-  
+
   computeContent(row, rowIndex, column, columnIndex) {
     return this.shareComputeContent(row, rowIndex, column, `#row_${rowIndex}_column_${columnIndex}`)
   }
-  
+
   __generateRowContent(columns = [], row, rowIndex, prefix = '') {
     const fragment = document.createDocumentFragment();
-    
+
     if(prefix !== 'fixed_right') {
-      
+
       const tmpOpContainer = document.createElement('tr');
       tmpOpContainer.innerHTML = this.optional(this.selectable, `<td><paper-checkbox class="checkbox-item" noink ></paper-checkbox></td>`)
-        + this.optional(this.__showExpansion, `<td class="expand-icon-td"><iron-icon class="expand-icon" icon="icons:chevron-right"></iron-icon></td>`)
-        + this.optional(this.showIndex, `<td>${rowIndex + 1}</td>`);
-      
+          + this.optional(this.__showExpansion, `<td class="expand-icon-td"><iron-icon class="expand-icon" icon="icons:chevron-right"></iron-icon></td>`)
+          + this.optional(this.showIndex, `<td>${rowIndex + 1}</td>`);
+
       if (tmpOpContainer.innerHTML !== '') {
         fragment.append(...tmpOpContainer.querySelectorAll('td'));
         const checkbox = fragment.querySelector('paper-checkbox');
         if (checkbox) {
-          
+
           this.isDisabledSelection(row) && checkbox.setAttribute("disabled", true);
           row.__selected && checkbox.setAttribute("checked", true)
           row.checkbox = checkbox;
@@ -720,7 +726,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
     }
     columns.filter(column => column.type !== 'expand').forEach((column, columnIndex) => {
-      
+
       const columnFrag = document.createDocumentFragment();
       const tmpContainer = document.createElement('tr');
       tmpContainer.innerHTML = `
@@ -731,9 +737,9 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
           </div>
         </td>
       `;
-      
+
       columnFrag.append(tmpContainer);
-      
+
       let content = document.createDocumentFragment();
       let tip = document.createDocumentFragment();
       if (column.tmpl && column.type === 'operate') {
@@ -751,16 +757,16 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         content.append(text);
         tip.append(text);
       }
-      
+
       columnFrag.querySelector('.table__cell').append(content);
       columnFrag.querySelector('paper-tooltip').append(tip);
       fragment.appendChild(columnFrag.querySelector('td'));
     });
-    
+
     for(let i = 0, len = this.colspan - fragment.querySelectorAll('td').length; i < len; i++) {
       fragment.appendChild(document.createElement('td'));
     }
-    
+
     setTimeout(() => {
       const parent = this.shadowRoot.querySelector(`#${prefix ? prefix + '_' : ''}row_ctn_${rowIndex}`);
       if (parent) {
@@ -769,50 +775,50 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
     }, 0);
   }
-  
-  
+
+
   connectedCallback() {
     super.connectedCallback();
     this.$.columnSlot.addEventListener('slotchange', e => {
       const columnInfos = e.target.assignedElements()
-        .filter(_ => _.tagName.toLowerCase() === 'h2-table-column');
+          .filter(_ => _.tagName.toLowerCase() === 'h2-table-column');
       const __tableFixed = columnInfos.filter(itm => itm.fixed === "" && itm.type !== 'expand');
       const __tableFixedRight = columnInfos.filter(itm => itm.fixed === "right" && itm.type !== 'expand');
       const columnInfosSort = __tableFixed.concat(columnInfos.filter(itm => __tableFixed.concat(__tableFixedRight).indexOf(itm) === -1)).concat(__tableFixedRight);
       this.set('columnInfos', columnInfosSort);
       this.set('__tableFixed', __tableFixed);
       this.set('__tableFixedRight', __tableFixedRight);
-      
+
       const tableBodyFixed = this.shadowRoot.querySelector('#tableBodyFixed');
       const tableBodyFixedRight = this.shadowRoot.querySelector('#tableBodyFixedRight');
-      
+
       this.$.tableBody.addEventListener('scroll', () => {
         this.$.tableHeader.scrollLeft = this.$.tableBody.scrollLeft;
         if (tableBodyFixed) tableBodyFixed.scrollTop = this.$.tableBody.scrollTop;
         if (tableBodyFixedRight) tableBodyFixedRight.scrollTop = this.$.tableBody.scrollTop;
       });
-      
+
       if (__tableFixed.length > 0) {
         tableBodyFixed && tableBodyFixed.addEventListener('scroll', () => {
           this.$.tableBody.scrollTop = tableBodyFixed.scrollTop;
           if (tableBodyFixedRight) tableBodyFixedRight.scrollTop = tableBodyFixed.scrollTop;
         });
       }
-      
+
       if (__tableFixedRight.length > 0) {
         tableBodyFixedRight && tableBodyFixedRight.addEventListener('scroll', () => {
           this.$.tableBody.scrollTop = tableBodyFixedRight.scrollTop;
           if (tableBodyFixed) tableBodyFixed.scrollTop = tableBodyFixedRight.scrollTop;
         })
       }
-      
+
     });
-    
+
     if (this.height) {
       this.set('tableBodyStyle', `overflow: auto; height: ${this.height - 68}px;`)
     }
   }
-  
+
   domReady() {
     // 计算固定列总宽度
     setTimeout(() => {
@@ -827,7 +833,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         if (this.showIndex) width += this.shadowRoot.querySelector('#showIndex').offsetWidth;
         const tableFixedStyle = `width: ${width}px`;
         this.set('tableFixedStyle', tableFixedStyle);
-        
+
       }
       if (this.__tableFixedRight.length > 0) {
         let width = 0;
@@ -838,11 +844,11 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         }
         const tableFixedRightStyle = `width: ${width}px`;
         this.set('tableFixedRightStyle', tableFixedRightStyle);
-        
+
       }
     }, 50);
   }
-  
+
   static get properties() {
     return {
       data: {
@@ -852,62 +858,67 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
           return [];
         }
       },
-      
+
       sort: {
         type: Function,
         observer: '__sortChanged'
       },
-      
+
       colspan: {
         type: Number,
         computed: '__calColspan(columnInfos)'
       },
-      
+
       columnInfos: {
         type: Array
       },
-      
+
       assignedElements: {
         type: Object
       },
-      
+
       __tableData: {
         type: Array
       },
-      
+
       showSummary: {
         type: Boolean,
         value: false
       },
-      
+
       tooltip: {
         type: Boolean,
         value: false,
         reflectToAttribute: true
       },
-      
+
       showIndex: {
         type: Boolean,
         value: false
       },
-      
+
       selectable: {
         type: Boolean,
         value: false
       },
-      
+
       radio: {
         type: Boolean,
         value: false
       },
-      
+
+      unsetHeadFixed: {
+        type: Boolean,
+        value: false
+      },
+
       __showExpansion: {
         type: Boolean,
         computed: '__calShowExpansion(columnInfos)'
       },
-      
+
       __selectedState: Boolean,
-      
+
       height: Number,
       tableBodyStyle: String,
       __tableFixed: Array,
@@ -916,7 +927,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       tableFixedRightStyle: String,
     };
   }
-  
+
   static get is() {
     return "h2-table";
   }
