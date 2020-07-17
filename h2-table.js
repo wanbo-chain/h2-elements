@@ -707,7 +707,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     if(prefix !== 'fixed_right') {
 
       const tmpOpContainer = document.createElement('tr');
-      tmpOpContainer.innerHTML = this.optional(this.selectable, `<td><paper-checkbox class="checkbox-item" noink ></paper-checkbox></td>`)
+      tmpOpContainer.innerHTML = this.optional(this.selectable, `<td id="contentSelectable"><paper-checkbox class="checkbox-item" noink ></paper-checkbox></td>`)
           + this.optional(this.__showExpansion, `<td class="expand-icon-td"><iron-icon class="expand-icon" icon="icons:chevron-right"></iron-icon></td>`)
           + this.optional(this.showIndex, `<td>${rowIndex + 1}</td>`);
 
@@ -849,6 +849,13 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     }, 50);
   }
 
+  selectableChanged(value) {
+    if (!value) {
+      const arr = Array.from(this.shadowRoot.querySelectorAll('#contentSelectable'));
+      arr.forEach(item => item.style.display = 'none');
+    }
+  }
+
   static get properties() {
     return {
       data: {
@@ -899,7 +906,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       selectable: {
         type: Boolean,
-        value: false
+        value: false,
+        observer: 'selectableChanged'
       },
 
       radio: {
