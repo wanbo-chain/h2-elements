@@ -648,6 +648,14 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   /**
+   * 触发全不选
+   */
+  unSelectAll() {
+    this.__selectedState = false;
+    this.__rowSelectionAll();
+  }
+
+  /**
    * 获取选中的行
    * @return {any}
    */
