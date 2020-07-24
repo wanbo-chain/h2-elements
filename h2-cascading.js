@@ -349,7 +349,7 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
       let treeItems = [].concat(this.treeItems), selectedValues = [];
       value.forEach((item, index) => {
         const findIndex = treeItems[index].findIndex(itm => itm[this.attrForValue] === item);
-        treeItems[index][findIndex].__select = true;
+        treeItems[index][findIndex] = Object.assign({}, treeItems[index][findIndex], {__select: true});
         selectedValues.push(treeItems[index][findIndex]);
         if (treeItems[index][findIndex].children) treeItems.push(treeItems[index][findIndex].children);
       });
@@ -366,7 +366,7 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.value.forEach((item, index) => {
         const findIndex = treeItems[index].findIndex(itm => itm[this.attrForValue] === item);
         if (treeItems[index] && treeItems[index].length && findIndex >= 0) {
-          treeItems[index][findIndex].__select = true;
+          treeItems[index][findIndex] = Object.assign({}, treeItems[index][findIndex], {__select: true});
           selectedValues.push(treeItems[index][findIndex]);
         }
       });
