@@ -336,9 +336,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
               
                 <template is="dom-if" if="[[ __showExpansion ]]">
                   <tr class="row__expansion row__expansion-hidden">
-                    <td id="row_[[rowIndex]]" class="row__expansion-col" colspan$="[[ colspan ]]">
-                      [[ computeExpansion(row, rowIndex) ]]
-                    </td>
+                    <td id="row_[[rowIndex]]" class="row__expansion-col" colspan$="[[ colspan ]]"></td>
                   </tr>
                 </template>
               </template>
@@ -440,9 +438,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
            
                 <template is="dom-if" if="[[ __showExpansion ]]">
                   <tr class="row__expansion row__expansion-hidden">
-                    <td id="fixed_row_[[rowIndex]]" class="row__expansion-col" colspan$="[[ colspan ]]">
-                      [[ computeExpansionFixed(row, rowIndex) ]]
-                    </td>
+                    <td id="fixed_row_[[rowIndex]]" class="row__expansion-col" colspan$="[[ colspan ]]"></td>
                   </tr>
                 </template>
               </template>
@@ -502,9 +498,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
            
                 <template is="dom-if" if="[[ __showExpansion ]]">
                   <tr class="row__expansion row__expansion-hidden">
-                    <td id="fixed_right_row_[[rowIndex]]" class="row__expansion-col fixed_right_expansion" colspan$="[[ colspan ]]">
-                      [[ computeExpansionFixedRight(row, rowIndex) ]]
-                    </td>
+                    <td id="fixed_right_row_[[rowIndex]]" class="row__expansion-col fixed_right_expansion" colspan$="[[ colspan ]]"></td>
                   </tr>
                 </template>
               </template>
@@ -666,9 +660,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   shareComputeExpansion(row, rowIndex, targetSelect) {
     const column = (this.columnInfos || []).find(col => col.type === 'expand');
     if (column) {
-      setTimeout(() => {
-        this.__appendTmplContent(targetSelect, row, rowIndex, column);
-      }, 0, this);
+      this.__appendTmplContent(targetSelect, row, rowIndex, column);
     }
   }
 
@@ -730,7 +722,15 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
           checkbox.addEventListener('change', (e) => this.__rowSelection(e, row, rowIndex));
         }
         const expandIcon = fragment.querySelector('iron-icon');
-        expandIcon && expandIcon.addEventListener('click', (e) => this.__openExpanderHandler(e.currentTarget, rowIndex, prefix));
+        expandIcon && expandIcon.addEventListener('click', (e) => {
+          const iconIsOpen = Array.from(expandIcon.classList).includes('expand-icon_opened');
+          if (!iconIsOpen) {
+            this.computeExpansion(this.__tableData[rowIndex], rowIndex);
+            this.computeExpansionFixed(this.__tableData[rowIndex], rowIndex);
+            this.computeExpansionFixedRight(this.__tableData[rowIndex], rowIndex);
+          }
+          this.__openExpanderHandler(e.currentTarget, rowIndex, prefix);
+        });
       }
     }
     columns.filter(column => column.type !== 'expand').forEach((column, columnIndex) => {
