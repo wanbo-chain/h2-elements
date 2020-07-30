@@ -246,6 +246,24 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         background-color: rgba(255, 255, 255, 1);
         z-index: 1;
       }
+      .hidden {
+        display: none;
+      }
+      .head-fixed-right {
+        position: sticky;
+        background: #fff;
+      }
+      .fixed-right {
+        position: sticky;
+        background: #fff;
+        border-left: 1px solid #eee;
+        box-shadow: -5px 0px 10px -3px rgba(0,0,0,.12);
+        display: flex;
+        align-items: center;
+      }
+      .fixed-right:hover {
+        background: #ecf5ff;
+      }
     </style>
     
     <slot id="columnSlot"></slot>
@@ -286,8 +304,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                 <template is="dom-if" if="[[ showIndex ]]">
                    <th id="showIndex">序号</th>
                 </template>
-                <template is="dom-repeat" items="[[__columnInfos(columnInfos)]]" as="column">
-                  <th class="table__column" style$="[[column.cellStyle]]" aria-frozen$="[[column.frozen]]">
+                <template is="dom-repeat" items="[[__columnInfos(columnInfos)]]" as="column" index-as="columnIndex">
+                  <th class$="table__column  [[getFixedRightClass(column)]]" style$="[[column.cellStyle]][[getFixedRightStyle(column,columnIndex)]]" aria-frozen$="[[column.frozen]]">
                     <div class="header__cell">
                       <div class="table__cell">[[column.label]]</div>
                       <template is="dom-if" if="[[ column.sortable ]]">
@@ -447,66 +465,6 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         </div>
         </div>
       </template>
-      <template is="dom-if" if="[[!isArrayEmpty(__tableFixedRight)]]">
-        <div class="table__fixed__right" style$="[[tableFixedRightStyle]]">
-          <div class$="table__scroll__head [[optional(unsetHeadFixed,'','table__scroll__head_fixed')]]">
-            <div class="table__scroll__head__inner"></div>
-            <table class="table__head" cellpadding="0" cellspacing="0" border="0">
-              <colgroup>
-                <template is="dom-repeat" items="[[__tableFixedRight]]">
-                    <col width="[[item.width]]">
-                </template>
-              </colgroup>
-              <thead>
-                <tr>
-                  <template is="dom-repeat" items="[[__tableFixedRight]]" as="column">
-                    <th class="table__column" style$="[[column.cellStyle]]" aria-frozen$="[[column.frozen]]">
-                      <div class="header__cell">
-                        <div class="table__cell">[[column.label]]</div>
-                        <template is="dom-if" if="[[ column.sortable ]]">
-                          <div class="table__sort__icons" on-tap="__sortTheColumn">
-                            <iron-icon class="table__sort__icon ascending" icon="icons:arrow-drop-up"></iron-icon>
-                            <iron-icon class="table__sort__icon descending" icon="icons:arrow-drop-down"></iron-icon>
-                          </div>
-                        </template>
-                      </div>
-                    </th>
-                  </template>
-                </tr>
-              </thead>
-            </table>
-          </div>
-          <div class="table__body__container" style$="[[tableBodyStyle]]" id="tableBodyFixedRight">
-          <table cellpadding="0" cellspacing="0" border="0">
-            <colgroup>
-              <template is="dom-repeat" items="[[__tableFixedRight]]">
-                <col width="[[item.width]]">
-              </template>
-            </colgroup>
-            
-            <tbody>
-              <template is="dom-if" if="[[ isArrayEmpty(data) ]]">
-                <tr class="table__row">
-                  <td class="table__nodata" colspan$="[[ colspan ]]">&nbsp;</td>
-                </tr>
-              </template>
-              
-              <template is="dom-repeat" items="[[__tableData]]" as="row" index-as="rowIndex">
-                <tr class="table__row" id="fixed_right_row_ctn_[[rowIndex]]">
-                  [[ __generateRowContent(__tableFixedRight, row, rowIndex, 'fixed_right') ]]
-                </tr>
-           
-                <template is="dom-if" if="[[ __showExpansion ]]">
-                  <tr class="row__expansion row__expansion-hidden">
-                    <td id="fixed_right_row_[[rowIndex]]" class="row__expansion-col fixed_right_expansion" colspan$="[[ colspan ]]"></td>
-                  </tr>
-                </template>
-              </template>
-            </tbody>
-          </table>
-        </div>
-        </div>
-      </template>
     </div>
 `;
   }
@@ -572,16 +530,21 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   __shareOpenExpanderHandler(icon, rowIndex, target) {
     this.toggleClass(icon, 'expand-icon_opened');
+  }
+
+  __shareOpenParentExpanderHandler(icon, rowIndex, target) {
     const expansion = this.shadowRoot.querySelector(target).parentElement;
     this.toggleClass(expansion, 'row__expansion-hidden');
   }
 
   __openExpanderHandler(icon, rowIndex, prefix = '') {
-
-    this.__shareOpenExpanderHandler(icon, rowIndex, `#row_${rowIndex}`);
     if(prefix === 'fixed') {
-      if (this.__tableFixed.length) this.__shareOpenExpanderHandler(icon, rowIndex, `#fixed_row_${rowIndex}`);
-      if (this.__tableFixedRight.length) this.__shareOpenExpanderHandler(icon, rowIndex, `#fixed_right_row_${rowIndex}`);
+      this.__shareOpenExpanderHandler(icon, rowIndex, `#row_${rowIndex}`);
+      this.__shareOpenParentExpanderHandler(icon, rowIndex, `#row_${rowIndex}`);
+      this.__shareOpenParentExpanderHandler(icon, rowIndex, `#fixed_row_${rowIndex}`);
+    }else {
+      this.__shareOpenExpanderHandler(icon, rowIndex, `#row_${rowIndex}`);
+      this.__shareOpenParentExpanderHandler(icon, rowIndex, `#row_${rowIndex}`);
     }
   }
 
@@ -703,7 +666,6 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   __generateRowContent(columns = [], row, rowIndex, prefix = '') {
     const fragment = document.createDocumentFragment();
-
     if(prefix !== 'fixed_right') {
 
       const tmpOpContainer = document.createElement('tr');
@@ -724,22 +686,30 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         const expandIcon = fragment.querySelector('iron-icon');
         expandIcon && expandIcon.addEventListener('click', (e) => {
           const iconIsOpen = Array.from(expandIcon.classList).includes('expand-icon_opened');
+          const hasFixedLeft =columns.filter(fi=>fi.fixed==='').length;
           if (!iconIsOpen) {
             this.computeExpansion(this.__tableData[rowIndex], rowIndex);
-            this.computeExpansionFixed(this.__tableData[rowIndex], rowIndex);
-            this.computeExpansionFixedRight(this.__tableData[rowIndex], rowIndex);
+            if (hasFixedLeft) this.computeExpansionFixed(this.__tableData[rowIndex], rowIndex);
           }
           this.__openExpanderHandler(e.currentTarget, rowIndex, prefix);
         });
       }
     }
     columns.filter(column => column.type !== 'expand').forEach((column, columnIndex) => {
-
       const columnFrag = document.createDocumentFragment();
       const tmpContainer = document.createElement('tr');
+      let rightStyle = '', right = 0;
+      const arr = columns.filter(fi => fi.fixed === 'right');
+      const findIndex = arr.findIndex(fi => fi.label === column.label);
+      if (findIndex !== -1) {
+        for (let i = findIndex + 1; i < arr.length; i++) {
+          right += parseFloat(arr[i].width);
+        }
+        rightStyle = `right:${right}px;`;
+      }
       tmpContainer.innerHTML = `
-        <td style="${column.cellStyle || ''}" class="table__column" role="${column.type}" id="${prefix ? prefix + '_' : ''}row_${rowIndex}_column_${columnIndex}" aria-frozen="${column.frozen}">
-          <div class="td_cell">
+        <td style="${column.cellStyle || ''} ${rightStyle||''}" class="table__column ${column.fixed === 'right' ? 'fixed-right':''}" role="${column.type}" id="${prefix ? prefix + '_' : ''}row_${rowIndex}_column_${columnIndex}" aria-frozen="${column.frozen}">
+          <div class="td_cell ${!prefix && (column.hasAttribute('fixed') && column.fixed !== 'right') ? 'hidden' : ''}">
             <div class="table__cell"></div>
             <paper-tooltip position="top" animation-delay="10" offset="5" fit-to-visible-bounds></paper-tooltip>
           </div>
@@ -769,6 +739,18 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       columnFrag.querySelector('.table__cell').append(content);
       columnFrag.querySelector('paper-tooltip').append(tip);
       fragment.appendChild(columnFrag.querySelector('td'));
+    });
+    //sticky布局导致z-index失效无法显示下拉框，鼠标进入时切换absolute，待优化
+    const fixedRight = fragment.querySelector('.fixed-right');
+    fixedRight && fixedRight.addEventListener('mouseenter', (e) => {
+      const ele = e.path.find(fi => fi.className.includes('fixed-right'));
+      ele.style.width = ele.offsetWidth + 'px';
+      ele.style.position = 'absolute';
+    });
+    fixedRight && fixedRight.addEventListener('mouseleave', (e) => {
+      const ele = e.path.find(fi => fi.className.includes('fixed-right'));
+      ele.style.width = 'auto';
+      ele.style.position = 'sticky';
     });
 
     for(let i = 0, len = this.colspan - fragment.querySelectorAll('td').length; i < len; i++) {
@@ -861,6 +843,24 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     if (!value) {
       const arr = Array.from(this.shadowRoot.querySelectorAll('#contentSelectable'));
       arr.forEach(item => item.style.display = 'none');
+    }
+  }
+
+  getFixedRightClass(column){
+    return column.fixed == 'right' ? 'head-fixed-right' : '';
+  }
+
+  getFixedRightStyle(column,index) {
+    const arr = this.columnInfos.filter(fi => fi.fixed === 'right');
+    const findIndex =arr.findIndex(fi=>fi.label===column.label);
+    if (findIndex !== -1 ) {
+      let right=0;
+      for (let i = findIndex + 1; i < arr.length; i++) {
+        right+=parseFloat(arr[i].width);
+      }
+      return `right:${right}px;`;
+    }else {
+      return '';
     }
   }
 
