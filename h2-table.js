@@ -45,7 +45,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         text-align: left;
         border-bottom: 1px solid #ebeef5;
         height: 44px;
-        line-height: 40px;
+        line-height: 44px;
         @apply --h2-table-line-height;
       }
       
@@ -254,12 +254,10 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         background: #fff;
       }
       .fixed-right {
-        position: sticky;
+        position: absolute;
         background: #fff;
         border-left: 1px solid #eee;
-        box-shadow: -5px 0px 10px -3px rgba(0,0,0,.12);
-        display: flex;
-        align-items: center;
+        box-shadow: -5px 0px 10px -3px rgba(0,0,0,.1);
       }
       .fixed-right:hover {
         background: #ecf5ff;
@@ -538,11 +536,11 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   __openExpanderHandler(icon, rowIndex, prefix = '') {
-    if(prefix === 'fixed') {
+    if (prefix === 'fixed') {
       this.__shareOpenExpanderHandler(icon, rowIndex, `#row_${rowIndex}`);
       this.__shareOpenParentExpanderHandler(icon, rowIndex, `#row_${rowIndex}`);
       this.__shareOpenParentExpanderHandler(icon, rowIndex, `#fixed_row_${rowIndex}`);
-    }else {
+    } else {
       this.__shareOpenExpanderHandler(icon, rowIndex, `#row_${rowIndex}`);
       this.__shareOpenParentExpanderHandler(icon, rowIndex, `#row_${rowIndex}`);
     }
@@ -553,11 +551,11 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     if (this.radio) {
       const selectedRow = this.__tableData.find(val => val.__selected);
 
-      if(selectedRow && selectedRow.checkbox) {
+      if (selectedRow && selectedRow.checkbox) {
         selectedRow.checkbox.checked = false;
         selectedRow.__selected = false;
       }
-      if(row.checkbox) {
+      if (row.checkbox) {
         row.checkbox.checked = e.currentTarget.checked;
       }
     }
@@ -666,7 +664,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   __generateRowContent(columns = [], row, rowIndex, prefix = '') {
     const fragment = document.createDocumentFragment();
-    if(prefix !== 'fixed_right') {
+    if (prefix !== 'fixed_right') {
 
       const tmpOpContainer = document.createElement('tr');
       tmpOpContainer.innerHTML = this.optional(this.selectable, `<td id="contentSelectable"><paper-checkbox class="checkbox-item" noink ></paper-checkbox></td>`)
@@ -686,7 +684,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         const expandIcon = fragment.querySelector('iron-icon');
         expandIcon && expandIcon.addEventListener('click', (e) => {
           const iconIsOpen = Array.from(expandIcon.classList).includes('expand-icon_opened');
-          const hasFixedLeft =columns.filter(fi=>fi.fixed==='').length;
+          const hasFixedLeft = columns.filter(fi => fi.fixed === '').length;
           if (!iconIsOpen) {
             this.computeExpansion(this.__tableData[rowIndex], rowIndex);
             if (hasFixedLeft) this.computeExpansionFixed(this.__tableData[rowIndex], rowIndex);
@@ -696,6 +694,10 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
     }
     columns.filter(column => column.type !== 'expand').forEach((column, columnIndex) => {
+      const contenBodyWidth = this.shadowRoot.querySelector('#content-body').offsetWidth;
+      const totalWidth = columns.map(mi => mi.width).reduce((pre, next) => pre + next, 0);
+      const percent = contenBodyWidth / totalWidth;
+      const width = percent * column.width;
       const columnFrag = document.createDocumentFragment();
       const tmpContainer = document.createElement('tr');
       let rightStyle = '', right = 0;
@@ -703,12 +705,15 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       const findIndex = arr.findIndex(fi => fi.label === column.label);
       if (findIndex !== -1) {
         for (let i = findIndex + 1; i < arr.length; i++) {
-          right += parseFloat(arr[i].width);
+          right += parseFloat(arr[i].width) * percent;
         }
-        rightStyle = `right:${right}px;`;
+        rightStyle = `right:${right}px;width:${width}px;`;
+        if (column.fixed === 'right' && findIndex != Object.keys(arr)[0]) {
+          rightStyle += 'border-left:none;box-shadow:none;'
+        }
       }
       tmpContainer.innerHTML = `
-        <td style="${column.cellStyle || ''} ${rightStyle||''}" class="table__column ${column.fixed === 'right' ? 'fixed-right':''}" role="${column.type}" id="${prefix ? prefix + '_' : ''}row_${rowIndex}_column_${columnIndex}" aria-frozen="${column.frozen}">
+        <td style="${column.cellStyle || ''} ${rightStyle || ''}" class="table__column ${column.fixed === 'right' ? 'fixed-right' : ''}" role="${column.type}" id="${prefix ? prefix + '_' : ''}row_${rowIndex}_column_${columnIndex}" aria-frozen="${column.frozen}">
           <div class="td_cell ${!prefix && (column.hasAttribute('fixed') && column.fixed !== 'right') ? 'hidden' : ''}">
             <div class="table__cell"></div>
             <paper-tooltip position="top" animation-delay="10" offset="5" fit-to-visible-bounds></paper-tooltip>
@@ -740,20 +745,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       columnFrag.querySelector('paper-tooltip').append(tip);
       fragment.appendChild(columnFrag.querySelector('td'));
     });
-    //sticky布局导致z-index失效无法显示下拉框，鼠标进入时切换absolute，待优化
-    const fixedRight = fragment.querySelector('.fixed-right');
-    fixedRight && fixedRight.addEventListener('mouseenter', (e) => {
-      const ele = e.path.find(fi => fi.className.includes('fixed-right'));
-      ele.style.width = ele.offsetWidth + 'px';
-      ele.style.position = 'absolute';
-    });
-    fixedRight && fixedRight.addEventListener('mouseleave', (e) => {
-      const ele = e.path.find(fi => fi.className.includes('fixed-right'));
-      ele.style.width = 'auto';
-      ele.style.position = 'sticky';
-    });
 
-    for(let i = 0, len = this.colspan - fragment.querySelectorAll('td').length; i < len; i++) {
+    for (let i = 0, len = this.colspan - fragment.querySelectorAll('td').length; i < len; i++) {
       fragment.appendChild(document.createElement('td'));
     }
 
@@ -846,20 +839,20 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     }
   }
 
-  getFixedRightClass(column){
+  getFixedRightClass(column) {
     return column.fixed == 'right' ? 'head-fixed-right' : '';
   }
 
-  getFixedRightStyle(column,index) {
+  getFixedRightStyle(column, index) {
     const arr = this.columnInfos.filter(fi => fi.fixed === 'right');
-    const findIndex =arr.findIndex(fi=>fi.label===column.label);
-    if (findIndex !== -1 ) {
-      let right=0;
+    const findIndex = arr.findIndex(fi => fi.label === column.label);
+    if (findIndex !== -1) {
+      let right = 0;
       for (let i = findIndex + 1; i < arr.length; i++) {
-        right+=parseFloat(arr[i].width);
+        right += parseFloat(arr[i].width);
       }
       return `right:${right}px;`;
-    }else {
+    } else {
       return '';
     }
   }
