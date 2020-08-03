@@ -79,7 +79,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         background: #ecf5ff;
       }
       
-      .table__row:hover .fixed-left {
+      .table__row:hover .fixed-left,.table__row:hover .fixed-right {
         background: #ecf5ff;
       }
       
