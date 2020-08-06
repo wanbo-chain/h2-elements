@@ -666,7 +666,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       if (this.showIndex) {
         left += 52;
       }
-      leftStyle = `left:${Math.round(left / totalWidth * 100)}%;`;
+      leftStyle = `left:${left / totalWidth * 100}%;`;
       if (leftFindIndex != Object.keys(leftArr)[leftArr.length - 1]) {
         leftStyle += 'border-right:none;box-shadow:none;'
       }
@@ -719,7 +719,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     if (this.showIndex) totalWidth += 52;
     const percent = contenBodyWidth / totalWidth;
     if (this.selectable) {
-      return `left:${Math.round(40 / totalWidth * 100)}%`;
+      return `left:${40 / totalWidth * 100}%`;
     } else {
       return 'left:0px;'
     }
@@ -733,11 +733,11 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     if (this.showIndex) totalWidth += 52;
     const percent = contenBodyWidth / totalWidth;
     if (this.selectable && !this.__showExpansion) {
-      return `left:${Math.round(40 / totalWidth * 100)}%`;
+      return `left:${40 / totalWidth * 100}%`;
     } else if (!this.selectable && this.__showExpansion) {
-      return `left:${Math.round(20 / totalWidth * 100)}%;`
+      return `left:${20 / totalWidth * 100}%;`
     } else if (this.selectable && this.__showExpansion) {
-      return `left:${Math.round(60 / totalWidth * 100)}%;`
+      return `left:${60 / totalWidth * 100}%;`
     } else {
       return 'left:0px;'
     }
@@ -767,7 +767,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       if (this.showIndex) {
         left += 52;
       }
-      return `left:${Math.round(left / totalWidth * 100)}%;`;
+      return `left:${left / totalWidth * 100}%;`;
     } else {
       return '';
     }
