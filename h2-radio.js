@@ -19,6 +19,7 @@ import {BaseBehavior} from "./behaviors/base-behavior";
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
 import '@polymer/iron-selector/iron-selector';
 import './behaviors/h2-elements-shared-styles.js';
+
 /**
  * @customElement
  * @polymer
@@ -99,6 +100,12 @@ class H2Radio extends mixinBehaviors([BaseBehavior], PolymerElement) {
         background: var(--h2-ui-red);
         color: #fff;
       }
+      
+      .candidate__item.disabled {
+        background: #eee;
+        color: #999;
+        pointer-events: none;
+      }
 
     </style>
     <div class="radio-wrapper">
@@ -109,7 +116,7 @@ class H2Radio extends mixinBehaviors([BaseBehavior], PolymerElement) {
       <div class="candidate-wrapper">
         <iron-selector class="candidate-items" selected="{{value}}" attr-for-selected="radio-item">
           <template is="dom-repeat" items="[[items]]"> 
-            <span class$="candidate__item [[item.selectedBgColor]]" radio-item="[[ getValueByKey(item, attrForValue) ]]">
+            <span class$="candidate__item [[item.selectedBgColor]] [[getDisabledClass(item)]]" radio-item="[[ getValueByKey(item, attrForValue) ]]">
               [[ getValueByKey(item, attrForLabel) ]]
             </span>
           </template>
@@ -197,7 +204,7 @@ class H2Radio extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   _requiredChanged(value, required, items = []) {
-    if(required && items.length > 0 && value == undefined) {
+    if (required && items.length > 0 && value == undefined) {
       // 如果必填， 默认选中第一项
       this.value = items[0][this.attrForValue];
     }
@@ -209,6 +216,10 @@ class H2Radio extends mixinBehaviors([BaseBehavior], PolymerElement) {
    */
   validate() {
     return true;
+  }
+
+  getDisabledClass(item) {
+    return item.disabled ? 'disabled' : ''
   }
 }
 
