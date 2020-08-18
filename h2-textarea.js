@@ -42,7 +42,7 @@ class H2Textarea extends mixinBehaviors(BaseBehavior, PolymerElement) {
         font-family: var(--h2-ui-font-family), sans-serif;
         font-size: var(--h2-ui-font-size);
         width: 400px;
-        height: 68px;
+        min-height: 68px;
         position: relative;
         background: white;
       }
