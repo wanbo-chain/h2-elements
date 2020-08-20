@@ -235,12 +235,10 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         box-shadow: 5px 0px 10px -3px rgba(0,0,0,.1);
       }
       .fixed-right {
-        position: absolute;
+        position: sticky;
         background: #fff;
         border-left: 1px solid #eee;
         box-shadow: -5px 0px 10px -3px rgba(0,0,0,.1);
-        display: flex;
-        align-items: center;
       }
       .head-selectable, .selectable, .show-expansion, .show-index {
         position: sticky;
@@ -600,6 +598,17 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       fragment.appendChild(columnFrag.querySelector('td'));
     });
 
+    //sticky布局导致z-index失效无法显示下拉框，原因未知（暂时解决方案：鼠标进入时动态添加z-index，移除时unset）
+    const fixedRight = fragment.querySelector('.fixed-right');
+    fixedRight && fixedRight.addEventListener('mouseenter', (e) => {
+      const ele = e.path.find(fi => fi.className.includes('fixed-right'));
+      ele.style.zIndex = 1000000;
+    });
+    fixedRight && fixedRight.addEventListener('mouseleave', (e) => {
+      const ele = e.path.find(fi => fi.className.includes('fixed-right'));
+      ele.style.zIndex = 'unset';
+    });
+
     for (let i = 0, len = this.colspan - fragment.querySelectorAll('td').length; i < len; i++) {
       fragment.appendChild(document.createElement('td'));
     }
@@ -611,17 +620,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         parent.appendChild(fragment);
       }
       this.setThreeLeft();
-      this.setFixedRightHeight(parent);
     }, 0);
 
-  }
-
-  setFixedRightHeight(parent) {
-    const children = Array.from(parent.children);
-    const fixedRightItems = children.filter(fi => Array.from(fi.classList).includes('fixed-right'));
-    fixedRightItems.forEach(fi => {
-      fi.style.height = `${parent.offsetHeight}px`
-    });
   }
 
   setThreeLeft() {
@@ -648,7 +648,6 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     if (this.__showExpansion) totalWidth += 20;
     if (this.showIndex) totalWidth += 52;
     const percent = contenBodyWidth / totalWidth;
-    const width = percent * column.width;
     let style = '', leftStyle = '', left = 0, rightStyle = '', right = 0;
     const leftArr = columns.filter(fi => fi.fixed === '');
     const leftFindIndex = leftArr.findIndex(fi => fi.label === column.label);
@@ -658,7 +657,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       for (let i = rightFindIndex + 1; i < rightArr.length; i++) {
         right += parseFloat(rightArr[i].width) * percent;
       }
-      rightStyle = `right:${right}px;width:${width}px;`;
+      rightStyle = `right:${right}px;`;
       if (rightFindIndex != Object.keys(rightArr)[0]) {
         rightStyle += 'border-left:none;box-shadow:none;'
       }
