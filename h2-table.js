@@ -239,6 +239,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         background: #fff;
         border-left: 1px solid #eee;
         box-shadow: -5px 0px 10px -3px rgba(0,0,0,.1);
+        display: flex;
+        align-items: center;
       }
       .head-selectable, .selectable, .show-expansion, .show-index {
         position: sticky;
@@ -609,8 +611,17 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         parent.appendChild(fragment);
       }
       this.setThreeLeft();
+      this.setFixedRightHeight(parent);
     }, 0);
 
+  }
+
+  setFixedRightHeight(parent) {
+    const children = Array.from(parent.children);
+    const fixedRightItems = children.filter(fi => Array.from(fi.classList).includes('fixed-right'));
+    fixedRightItems.forEach(fi => {
+      fi.style.height = `${parent.offsetHeight}px`
+    });
   }
 
   setThreeLeft() {
