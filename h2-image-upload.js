@@ -95,14 +95,17 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
         height: 90%;
         padding: 0;
       }
-
-      #viewer-img {
+      
+      .img-container {
         cursor: zoom-out;
         display: flex;
-        padding: 0;
-        margin: auto;
+        align-items: center;
+        justify-content: center;
         width: 100%;
         height: 100%;
+        overflow: auto;
+        margin: 0;
+        padding: 0;
       }
 
       #file-chooser {
@@ -179,7 +182,9 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
       </div>
     </div>
     <paper-dialog id="viewer-dialog" on-click="closeViewZoom">
-      <div id="viewer-img"></div>
+      <div class="img-container">
+        <img id="viewer-img" src="[[src]]"></img>
+      </div>
       <div class="up-scale-button" on-click="imgUpScale" on-mousedown="upScaleMouseDown" on-mouseup="onMouseUp">
         <iron-icon icon="add"></iron-icon>
       </div>
@@ -309,21 +314,19 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
 
   __srcChanged(src) {
     const style = this.$["img__container"].style;
-    const viewerStyle = this.$['viewer-img'].style;
+    const viewer = this.$['viewer-img'];
 
     if (src) {
       this.setAttribute('data-has-src', '');
 
       style.background = `url(${src}) no-repeat center`;
       style.backgroundSize = "contain";
-      viewerStyle.background = `url(${src}) no-repeat center`;
-      viewerStyle.backgroundSize = "contain";
-
+      viewer.src = src;
     } else {
       this.removeAttribute('data-has-src');
 
       style.background = "none";
-      viewerStyle.background = "none";
+      viewer.src = "";
     }
   }
 
@@ -391,6 +394,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
    */
   openViewZoom() {
     if (this.src) {
+      this.resetRotateAndScale();
       this.$['viewer-dialog'].open();
     }
   }
@@ -415,7 +419,8 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
    */
   imgUpScale(e) {
     e.stopPropagation();
-    if (this.scaleValue >= 3) {
+    if (this.scaleValue >= 20) {
+      this.h2Tip.warn(`放大20倍了还不满足？！`, 1500);
       if (this.interval) clearInterval(this.interval);
       return;
     }
@@ -447,6 +452,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
   imgDownScale(e) {
     e.stopPropagation();
     if (this.scaleValue <= 0.3) {
+      this.h2Tip.warn(`已经到最小了哦~`, 1500);
       if (this.interval) clearInterval(this.interval);
       return;
     };
@@ -466,6 +472,12 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
 
   onMouseUp(e) {
     clearInterval(this.interval);
+  }
+
+  resetRotateAndScale(){
+    this.scaleValue = 1;
+    this.rotateValue = 0;
+    this.$['viewer-img'].style.transform = `rotate(${this.rotateValue}deg)scale(${this.scaleValue})`;
   }
 }
 
