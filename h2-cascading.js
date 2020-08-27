@@ -214,11 +214,39 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
       .head-active {
-        background: #fff;
         font-weight: bold;
         color: var(--h2-ui-color_skyblue);
-        transition: all ease .1s;
+        cursor: pointer!important;
+        z-index: 1;
+        position:relative;
       }
+      
+      .head-active:after {
+        content: '';
+        background: #fff;
+        height: 100%;
+        z-index: -1;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        animation: bgchanged .2s normal;
+        width: 100%;
+        height: 100%;
+        border-bottom: 1px solid #fff;
+      }
+      
+      .head-cant-click {
+        cursor: not-allowed;
+      }
+      
+      @keyframes bgchanged{
+        0%{width: 0%;}
+        25%{width: 25%;}
+        50%{width: 50%;}
+        75%{width: 75%;}
+        100%{width: 100%;}
+       } 
     </style>
     
     <template is="dom-if" if="[[ toBoolean(label) ]]">
@@ -238,7 +266,7 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
       <div class="dialog-container">
         <div class="header">
           <template is="dom-repeat" items="{{headItems}}" as="head" index-as="headIndex">
-            <div class$="head-item [[optional(head.active,'head-active','')]]" on-click="__selectByHead">[[head.name]]</div>
+            <div class$="head-item [[optional(head.active,'head-active','')]] [[optional(head.canClick,'','head-cant-click')]]" on-click="__selectByHead">[[head.name]]</div>
           </template>
         </div>
         <template is="dom-repeat" items="{{treeItems}}" as="tree" index-as="treeIndex">
@@ -444,6 +472,14 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.headItems.forEach((fi, index) => {
       this.set(`headItems.${index}.active`, true);
       if (fi.level != this.currentHeadLevel) this.set(`headItems.${index}.active`, false);
+      if (this.treeItems.filter(fi => fi.length).length) {
+        const treeLevels = this.treeItems && this.treeItems.map(mi => mi[0].level);
+        if (treeLevels.includes(fi.level)) {
+          this.set(`headItems.${index}.canClick`, true);
+        } else {
+          this.set(`headItems.${index}.canClick`, false);
+        }
+      }
     });
 
     const cacheItems = this.treeItems;
