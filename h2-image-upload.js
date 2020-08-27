@@ -90,21 +90,20 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
 
       #viewer-dialog {
         display: flex;
-        overflow: hidden;
+        overflow: auto;
         width: 90%;
         height: 90%;
         padding: 0;
+        cursor: zoom-out;
       }
       
-      .img-container {
-        cursor: zoom-out;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        margin: 0;
+      #viewer-img {
+        cursor: move;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        right: 0px;
+        margin: 0 auto;
         padding: 0;
       }
 
@@ -182,9 +181,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
       </div>
     </div>
     <paper-dialog id="viewer-dialog" on-click="closeViewZoom">
-      <div class="img-container">
-        <img id="viewer-img" src="[[src]]"></img>
-      </div>
+      <img id="viewer-img" src="[[src]]" draggable="true" on-click="onImgClick"></img>
       <div class="up-scale-button" on-click="imgUpScale" on-mousedown="upScaleMouseDown" on-mouseup="onMouseUp">
         <iron-icon icon="add"></iron-icon>
       </div>
@@ -263,10 +260,6 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
         type: String,
         value: 'image/gif, image/jpeg, image/png'
       },
-      scaleValue: {
-        type: Number,
-        value: 1
-      },
       rotateValue: {
         type: Number,
         value: 0
@@ -274,6 +267,13 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
       interval: {
         type: Object,
         value: () => ({})
+      },
+      /**
+       * 单击图片进行跟随鼠标移动
+       * **/
+      openFollow: {
+        type: Boolean,
+        value: false
       }
     };
   }
@@ -396,6 +396,8 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
     if (this.src) {
       this.resetRotateAndScale();
       this.$['viewer-dialog'].open();
+      this.$['viewer-img'].addEventListener('dragstart', this.dragStartEvents)
+      this.$['viewer-img'].addEventListener('dragend', this.dragEndEvents)
     }
   }
 
@@ -419,13 +421,17 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
    */
   imgUpScale(e) {
     e.stopPropagation();
-    if (this.scaleValue >= 20) {
-      this.h2Tip.warn(`放大20倍了还不满足？！`, 1500);
+    let imgWidth = this.$['viewer-img'].width;
+    let imgHeight = this.$['viewer-img'].height;
+    if (imgWidth >= 10000) {
+      this.h2Tip.warn(`不能再放大了哦~`, 1500);
       if (this.interval) clearInterval(this.interval);
       return;
     }
-    this.scaleValue += 0.2;
-    this.$['viewer-img'].style.transform = `rotate(${this.rotateValue}deg)scale(${this.scaleValue})`;
+    imgWidth += 100;
+    imgHeight += 100;
+    this.$['viewer-img'].style.width = `${imgWidth}px`;
+    this.$['viewer-img'].style.height = `${imgHeight}px`;
   }
 
   upScaleMouseDown(e) {
@@ -444,20 +450,25 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
     e.stopPropagation();
     if (this.rotateValue == 360) this.rotateValue = 0;
     this.rotateValue += 90;
-    this.$['viewer-img'].style.transform = `rotate(${this.rotateValue}deg)scale(${this.scaleValue})`;
+    this.$['viewer-img'].style.transform = `rotate(${this.rotateValue}deg)`;
+    this.$['viewer-img'].style.transformOrigin = `center`;
   }
   /**
    * Scale - the image.
    */
   imgDownScale(e) {
     e.stopPropagation();
-    if (this.scaleValue <= 0.3) {
-      this.h2Tip.warn(`已经到最小了哦~`, 1500);
+    let imgWidth = this.$['viewer-img'].width;
+    let imgHeight = this.$['viewer-img'].height;
+    if (imgWidth <= 100) {
+      this.h2Tip.warn(`不能再缩小了哦~`, 1500);
       if (this.interval) clearInterval(this.interval);
       return;
     };
-    this.scaleValue -= 0.2;
-    this.$['viewer-img'].style.transform = `rotate(${this.rotateValue}deg)scale(${this.scaleValue})`;
+    imgWidth -= 100;
+    imgHeight -= 100;
+    this.$['viewer-img'].style.width = `${imgWidth}px`;
+    this.$['viewer-img'].style.height = `${imgHeight}px`;
   }
 
   downScaleMouseDown(e) {
@@ -474,10 +485,54 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
     clearInterval(this.interval);
   }
 
-  resetRotateAndScale(){
-    this.scaleValue = 1;
-    this.rotateValue = 0;
-    this.$['viewer-img'].style.transform = `rotate(${this.rotateValue}deg)scale(${this.scaleValue})`;
+  resetRotateAndScale() {
+    this.openFollow = false;
+    this.$['viewer-img'].removeEventListener('mousemove', this.followEvents);
+    this.$['viewer-img'].style.transform = `rotate(0deg)`;
+    this.$['viewer-img'].style.width = 'auto';
+    this.$['viewer-img'].style.height = 'auto';
+    this.$['viewer-img'].style.left = '0px';
+    this.$['viewer-img'].style.top = '0px';
+    this.$['viewer-img'].style.right = '0px';
+    this.$['viewer-img'].removeEventListener('dragstart', this.dragStartEvents);
+    this.$['viewer-img'].removeEventListener('dragend', this.dragEndEvents);
+  }
+
+  dragStartEvents(e){
+
+  }
+
+  dragEndEvents(e) {
+    const target = this;
+    const left = e.clientX - (target.width / 2);
+    const top = e.clientY - (target.height / 2);
+    target.style.left = `${left}px`;
+    target.style.top = `${top}px`;
+    target.style.right = `unset`;
+  }
+
+  onImgClick(e) {
+    e.stopPropagation();
+    this.openFollow = !this.openFollow;
+    if (this.openFollow) {
+      this.$['viewer-img'].addEventListener('mousemove', this.followEvents);
+    } else {
+      this.$['viewer-img'].removeEventListener('mousemove', this.followEvents);
+    }
+  }
+
+  followEvents(e) {
+    const target = this;
+    const left = (+target.style.left.replace('px', '')) + (+e.movementX);
+    const top = (+target.style.top.replace('px', '')) + (+e.movementY);
+    if (+target.style.left.replace('px', '')) {
+      target.style.left = `${left}px`;
+      target.style.top = `${top}px`;
+    } else {
+      target.style.left = `${target.offsetLeft}px`;
+      target.style.top = `${target.offsetTop}px`;
+    }
+    target.style.right = `unset`;
   }
 }
 

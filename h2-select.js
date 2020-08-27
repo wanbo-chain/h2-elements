@@ -227,6 +227,14 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         background: var(--h2-ui-bg);
         color: #fff
       }
+      
+      .candidate-item[disabled] {
+        pointer-events: none;
+        background: #eee;
+        color: #999;
+        display: flex;
+        align-items: center;
+      }
 
       .iron-selected {
         background: var(--h2-ui-bg);
@@ -269,6 +277,13 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
       :host([multi]) {
         height: auto;
       }
+      
+      .diasbled-icon {
+        width: 15px;
+        height: 15px;
+        color: #999;
+        margin-left: 5px;
+      }
     </style>
     
     <template is="dom-if" if="[[ toBoolean(label) ]]">
@@ -300,8 +315,11 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
       <div id="select-collapse" on-click="__focusOnLast">
         <iron-selector class="selector-panel" multi="[[ multi ]]" selected="{{ selectedItem }}" selected-values="{{ selectedValues }}" attr-for-selected="candidate-item">
           <template is="dom-repeat" items="[[items]]">
-            <div class="candidate-item" candidate-item="[[item]]" title="[[getValueByKey(item, attrForLabel)]]">
+            <div class="candidate-item" candidate-item="[[item]]" title="[[getValueByKey(item, attrForLabel)]]" disabled$="[[ setDiasbled(item) ]]">
               [[getValueByKey(item, attrForLabel)]]
+              <template is="dom-if" if="[[ setDiasbled(item) ]]">  
+                <iron-icon icon="icons:block" class="diasbled-icon"></iron-icon>
+              </template>
             </div>
           </template>
         </iron-selector>
@@ -421,7 +439,8 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
       /*
       * 判断是否需要最后一个虚拟输入框的焦点
       * */
-      isFocus: Boolean
+      isFocus: Boolean,
+      disabledItems: String
     };
   }
 
@@ -614,6 +633,10 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
    */
   validate() {
     return this.required ? (this.selectedValues && this.selectedValues.length > 0) : true;
+  }
+
+  setDiasbled(item) {
+    return this.disabledItems && this.disabledItems.split(',').includes(item[this.attrForValue]);
   }
 
 }
