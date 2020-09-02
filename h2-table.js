@@ -356,6 +356,9 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   __sortTheColumn({currentTarget: container, model}) {
+    const sortType = model.column.sortType;
+    const sortEnum = model.column.sortEnum;
+
     const ASCENDING = 'ascending';
     const DESCENDING = 'descending';
 
@@ -378,26 +381,60 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       direction = ASCENDING;
     }
 
-    let cmpFn;
-    switch (direction) {
-      case DESCENDING:
-        cmpFn = field => {
-          return (a, b) => (b[field] || '').toString().localeCompare((a[field] || '').toString());
-        };
-        break;
-      case ASCENDING:
-        cmpFn = field => {
-          return (a, b) => (a[field] || '').toString().localeCompare((b[field] || '').toString());
-        };
-        break;
-      default:
-        cmpFn = () => undefined;
-        break;
+    if (sortEnum) {
+      let enums = [];
+      let result = [];
+
+      switch (direction) {
+        case DESCENDING:
+          enums = sortEnum.map(mi => mi.value).reverse();
+          enums.forEach((item, index) => {
+            const array = this.data.filter(fi => fi[model.column.prop] === item);
+            result = result.concat(array);
+          })
+          this.__tableData = result.length ? result : this.data;
+          break;
+        case ASCENDING:
+          enums = sortEnum.map(mi => mi.value);
+          enums.forEach((item, index) => {
+            const array = this.data.filter(fi => fi[model.column.prop] === item);
+            result = result.concat(array);
+          })
+          this.__tableData = result.length ? result : this.data;
+          break;
+        default:
+          this.__tableData = this.data;
+          break;
+      }
+    } else {
+      let cmpFn;
+      switch (direction) {
+        case DESCENDING:
+          cmpFn = field => {
+            if (sortType === 'number') {
+              return (a, b) => parseFloat(b[field]) - parseFloat(a[field]);
+            }
+            return (a, b) => (b[field] || '').toString().localeCompare((a[field] || '').toString());
+          };
+          break;
+        case ASCENDING:
+          cmpFn = field => {
+            if (sortType === 'number') {
+              return (a, b) => parseFloat(a[field]) - parseFloat(b[field]);
+            }
+            return (a, b) => (a[field] || '').toString().localeCompare((b[field] || '').toString());
+          };
+          break;
+        default:
+          cmpFn = () => undefined;
+          break;
+      }
+
+      const cache = this.data.slice();
+      cache.sort(cmpFn(model.column.prop));
+      this.__tableData = cache;
     }
 
-    const cache = this.data.slice();
-    cache.sort(cmpFn(model.column.prop));
-    this.__tableData = cache;
   }
 
   __calColspan(columnInfos = []) {
