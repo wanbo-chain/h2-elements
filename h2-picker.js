@@ -191,6 +191,12 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         background: var(--h2-ui-bg) !important;
         color: #fff;
       }
+      
+      .candidate-item.disabled {
+        pointer-events: none;
+        background: #eee!important;
+        color: #999;
+      }
 
       .table-hotkey {
         width: 40px;
@@ -223,6 +229,13 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
       :host([data-invalid]) .tags-input {
         border-color: var(--h2-ui-color_pink);
+      }
+      .disabled-icon {
+        width: 15px;
+        height: 15px;
+        color: #999;
+        margin-left: 5px;
+        padding-bottom: 2px;
       }
     </style>
     <template is="dom-if" if="[[ toBoolean(label) ]]">
@@ -261,15 +274,21 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
           </thead>
           <tbody>
           <template is="dom-repeat" items="[[_displayItems]]" as="row">
-            <tr id="candidate-item__[[index]]" on-click="_selectCollapseItem">
+            <tr id="candidate-item__[[index]]" class$="candidate-item [[ setDisabled(row) ]]" on-click="_selectCollapseItem">
               <template is="dom-repeat" items="[[pickerMeta]]" as="col">
-                <td class="collapse-table__cell">[[ getValueByPath(row, col.field) ]]</td>
-              </template>
-              <template is="dom-if" if="[[row.selected]]">
-                <iron-icon icon="icons:check" class="selected-icon"></iron-icon>
+                <td class="collapse-table__cell">[[ getValueByPath(row, col.field) ]]
+                  <template is="dom-if" if="[[ setDisabled(row) ]]"> 
+                    <template is="dom-if" if="[[ isEqual(index, 0) ]]">   
+                      <iron-icon icon="icons:block" class="disabled-icon"></iron-icon>
+                    </template>
+                  </template>
+                </td>
               </template>
               <template is="dom-if" if="[[ enableHotkey ]]">
                 <td class="collapse-table__cell table-hotkey">[[_getHotKey(index)]]</td>
+              </template>
+              <template is="dom-if" if="[[row.selected]]">
+                <iron-icon icon="icons:check" class="selected-icon"></iron-icon>
               </template>
             </tr>
           </template>
@@ -508,6 +527,11 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       noSortByPopularity: {
         type: Boolean,
         value: false
+      },
+      disabledItems: String,
+      isDisabledItemsFirstOpen: {
+        type: Boolean,
+        value: true
       }
     };
   }
@@ -523,7 +547,8 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       '_userInputKeywordChanged(_userInputKeyword)',
       '_selectedValuesChanged(selectedValues.splices)',
       '_valueChanged(value)',
-      '__refreshUIState(required)'
+      '__refreshUIState(required)',
+      '__disabledItemsChanged(disabledItems)'
     ]
   }
 
@@ -734,6 +759,10 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   _selectItemAt(index) {
+    const currentItem = this._displayItems[index];
+    const currentItemValue = currentItem ? currentItem[this.attrForValue] : '';
+    const findDisabled = this.disabledItems && this.disabledItems.split(',').find(value => value == currentItemValue);
+    if (findDisabled) return;
     if (index >= 0 && index < this._displayItems.length) {
       this._switchFocusItemAt(index);
       this._selectItem(this._displayItems[index]);
@@ -937,6 +966,16 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
   displayCollapse(display) {
     this.$["picker-collapse"].hidden = !display;
     if (this.$["picker-collapse"].hidden === false) this.__collapsePosition();
+    if (display && this.disabledItems && this.isDisabledItemsFirstOpen) {
+      this.isDisabledItemsFirstOpen = false;
+      const cache = this._displayItems;
+      this._displayItems = [];
+      setTimeout(() => {
+        cache.forEach(fi => {
+          this.push('_displayItems', fi);
+        })
+      }, 0)
+    }
   }
 
   /**
@@ -965,6 +1004,18 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
     } else {
       return this.required ? (this.selectedValues && this.selectedValues.length > 0) : true;
     }
+  }
+
+  setDisabled(item) {
+    if (this.disabledItems) {
+      return this.disabledItems.split(',').find(fi => fi == item[this.attrForValue]) ? 'disabled' : '';
+    } else {
+      return '';
+    }
+  }
+
+  __disabledItemsChanged(value) {
+    if (value) this.isDisabledItemsFirstOpen = true;
   }
 }
 

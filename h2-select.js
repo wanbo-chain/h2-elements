@@ -278,7 +278,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         height: auto;
       }
       
-      .diasbled-icon {
+      .disabled-icon {
         width: 15px;
         height: 15px;
         color: #999;
@@ -315,10 +315,10 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
       <div id="select-collapse" on-click="__focusOnLast">
         <iron-selector class="selector-panel" multi="[[ multi ]]" selected="{{ selectedItem }}" selected-values="{{ selectedValues }}" attr-for-selected="candidate-item">
           <template is="dom-repeat" items="[[items]]">
-            <div class="candidate-item" candidate-item="[[item]]" title="[[getValueByKey(item, attrForLabel)]]" disabled$="[[ setDiasbled(item) ]]">
+            <div class="candidate-item" candidate-item="[[item]]" title="[[getValueByKey(item, attrForLabel)]]" disabled$="[[ setDisabled(item) ]]">
               [[getValueByKey(item, attrForLabel)]]
-              <template is="dom-if" if="[[ setDiasbled(item) ]]">  
-                <iron-icon icon="icons:block" class="diasbled-icon"></iron-icon>
+              <template is="dom-if" if="[[ setDisabled(item) ]]">  
+                <iron-icon icon="icons:block" class="disabled-icon"></iron-icon>
               </template>
             </div>
           </template>
@@ -635,8 +635,12 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
     return this.required ? (this.selectedValues && this.selectedValues.length > 0) : true;
   }
 
-  setDiasbled(item) {
-    return this.disabledItems && this.disabledItems.split(',').includes(item[this.attrForValue]);
+  setDisabled(item) {
+    if (this.disabledItems) {
+      return this.disabledItems.split(',').find(fi => fi == item[this.attrForValue]) ? true : false;
+    } else {
+      return false;
+    }
   }
 
 }
