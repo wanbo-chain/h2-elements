@@ -209,44 +209,45 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
         user-select: none;
       }
       
+      .head-item:before,.head-item:after {
+        content: '';
+        background: #fff;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        border-bottom: 1px solid #fff;
+      }
+      .head-item:before {
+        transform: translateX(-100%);
+      }
+      .head-item:after {
+        transform: translateX(100%);
+      }
+      
       .head-item:last-of-type {
         border-right: none;
       }
       
-      .head-active {
+      .head-left-to-right,.head-right-to-left {
         font-weight: bold;
         color: var(--h2-ui-color_skyblue);
         cursor: pointer!important;
-        z-index: 1;
         position:relative;
       }
       
-      .head-active:after {
-        content: '';
-        background: #fff;
-        height: 100%;
-        z-index: -1;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        animation: bgchanged .2s normal;
-        width: 100%;
-        height: 100%;
-        border-bottom: 1px solid #fff;
+      .head-left-to-right:before,.head-right-to-left:after {
+        transform: translateX(0);
+        opacity: 1;
+        transition: transform .3s;
       }
       
       .head-cant-click {
         cursor: not-allowed;
       }
-      
-      @keyframes bgchanged{
-        0%{width: 0%;}
-        25%{width: 25%;}
-        50%{width: 50%;}
-        75%{width: 75%;}
-        100%{width: 100%;}
-       } 
     </style>
     
     <template is="dom-if" if="[[ toBoolean(label) ]]">
@@ -266,7 +267,7 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
       <div class="dialog-container">
         <div class="header">
           <template is="dom-repeat" items="{{headItems}}" as="head" index-as="headIndex">
-            <div class$="head-item [[optional(head.active,'head-active','')]] [[optional(head.canClick,'','head-cant-click')]]" on-click="__selectByHead">[[head.name]]</div>
+            <div class$="head-item [[optional(head.rightToLeft,'head-right-to-left','')]] [[optional(head.leftToRight,'head-left-to-right','')]] [[optional(head.canClick,'','head-cant-click')]]" on-click="__selectByHead">[[head.name]]</div>
           </template>
         </div>
         <template is="dom-repeat" items="{{treeItems}}" as="tree" index-as="treeIndex">
@@ -363,6 +364,10 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
         type: Number,
         value: 1,
         observer: '__currentHeadLevelChanged'
+      },
+      lastHeadLevel: {
+        type: Number,
+        value: 1
       }
     };
   }
@@ -470,8 +475,19 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   refreshStyle() {
     this.headItems.forEach((fi, index) => {
-      this.set(`headItems.${index}.active`, true);
-      if (fi.level != this.currentHeadLevel) this.set(`headItems.${index}.active`, false);
+      if (fi.level != this.currentHeadLevel) {
+        this.set(`headItems.${index}.rightToLeft`, false);
+        this.set(`headItems.${index}.leftToRight`, false);
+      } else {
+        if (this.lastHeadLevel > this.currentHeadLevel) {
+          this.set(`headItems.${index}.rightToLeft`, true);
+          this.set(`headItems.${index}.leftToRight`, false);
+        } else {
+          this.set(`headItems.${index}.rightToLeft`, false);
+          this.set(`headItems.${index}.leftToRight`, true);
+        }
+        this.lastHeadLevel = this.currentHeadLevel;
+      }
       if (this.treeItems.filter(fi => fi.length).length) {
         const treeLevels = this.treeItems && this.treeItems.map(mi => mi[0].level);
         if (treeLevels.includes(fi.level)) {
