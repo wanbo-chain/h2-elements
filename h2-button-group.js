@@ -119,6 +119,22 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
         background: var(--h2-ui-bg);
       }
       
+      .warning {
+        color: var(--h2-ui-color_yellow);
+      }
+      
+      .danger {
+        color: var(--h2-ui-color_pink);
+      }
+      
+      .warning:hover {
+        background: var(--h2-ui-orange);
+      }
+      
+      .danger:hover {
+        background: var(--h2-ui-red);
+      }
+      
       .trigger__icon {
         transition: transform .2s ease-in-out
       }
@@ -130,7 +146,7 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
     </style>
     
-    <h2-button class="trigger" on-mouseover="toggle" on-mouseout="close">
+    <h2-button class="trigger" on-mouseover="toggle" on-mouseout="close" type="[[colorType]]">
       <div class="trigger__label">[[ label ]]</div>
       <iron-icon class="trigger__icon" icon="icons:expand-more"></iron-icon>
     </h2-button>
@@ -138,14 +154,14 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
     <iron-collapse id="collapse" on-mouseover="toggle" on-mouseout="close" class="dropdown-menu" opened="[[ opened ]]" on-click="_onButtonDropdownClick">
       <div class="container">
        <template is="dom-repeat" items="[[ items ]]">
-         <div class="item" bind-item="[[ item ]]">[[ getValueByKey(item, attrForLabel, 'Unknown') ]]</div>
+         <div class$="item [[item.type]]" bind-item="[[ item ]]">[[ getValueByKey(item, attrForLabel, 'Unknown') ]]</div>
        </template>
        <slot id="itemSlot"></slot>
       </div>
     </iron-collapse>
 `;
   }
-  
+
   static get properties() {
     return {
       /**
@@ -164,7 +180,7 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
         value: false,
         reflectToAttribute: true
       },
-      
+
       /**
        * The dropdown items.
        * @type Array
@@ -172,7 +188,7 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       items: {
         type: Array
       },
-      
+
       /**
        * Attribute name for label.
        * @type {string}
@@ -187,35 +203,39 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
        */
       onItemClick: {
         type: Object
+      },
+      colorType: {
+        type: String,
+        value: 'primary'
       }
     };
   }
-  
+
   static get is() {
     return "h2-button-group";
   }
-  
+
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('scroll', e => {
       this.close();
     });
   }
-  
+
   /**
    * Expand the group.
    */
   open() {
     this.opened = true;
   }
-  
+
   /**
    * Collpase the group.
    */
   close() {
     this.opened = false;
   }
-  
+
   /**
    * Toggle the group.
    */
@@ -234,15 +254,15 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.$.collapse.style.width = this.clientWidth + 'px';
     this.opened = !this.opened;
   }
-  
+
   getElemPos(obj) {
     const {x, y} = obj.getBoundingClientRect();
     return {top: y + 2, left: x};
   }
-  
+
   _onButtonDropdownClick(e) {
     const target = e.target,
-      bindItem = e.target.bindItem || e.target.getAttribute('bind-item');
+        bindItem = e.target.bindItem || e.target.getAttribute('bind-item');
     this.dispatchEvent(new CustomEvent('item-click', {detail: {target, bindItem}}));
   }
 }
