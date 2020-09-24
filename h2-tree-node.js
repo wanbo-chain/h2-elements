@@ -98,19 +98,24 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
         transform: rotate(180deg);  
       }
       
-      .title:hover{
+      .title,.no-children-title {
+        user-select: none;
+        cursor: pointer;
+      }
+      
+      .title:hover {
         color: var(--h2-ui-color_purple);
       }
       
-      .no-children-title{
+      .no-children-title {
         color: #756A85;
       }
       
-      .no-children-title:hover{
+      .no-children-title:hover {
         color: var(--h2-ui-color_purple);
       }
       
-      .checkbox{
+      .checkbox {
         width: 16px;
         height: 16px;
         margin-right: 6px;
@@ -192,7 +197,7 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
       <li id="navItem" class="nav-item">
         <div id="childrenToggle" class$="[[getToggleClass(item)]]" on-click="onToggle"></div>
         <div id="checkbox" class$="checkbox [[optional(showCheckBox,'','display-none')]] [[optional(item.disabled,'disabled','')]]" on-click="onCheck"></div>
-        <div class$="[[getTextClass(item)]]">[[getValueByKey(item, attrForLabel)]]
+        <div class$="[[getTextClass(item)]]" on-click="onTitleClick">[[getValueByKey(item, attrForLabel)]]
           <template is="dom-if" if="[[item.tagName]]">
             <span class$="tag tag-[[item.tagType]]">[[item.tagName]]</span>
           </template>
@@ -200,7 +205,7 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
       </li>
       <li id="children">
         <template is="dom-repeat" items="[[item.children]]" as="itm">
-          <h2-tree-node accordion="{{accordion}}" on-tree-node-toggle="onTreeNodeToggle" keyword="{{keyword}}" default-open="[[defaultOpen]]" show-check-box="[[showCheckBox]]" attr-for-label="[[attrForLabel]]" item="[[itm]]" on-tree-node-selected="onTreeNodeSelected" node-selected-item="{{nodeSelectedItem}}"></h2-tree-node>
+          <h2-tree-node accordion="{{accordion}}" on-tree-node-toggle="onTreeNodeToggle" keyword="{{keyword}}" default-open="[[defaultOpen]]" show-check-box="[[showCheckBox]]" attr-for-label="[[attrForLabel]]" item="[[itm]]" on-tree-node-selected="onTreeNodeSelected" node-selected-item="{{nodeSelectedItem}}" can-dispatch-event="[[canDispatchEvent]]"></h2-tree-node>
         </template>
       </li>
     </ul>
@@ -263,6 +268,10 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
        * @default false
        */
       accordion: {
+        type: Boolean,
+        value: false
+      },
+      canDispatchEvent: {
         type: Boolean,
         value: false
       }
@@ -381,6 +390,14 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
         }
         return Object.assign({}, mi);
       }))
+    }
+  }
+
+  onTitleClick() {
+    if (this.canDispatchEvent) {
+      window.dispatchEvent(new CustomEvent('treeNodeTitleClick', {detail: {item: this.item}}));
+    }else {
+      this.onToggle();
     }
   }
 
