@@ -3,6 +3,8 @@ import {BaseBehavior} from "./behaviors/base-behavior";
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
 import '@polymer/iron-selector/iron-selector';
 import './behaviors/h2-elements-shared-styles.js';
+import '@polymer/iron-icon';
+import '@polymer/iron-icons';
 
 class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get template() {
@@ -107,6 +109,34 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
         color: var(--h2-ui-color_purple);
       }
       
+      .actionsBox {
+        display: none;
+        opacity: 0;
+        color: #2196F3;
+        position:absolute;
+        top: -4px;
+      }
+      
+      .actionsBox iron-icon {
+        width: 28px;
+        height: 28px;
+      }
+      
+      .title:hover .actionsBox,.no-children-title:hover .actionsBox {
+        display: inline-block;
+        opacity: 1;
+        animation: myshow .3s;
+        padding: 0 15px;
+      }
+      
+      @keyframes myshow {
+        0%{opacity: 0;}
+        25%{opacity: .25;}
+        50%{opacity: .5;}
+        75%{opacity: .75;}
+        100%{opacity: 1;}
+      }
+      
       .no-children-title {
         color: #756A85;
       }
@@ -124,12 +154,12 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
         border: 2px solid #000;
       }
       
-      .checked,.partial-checked{
+      .checked,.partial-checked {
         background: var(--h2-ui-color_skyblue);
         border: 2px solid var(--h2-ui-color_skyblue);
       }
       
-      .checked:before{
+      .checked:before {
         content: "";
         border: 2px solid #fff;
         border-left: 0;
@@ -141,7 +171,7 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
         width: 4px;
       }
       
-      .partial-checked:before{
+      .partial-checked:before {
         content: "";
         position: absolute;
         display: block;
@@ -153,13 +183,13 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
       /*禁用勾选*/
-      .disabled{
+      .disabled {
         border: 2px solid var(--h2-ui-color_pink);
         border-radius: 50%;
         pointer-events: none;
       }
       
-      .disabled:before{
+      .disabled:before {
         content: "";
         position: absolute;
         display: block;
@@ -171,11 +201,11 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
         transform: rotate(45deg);
       }
       /*隐藏*/
-      .display-none{
+      .display-none {
         display: none;
       }
       
-      .tag{
+      .tag {
         background: var(--h2-ui-bg);
         color: #fff;
         margin-left: 5px;
@@ -185,27 +215,43 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
         box-sizing: border-box;
       }
       
-      .tag-danger{
+      .tag-danger {
         background: var(--h2-ui-red);
       }
       
-      .tag-warning{
+      .tag-warning {
         background: var(--h2-ui-orange);
+      }
+      
+      .danger {
+        color: var(--h2-ui-color_pink);
+      }
+      
+      .warning {
+        color: var(--h2-ui-color_yellow);
       }
     </style>
     <ul>
       <li id="navItem" class="nav-item">
         <div id="childrenToggle" class$="[[getToggleClass(item)]]" on-click="onToggle"></div>
         <div id="checkbox" class$="checkbox [[optional(showCheckBox,'','display-none')]] [[optional(item.disabled,'disabled','')]]" on-click="onCheck"></div>
-        <div class$="[[getTextClass(item)]]" on-click="onTitleClick">[[getValueByKey(item, attrForLabel)]]
+        <div class$="[[getTextClass(item)]]">
+          <span on-click="onTitleClick">[[getValueByKey(item, attrForLabel)]]</span>
           <template is="dom-if" if="[[item.tagName]]">
             <span class$="tag tag-[[item.tagType]]">[[item.tagName]]</span>
+          </template>
+          <template is="dom-if" if="[[item.actions.length]]">
+            <div class="actionsBox">
+              <template is="dom-repeat" items="[[item.actions]]" as="actionItem">
+                <iron-icon icon$="[[actionItem.actionIcon]]" on-click="onActionClick" class$="[[actionItem.actionColor]]"></iron-icon>
+              </template>
+            </div>
           </template>
         </div>
       </li>
       <li id="children">
         <template is="dom-repeat" items="[[item.children]]" as="itm">
-          <h2-tree-node accordion="{{accordion}}" on-tree-node-toggle="onTreeNodeToggle" keyword="{{keyword}}" default-open="[[defaultOpen]]" show-check-box="[[showCheckBox]]" attr-for-label="[[attrForLabel]]" item="[[itm]]" on-tree-node-selected="onTreeNodeSelected" node-selected-item="{{nodeSelectedItem}}" can-dispatch-event="[[canDispatchEvent]]"></h2-tree-node>
+          <h2-tree-node accordion="{{accordion}}" on-tree-node-toggle="onTreeNodeToggle" keyword="{{keyword}}" default-open="[[defaultOpen]]" show-check-box="[[showCheckBox]]" attr-for-label="[[attrForLabel]]" item="[[itm]]" on-tree-node-selected="onTreeNodeSelected" node-selected-item="{{nodeSelectedItem}}" on-title-click="treeTitleClick" on-action-click="treeActionClick"></h2-tree-node>
         </template>
       </li>
     </ul>
@@ -268,10 +314,6 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
        * @default false
        */
       accordion: {
-        type: Boolean,
-        value: false
-      },
-      canDispatchEvent: {
         type: Boolean,
         value: false
       }
@@ -394,13 +436,24 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   onTitleClick() {
-    if (this.canDispatchEvent) {
-      window.dispatchEvent(new CustomEvent('treeNodeTitleClick', {detail: {item: this.item}}));
-    }else {
+    if (this.item.actions && this.item.actions.length) {
+      this.dispatchEvent(new CustomEvent('title-click', {detail: {item: this.item}}));
+    } else {
       this.onToggle();
     }
   }
 
+  treeTitleClick({detail: {item}}) {
+    this.dispatchEvent(new CustomEvent('title-click', {detail: {item}}));
+  }
+
+  onActionClick({model: {actionItem}}) {
+    this.dispatchEvent(new CustomEvent('action-click', {detail: {item: this.item, actionType: actionItem.actionType}}));
+  }
+
+  treeActionClick({detail: {item, actionType}}) {
+    this.dispatchEvent(new CustomEvent('action-click', {detail: {item, actionType}}));
+  }
 }
 
 window.customElements.define(H2TreeNode.is, H2TreeNode);
