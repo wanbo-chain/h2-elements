@@ -358,6 +358,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   __sortTheColumn({currentTarget: container, model}) {
     const sortType = model.column.sortType;
     const sortEnum = model.column.sortEnum;
+    const prop = model.column.prop;
 
     const ASCENDING = 'ascending';
     const DESCENDING = 'descending';
@@ -381,6 +382,14 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       direction = ASCENDING;
     }
 
+    this.sortingCache = {sortType, sortEnum, direction, prop};
+    this.__sortMethod(sortType, sortEnum, direction, prop);
+  }
+
+  __sortMethod(sortType, sortEnum, direction, prop) {
+    const ASCENDING = 'ascending';
+    const DESCENDING = 'descending';
+
     if (sortEnum) {
       let enums = [];
       let result = [];
@@ -389,7 +398,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         case DESCENDING:
           enums = sortEnum.map(mi => mi.value).reverse();
           enums.forEach((item, index) => {
-            const array = this.data.filter(fi => fi[model.column.prop] === item);
+            const array = this.data.filter(fi => fi[prop] === item);
             result = result.concat(array);
           })
           this.__tableData = result.length ? result : this.data;
@@ -397,7 +406,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         case ASCENDING:
           enums = sortEnum.map(mi => mi.value);
           enums.forEach((item, index) => {
-            const array = this.data.filter(fi => fi[model.column.prop] === item);
+            const array = this.data.filter(fi => fi[prop] === item);
             result = result.concat(array);
           })
           this.__tableData = result.length ? result : this.data;
@@ -431,10 +440,9 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
 
       const cache = this.data.slice();
-      cache.sort(cmpFn(model.column.prop));
+      cache.sort(cmpFn(prop));
       this.__tableData = cache;
     }
-
   }
 
   __calColspan(columnInfos = []) {
@@ -498,6 +506,12 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   __dataChanged(data = []) {
     this.__tableData = data.slice();
     this.setThreeLeft();
+    // 如果有点击排序，跳页后继续按照规则排好序
+    if (this.sortingCache && this.sortingCache.direction) {
+      const {sortType, sortEnum, direction, prop} = this.sortingCache;
+      this.__sortMethod(sortType, sortEnum, direction, prop);
+    }
+
   }
 
   __calShowExpansion(columnMetas = []) {
@@ -906,7 +920,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       __selectedState: Boolean,
 
       height: Number,
-      tableBodyStyle: String
+      tableBodyStyle: String,
+      sortingCache: Object
     };
   }
 
