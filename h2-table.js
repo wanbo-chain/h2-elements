@@ -83,6 +83,18 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         background: #ecf5ff;
       }
       
+      .row-high-light {
+        background: #ffebee!important;
+      }
+      
+      .column-high-light {
+        background: #e8eaf6!important;
+      }
+      
+      .column-high-light.row-high-light {
+        background: #ffcdd2!important;
+      }
+      
       .expand-icon {
         cursor:pointer;
         color: grey;
@@ -285,7 +297,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                    <th id="showIndex" class="show-index">序号</th>
                 </template>
                 <template is="dom-repeat" items="[[__columnInfos(columnInfos)]]" as="column" index-as="columnIndex">
-                  <th class$="table__column  [[__getHeadFixedClass(column)]]" style$="[[column.cellStyle]][[__getFixedLeftStyle(column)]][[__getFixedRightStyle(column)]]" aria-frozen$="[[column.frozen]]">
+                  <th class$="table__column  [[__getHeadFixedClass(column)]]" style$="[[column.cellStyle]][[__getFixedLeftStyle(column)]][[__getFixedRightStyle(column)]]" aria-frozen$="[[column.frozen]]" on-dblClick="__columnClick">
                     <div class="header__cell">
                       <div class="table__cell">[[column.label]]</div>
                       <template is="dom-if" if="[[ column.sortable ]]">
@@ -328,7 +340,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                 </tr>
               </template>
               <template is="dom-repeat" items="[[__tableData]]" as="row" index-as="rowIndex">
-              <tr class="table__row" id="row_ctn_[[rowIndex]]">
+              <tr class="table__row" id="row_ctn_[[rowIndex]]" on-dblClick="__rowClick">
                   [[ __generateRowContent(columnInfos, row, rowIndex) ]]
                </tr>
               
@@ -845,6 +857,32 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       return `right:${right}px;`;
     } else {
       return '';
+    }
+  }
+
+  __rowClick({model: {rowIndex}}) {
+    const rows = Array.from(this.shadowRoot.querySelectorAll('.table__row')).filter(fi => fi.style.display !== 'none');
+    const childrens = Array.from(rows[rowIndex].children);
+    const classList = new Set(childrens.map(mi => Array.from(mi.classList)).flat());
+    if ([...classList].includes('row-high-light')) {
+      childrens.forEach(fi => {
+        fi.classList.remove('row-high-light');
+      })
+    } else {
+      childrens.forEach(fi => {
+        fi.classList.add('row-high-light');
+      })
+    }
+  }
+
+  __columnClick({model: {columnIndex}}) {
+    for (let i = 0, len = this.__tableData.length - 1; i <= len; i++) {
+      const ele = this.shadowRoot.querySelector(`#row_${i}_column_${columnIndex}`);
+      if ([...ele.classList].includes('column-high-light')) {
+        ele.classList.remove('column-high-light');
+      } else {
+        ele.classList.add('column-high-light');
+      }
     }
   }
 
