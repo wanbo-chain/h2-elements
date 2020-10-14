@@ -340,7 +340,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                 </tr>
               </template>
               <template is="dom-repeat" items="[[__tableData]]" as="row" index-as="rowIndex">
-              <tr class="table__row" id="row_ctn_[[rowIndex]]" on-dblClick="__rowClick">
+              <tr class="table__row" id="row_ctn_[[rowIndex]]" on-dblClick="__rowClick" style$="[[setRowCustomStyle(row)]]">
                   [[ __generateRowContent(columnInfos, row, rowIndex) ]]
                </tr>
               
@@ -628,7 +628,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       const tmpContainer = document.createElement('tr');
 
       tmpContainer.innerHTML = `
-        <td style="${column.cellStyle || ''} ${contentStyle || ''}" class="table__column ${column.fixed === '' ? 'fixed-left' : ''} ${column.fixed === 'right' ? 'fixed-right' : ''}" role="${column.type}" id="row_${rowIndex}_column_${columnIndex}" aria-frozen="${column.frozen}">
+        <td style="${column.cellStyle || ''} ${contentStyle || ''} ${column.fixed === '' || column.fixed === 'right' ? this.setRowCustomStyle && this.setRowCustomStyle(row) : ''}" class="table__column ${column.fixed === '' ? 'fixed-left' : ''} ${column.fixed === 'right' ? 'fixed-right' : ''}" role="${column.type}" id="row_${rowIndex}_column_${columnIndex}" aria-frozen="${column.frozen}">
           <div class="td_cell">
             <div class="table__cell"></div>
             <paper-tooltip position="top" animation-delay="10" offset="5" fit-to-visible-bounds></paper-tooltip>
@@ -959,7 +959,8 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       height: Number,
       tableBodyStyle: String,
-      sortingCache: Object
+      sortingCache: Object,
+      setRowCustomStyle: Function
     };
   }
 
