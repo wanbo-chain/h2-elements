@@ -15,6 +15,7 @@ import '@polymer/paper-tooltip/paper-tooltip';
 import {BaseBehavior} from "./behaviors/base-behavior";
 import './behaviors/h2-elements-shared-styles.js';
 import './h2-table-column'
+import './h2-dialog'
 
 /**
  * `h2-table`
@@ -256,6 +257,19 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         position: sticky;
         background: #fff;
       }
+      #dialogFilterList {
+        --h2-dialog-width: auto;
+        --h2-dialog-height: auto;
+        --h2-dialog-content_-_padding: 20px 50px 20px 30px!important;
+      }
+      .table__filter__icon {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+      }
+      .filter-icon-selected {
+        color: #2196F3;
+      }
     </style>
     
     <slot id="columnSlot"></slot>
@@ -305,6 +319,9 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
                           <iron-icon class="table__sort__icon ascending" icon="icons:arrow-drop-up"></iron-icon>
                           <iron-icon class="table__sort__icon descending" icon="icons:arrow-drop-down"></iron-icon>
                         </div>
+                      </template>
+                      <template is="dom-if" if="[[ column.filterable ]]">
+                        <iron-icon class="table__filter__icon" icon="icons:filter-list" on-click="__clickFilter" data-prop$="[[column.prop]]"></iron-icon>
                       </template>
                     </div>
                   </th>
@@ -364,6 +381,9 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         </div>
       </div>
     </div>
+    <h2-dialog id="dialogFilterList">
+      <h2-select label="筛选条件" value="{{filterSelectedValue}}" items="[[filterList]]" placeholder="请选择" on-item-selected="__filterValueSelected"></h2-select>
+    </h2-dialog>
 `;
   }
 
@@ -517,11 +537,16 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   __dataChanged(data = []) {
     this.__tableData = data.slice();
+    this.cacheTableData = data.slice();
     this.setThreeLeft();
     // 如果有点击排序，跳页后继续按照规则排好序
     if (this.sortingCache && this.sortingCache.direction) {
       const {sortType, sortEnum, direction, prop} = this.sortingCache;
       this.__sortMethod(sortType, sortEnum, direction, prop);
+    }
+    if (this.filterSelectedValue) {
+      this.filterSelectedValue = '';
+      this.shadowRoot.querySelectorAll('.table__filter__icon').forEach(fi => fi.classList.remove('filter-icon-selected'))
     }
 
   }
@@ -886,6 +911,61 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     }
   }
 
+  __clickFilter({model: {column: {prop, filterEnum}, columnIndex}}) {
+    let list = [];
+    if (filterEnum) {
+      const arr = this.cacheTableData.map(mi => mi[prop]).filter(fi => fi);
+      list = filterEnum.filter(fi => arr.includes(fi.value));
+      list.unshift({value: '全部', label: '全部'});
+      this.filterList = list;
+    } else {
+      list = this.cacheTableData.map(mi => mi[prop]).filter(fi => fi);
+      list.unshift('全部');
+      list = Array.from(new Set(list));
+      this.filterList = list.map((mi) => {
+        return {value: mi, label: mi}
+      });
+    }
+
+    const elements = this.shadowRoot.querySelectorAll('.table__filter__icon');
+    const ele = [...elements].find(fi => [...fi.classList].includes('filter-icon-selected'));
+
+    if (ele && ele.dataset.prop === prop) {
+      this.filterSelectedValue = this.__tableData[0][prop];
+    } else {
+      this.filterSelectedValue = '全部';
+    }
+
+    this.filterProp = prop;
+    this.$.dialogFilterList.open();
+  }
+
+  __filterValueSelected({detail: {value}}) {
+    if (value) {
+      this.filterSelectedValue = value;
+      if (value === '全部') {
+        this.__tableData = this.cacheTableData.slice();
+      } else {
+        this.__tableData = this.cacheTableData.filter(fi => fi[this.filterProp] === value);
+      }
+
+      this.$.dialogFilterList.close();
+      this.changeFilterIconClass();
+    }
+
+  }
+
+  changeFilterIconClass() {
+    const elements = this.shadowRoot.querySelectorAll('.table__filter__icon');
+    elements.forEach(fi => fi.classList.remove('filter-icon-selected'));
+    const ele = [...elements].find(fi => fi.dataset.prop === this.filterProp);
+    if (this.filterSelectedValue !== '全部') {
+      ele.classList.add('filter-icon-selected');
+    } else {
+      ele.classList.remove('filter-icon-selected');
+    }
+  }
+
   static get properties() {
     return {
       data: {
@@ -960,7 +1040,11 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       height: Number,
       tableBodyStyle: String,
       sortingCache: Object,
-      setRowCustomStyle: Function
+      setRowCustomStyle: Function,
+      filterList: Array,
+      filterSelectedValue: String,
+      cacheTableData: Array,
+      filterProp: String
     };
   }
 

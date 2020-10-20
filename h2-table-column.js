@@ -61,6 +61,11 @@ class H2TableColumn extends mixinBehaviors([Templatizer], PolymerElement) {
         value: false
       },
 
+      filterable: {
+        type: Boolean,
+        value: false
+      },
+
       sortType: {
         type: String,
         value: 'string'
@@ -75,7 +80,8 @@ class H2TableColumn extends mixinBehaviors([Templatizer], PolymerElement) {
 
       formatter: Function,
       cellStyle: String,
-      defaultValue: String
+      defaultValue: String,
+      filterEnum: Array
     };
   }
 

@@ -315,7 +315,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
       <div id="select-collapse" on-click="__focusOnLast">
         <iron-selector class="selector-panel" multi="[[ multi ]]" selected="{{ selectedItem }}" selected-values="{{ selectedValues }}" attr-for-selected="candidate-item">
           <template is="dom-repeat" items="[[items]]">
-            <div class="candidate-item" candidate-item="[[item]]" title="[[getValueByKey(item, attrForLabel)]]" disabled$="[[ setDisabled(item) ]]">
+            <div class="candidate-item" candidate-item="[[item]]" title="[[getValueByKey(item, attrForLabel)]]" disabled$="[[ setDisabled(item) ]]" on-click="__itemSelected">
               [[getValueByKey(item, attrForLabel)]]
               <template is="dom-if" if="[[ setDisabled(item) ]]">  
                 <iron-icon icon="icons:block" class="disabled-icon"></iron-icon>
@@ -641,6 +641,10 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
     } else {
       return false;
     }
+  }
+
+  __itemSelected({model: {item}}) {
+    this.dispatchEvent(new CustomEvent('item-selected', {detail: item}));
   }
 
 }
