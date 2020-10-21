@@ -416,6 +416,20 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
     this.sortingCache = {sortType, sortEnum, direction, prop};
     this.__sortMethod(sortType, sortEnum, direction, prop);
+    if (this.filterSelectedValue) {
+      this.resetFilterClass();
+    }
+    if (this.dblClickColumnIndexs.length) {
+      this.resetDblClickClass();
+    }
+  }
+
+  resetDblClickClass() {
+    this.dblClickColumnIndexs.forEach(item => {
+      const elements = Array.from(this.shadowRoot.querySelectorAll(`.table__column__${item}`));
+      elements.forEach(fi => fi.classList.remove('column-high-light'));
+    })
+    this.dblClickColumnIndexs = [];
   }
 
   __sortMethod(sortType, sortEnum, direction, prop) {
@@ -545,10 +559,14 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.__sortMethod(sortType, sortEnum, direction, prop);
     }
     if (this.filterSelectedValue) {
-      this.filterSelectedValue = '';
-      this.shadowRoot.querySelectorAll('.table__filter__icon').forEach(fi => fi.classList.remove('filter-icon-selected'))
+      this.resetFilterClass();
     }
 
+  }
+
+  resetFilterClass() {
+    this.filterSelectedValue = '';
+    this.shadowRoot.querySelectorAll('.table__filter__icon').forEach(fi => fi.classList.remove('filter-icon-selected'))
   }
 
   __calShowExpansion(columnMetas = []) {
@@ -653,7 +671,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       const tmpContainer = document.createElement('tr');
 
       tmpContainer.innerHTML = `
-        <td style="${column.cellStyle || ''} ${contentStyle || ''} ${column.fixed === '' || column.fixed === 'right' ? this.setRowCustomStyle && this.setRowCustomStyle(row) : ''}" class="table__column ${column.fixed === '' ? 'fixed-left' : ''} ${column.fixed === 'right' ? 'fixed-right' : ''}" role="${column.type}" id="row_${rowIndex}_column_${columnIndex}" aria-frozen="${column.frozen}">
+        <td style="${column.cellStyle || ''} ${contentStyle || ''} ${column.fixed === '' || column.fixed === 'right' ? this.setRowCustomStyle && this.setRowCustomStyle(row) : ''}" class="table__column table__column__${columnIndex} ${column.fixed === '' ? 'fixed-left' : ''} ${column.fixed === 'right' ? 'fixed-right' : ''}" role="${column.type}" id="row_${rowIndex}_column_${columnIndex}" aria-frozen="${column.frozen}">
           <div class="td_cell">
             <div class="table__cell"></div>
             <paper-tooltip position="top" animation-delay="10" offset="5" fit-to-visible-bounds></paper-tooltip>
@@ -901,13 +919,13 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   __columnClick({model: {columnIndex}}) {
-    for (let i = 0, len = this.__tableData.length - 1; i <= len; i++) {
-      const ele = this.shadowRoot.querySelector(`#row_${i}_column_${columnIndex}`);
-      if ([...ele.classList].includes('column-high-light')) {
-        ele.classList.remove('column-high-light');
-      } else {
-        ele.classList.add('column-high-light');
-      }
+    const elements = Array.from(this.shadowRoot.querySelectorAll(`.table__column__${columnIndex}`));
+    if (this.dblClickColumnIndexs.includes(columnIndex)) {
+      elements.forEach(fi => fi.classList.remove('column-high-light'));
+      this.dblClickColumnIndexs = this.dblClickColumnIndexs.filter(fi => fi !== columnIndex);
+    } else {
+      elements.forEach(fi => fi.classList.add('column-high-light'));
+      this.dblClickColumnIndexs.push(columnIndex);
     }
   }
 
@@ -951,6 +969,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
       this.$.dialogFilterList.close();
       this.changeFilterIconClass();
+      this.resetSortClass();
     }
 
   }
@@ -964,6 +983,10 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     } else {
       ele.classList.remove('filter-icon-selected');
     }
+  }
+
+  resetSortClass() {
+    this.shadowRoot.querySelectorAll('.table__sort__icons').forEach(fi => fi.classList.remove('descending', 'ascending'));
   }
 
   static get properties() {
@@ -1044,7 +1067,11 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       filterList: Array,
       filterSelectedValue: String,
       cacheTableData: Array,
-      filterProp: String
+      filterProp: String,
+      dblClickColumnIndexs: {
+        type: Array,
+        value: []
+      }
     };
   }
 
