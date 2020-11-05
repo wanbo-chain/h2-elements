@@ -110,7 +110,7 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
         color: var(--h2-ui-color_purple);
       }
       
-      .checkbox{
+      .checkbox {
         width: 16px;
         height: 16px;
         margin-right: 6px;
@@ -119,12 +119,12 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
         border: 2px solid #000;
       }
       
-      .checked,.partial-checked{
+      .checked,.partial-checked {
         background: var(--h2-ui-color_skyblue);
         border: 2px solid var(--h2-ui-color_skyblue);
       }
       
-      .checked:before{
+      .checked:before {
         content: "";
         border: 2px solid #fff;
         border-left: 0;
@@ -136,7 +136,7 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
         width: 4px;
       }
       
-      .partial-checked:before{
+      .partial-checked:before {
         content: "";
         position: absolute;
         display: block;
@@ -148,13 +148,13 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
       /*禁用勾选*/
-      .disabled{
+      .disabled {
         border: 2px solid var(--h2-ui-color_pink);
         border-radius: 50%;
         pointer-events: none;
       }
       
-      .disabled:before{
+      .disabled:before {
         content: "";
         position: absolute;
         display: block;
@@ -166,11 +166,11 @@ class H2TreeNode extends mixinBehaviors([BaseBehavior], PolymerElement) {
         transform: rotate(45deg);
       }
       /*隐藏*/
-      .display-none{
+      .display-none {
         display: none;
       }
       
-      .tag{
+      .tag {
         background: var(--h2-ui-bg);
         color: #fff;
         margin-left: 5px;
