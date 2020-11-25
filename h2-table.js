@@ -561,7 +561,9 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     if (this.filterSelectedValue) {
       this.resetFilterClass();
     }
-
+    //如果展开过，数据变化时关闭掉，避免展示的数据混乱
+    const expandRows = Array.from(this.shadowRoot.querySelectorAll('.row__expansion'));
+    if (expandRows.length) expandRows.forEach(fi => fi.classList.add('row__expansion-hidden'));
   }
 
   resetFilterClass() {
