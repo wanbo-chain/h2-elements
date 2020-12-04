@@ -78,6 +78,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
       :host([readonly]) .tags-input {
         border: none;
+        padding: 2px 0;
       }
       
       .tags-input::-webkit-scrollbar {
