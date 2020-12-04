@@ -69,6 +69,10 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         position: relative;
         @apply --h2-select__container;
       }
+      
+      :host([readonly]) #select__container {
+        border: none;
+      }
 
       .tags__container {
         flex: 1;
@@ -92,6 +96,10 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         height: inherit;
         transition: transform .2s ease-in-out;
         color: var(--h2-ui-color_skyblue);
+      }
+      
+      :host([readonly]) #caret {
+        display: none;
       }
 
       #tag-content {
@@ -126,6 +134,10 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         @apply --h2-select-tag;
       }
       
+      :host([readonly]) .tag {
+        margin: 3px 0;
+      }
+      
       .tag-not-multi {
         max-width: 95%;
         position: absolute;
@@ -147,6 +159,10 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         color: #fff;
         cursor: pointer;
         @apply --h2-select-tag-deleter;
+      }
+      
+      :host([readonly]) .tag-deleter {
+        display: none;
       }
 
       .tag-deleter:hover {
@@ -283,6 +299,10 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
         height: 15px;
         color: #999;
         margin-left: 5px;
+      }
+      
+      :host([readonly]) .mask {
+        background-color: rgba(255, 255, 255, 0)!important;
       }
     </style>
     
@@ -440,7 +460,11 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
       * 判断是否需要最后一个虚拟输入框的焦点
       * */
       isFocus: Boolean,
-      disabledItems: String
+      disabledItems: String,
+      sortItem: {
+        type: Boolean,
+        value: false
+      }
     };
   }
 
@@ -451,6 +475,7 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
   static get observers() {
     return [
       '_valueChanged(value, items)',
+      '_itemsChanged(items)',
       '_selectedValuesChanged(selectedValues.splices)',
       'selectedItemChanged(selectedItem)',
       '__refreshUIState(required)',
@@ -498,14 +523,14 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.toggleCollapse();
   }
 
-  refreshElemPos(){
+  refreshElemPos() {
     const anchor = this.$['select__container'];
     const {x: left, y} = anchor.getBoundingClientRect();
 
     const collapseHeight = Math.min(this.items.length * 26, 300);
     const totalHeight = y + collapseHeight;
     let top;
-    if(totalHeight > document.documentElement.clientHeight) {
+    if (totalHeight > document.documentElement.clientHeight) {
       top = y - collapseHeight - 4;
     } else {
       top = y + this.clientHeight;
@@ -645,6 +670,17 @@ class H2Select extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   __itemSelected({model: {item}}) {
     this.dispatchEvent(new CustomEvent('item-selected', {detail: item}));
+  }
+
+  _itemsChanged(value) {
+    //如果有禁用的选项，把禁用的排序到后面
+    if (!this.sortItem && this.disabledItems) {
+      this.sortItem = true;
+      const disabledItems = this.disabledItems.split(',');
+      const first = value.filter(fi => !disabledItems.includes(fi.value));
+      const last = value.filter(fi => disabledItems.includes(fi.value));
+      this.items = first.concat(last);
+    }
   }
 
 }
