@@ -179,13 +179,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         border-bottom: 1px solid #ddd;
       }
       
-      .collapse-table__cell:last-of-type {
-        padding-right: 30px;
-      }
-      
       .selected-icon {
-        position: absolute;
-        right: 5px;
         color: red;
       }
 
@@ -300,13 +294,18 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
                       <iron-icon icon="icons:block" class="disabled-icon"></iron-icon>
                     </template>
                   </template>
+                  <template is="dom-if" if="[[ showSelectedIcon(row,index) ]]">
+                    <iron-icon icon="icons:check" class="selected-icon"></iron-icon>
+                  </template>
                 </td>
               </template>
               <template is="dom-if" if="[[ enableHotkey ]]">
-                <td class="collapse-table__cell table-hotkey">[[_getHotKey(index)]]</td>
-              </template>
-              <template is="dom-if" if="[[row.selected]]">
-                <iron-icon icon="icons:check" class="selected-icon"></iron-icon>
+                <td class="collapse-table__cell table-hotkey">
+                  [[_getHotKey(index)]]
+                  <template is="dom-if" if="[[ row.selected ]]">
+                    <iron-icon icon="icons:check" class="selected-icon"></iron-icon>
+                  </template>
+                </td>
               </template>
             </tr>
           </template>
@@ -1034,6 +1033,10 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   __disabledItemsChanged(value) {
     if (value) this.isDisabledItemsFirstOpen = true;
+  }
+
+  showSelectedIcon(row, index) {
+    return !this.enableHotkey && row.selected && index === this.pickerMeta.length - 1;
   }
 }
 
