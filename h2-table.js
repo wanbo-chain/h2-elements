@@ -659,7 +659,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       const expandIcon = fragment.querySelector('iron-icon');
       expandIcon && expandIcon.addEventListener('click', (e) => {
         const iconIsOpen = Array.from(expandIcon.classList).includes('expand-icon_opened');
-        if (!iconIsOpen) {
+        if (!iconIsOpen && !this.shadowRoot.querySelector(`#row_${rowIndex}`).hasChildNodes()) {
           this.computeExpansion(this.__tableData[rowIndex], rowIndex);
         }
         this.__openExpanderHandler(e.currentTarget, rowIndex);
@@ -748,12 +748,12 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   __getContentFixedStyle(columns, column) {
-    const contenBodyWidth = this.shadowRoot.querySelector('#content-body').offsetWidth;
+    const contentBodyWidth = this.shadowRoot.querySelector('#content-body').offsetWidth;
     let totalWidth = columns.map(mi => mi.width).reduce((pre, next) => pre + next, 0);
     if (this.selectable) totalWidth += 40;
     if (this.__showExpansion) totalWidth += 20;
     if (this.showIndex) totalWidth += 52;
-    const percent = contenBodyWidth / totalWidth;
+    const percent = contentBodyWidth / totalWidth;
     let style = '', leftStyle = '', left = 0, rightStyle = '', right = 0;
     const leftArr = columns.filter(fi => fi.fixed === '');
     const leftFindIndex = leftArr.findIndex(fi => fi.label === column.label);
