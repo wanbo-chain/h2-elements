@@ -544,11 +544,16 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     const parent = this.shadowRoot.querySelector(targetSelector);
     const {root} = columnTag.stampTemplate(model) || {};
     if (root) {
-      parent.innerHTML = '';
+      this.clearChildren(parent);
       parent.appendChild(root);
     }
   }
 
+  clearChildren(parent) {
+    while(parent.firstChild) {
+      parent.firstChild.remove();
+    }
+  }
   __dataChanged(data = []) {
     this.__tableData = data.slice();
     this.cacheTableData = data.slice();
@@ -648,7 +653,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
         + this.optional(this.__showExpansion, `<td class="expand-icon-td show-expansion"><iron-icon class="expand-icon" icon="icons:chevron-right"></iron-icon></td>`)
         + this.optional(this.showIndex, `<td class="show-index">${rowIndex + 1}</td>`);
 
-    if (tmpOpContainer.innerHTML !== '') {
+    if (tmpOpContainer.hasChildNodes()) {
       fragment.append(...tmpOpContainer.querySelectorAll('td'));
       const checkbox = fragment.querySelector('paper-checkbox');
       if (checkbox) {
@@ -724,7 +729,7 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     setTimeout(() => {
       const parent = this.shadowRoot.querySelector(`#row_ctn_${rowIndex}`);
       if (parent) {
-        parent.innerHTML = '';
+        this.clearChildren(parent);
         parent.appendChild(fragment);
       }
       this.setThreeLeft();
