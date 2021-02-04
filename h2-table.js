@@ -609,40 +609,11 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     return this.selectable ? (this.__tableData || []).filter(d => d.__selected) : [];
   }
 
-  shareComputeExpansion(row, rowIndex, targetSelect) {
+  computeExpansion(row, rowIndex) {
     const column = (this.columnInfos || []).find(col => col.type === 'expand');
     if (column) {
-      this.__appendTmplContent(targetSelect, row, rowIndex, column);
+      this.__appendTmplContent(`#row_${rowIndex}`, row, rowIndex, column);
     }
-  }
-
-  computeExpansion(row, rowIndex) {
-    this.shareComputeExpansion(row, rowIndex, `#row_${rowIndex}`);
-  }
-
-  shareComputeContent(row, rowIndex, column, targetSelect) {
-    if (column.tmpl && column.type === 'operate') {
-
-      setTimeout(() => {
-        this.__appendTmplContent(targetSelect, row, rowIndex, column);
-      }, 0, this);
-
-      return null;
-    }
-
-    if (column.props) {
-      return column.props.split(",").map(p => this.getValueByKey(row, p.trim())).join(column.separator || ',');
-    }
-
-    if (Function.prototype.isPrototypeOf(column.formatter)) {
-      return column.formatter.call(this, this.getValueByKey(row, column.prop, column.defaultValue));
-    }
-
-    return this.getValueByKey(row, column.prop, column.defaultValue);
-  }
-
-  computeContent(row, rowIndex, column, columnIndex) {
-    return this.shareComputeContent(row, rowIndex, column, `#row_${rowIndex}_column_${columnIndex}`)
   }
 
   __generateRowContent(columns = [], row, rowIndex) {
