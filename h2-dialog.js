@@ -107,27 +107,29 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
 
     </style>
-
+    
     <paper-dialog id="dialog"
       entry-animation="scale-up-animation"
       exit-animation="fade-out-animation"
       no-cancel-on-esc-key="[[noCancelOnEscKey]]"
       opened="{{opened}}"
       no-cancel-on-outside-click="[[noCancelOnOutsideClick]]" on-opened-changed="openedChanged">
-      
-      <div class="close-dialog" on-tap="close">
-        <iron-icon icon="icons:close"></iron-icon>
-      </div>
-      
-      <template is="dom-if" if="[[ toBoolean(title) ]]">
-        <div class="title">[[title]]</div>
+      <template is="dom-if" if="[[ opened ]]">
+        <div class="close-dialog" on-tap="close">
+          <iron-icon icon="icons:close"></iron-icon>
+        </div>
+        
+        <template is="dom-if" if="[[ toBoolean(title) ]]">
+          <div class="title">[[title]]</div>
+        </template>
+        <div class="scrollable-container">
+          <slot></slot>
+        </div>
       </template>
-      <div class="scrollable-container">
-        <slot></slot>
-      </div>
     </paper-dialog>
-    
+  
     <div class="backdrop"></div>
+    
 `;
   }
 
@@ -176,7 +178,8 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
       },
       opened: {
         type: Boolean,
-        reflectToAttribute: true
+        reflectToAttribute: true,
+        notify: true
       }
     };
   }
@@ -240,7 +243,7 @@ class H2Dialog extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   modalChanged(modal) {
-    if(modal) {
+    if (modal) {
       this.noCancelOnOutsideClick = true;
       this.noCancelOnEscKey = true;
     }

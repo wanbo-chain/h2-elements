@@ -91,8 +91,8 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
       #viewer-dialog {
         display: flex;
         overflow: auto;
-        width: 90%;
-        height: 90%;
+        width: 100%;
+        height: 100%;
         padding: 0;
         cursor: zoom-out;
       }
@@ -136,9 +136,9 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
         cursor: default;
       }
       
-      .rotate-button,.up-scale-button,.down-scale-button {
-        position: absolute;
-        right: 2%;
+      .rotate-button,.up-scale-button,.down-scale-button,.close-button {
+        position: fixed;
+        right: 5%;
         top: 50%;
         background: linear-gradient(315deg, #8FCDFF 0%, #2196F3 100%);;
         border-radius: 10px;
@@ -147,6 +147,10 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
         color: #fff;
         cursor: pointer;
         box-shadow: 0 0 5px 2px #ccc;
+      }
+      
+      .close-button {
+        top: 10%;
       }
       
       .up-scale-button {
@@ -182,6 +186,9 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
     </div>
     <paper-dialog id="viewer-dialog" on-click="closeViewZoom">
       <img id="viewer-img" src="[[src]]" draggable="true" on-click="onImgClick"></img>
+      <div class="close-button" on-click="closeViewZoom">
+        <iron-icon icon="close"></iron-icon>
+      </div>
       <div class="up-scale-button" on-click="imgUpScale" on-mousedown="upScaleMouseDown" on-mouseup="onMouseUp">
         <iron-icon icon="add"></iron-icon>
       </div>
@@ -269,9 +276,16 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
         value: () => ({})
       },
       /**
-       * 单击图片进行跟随鼠标移动
+       * Click the picture to follow the mouse movement
        * **/
       openFollow: {
+        type: Boolean,
+        value: false
+      },
+      /**
+       * Do you need to turn the picture into grayscale
+       * **/
+      grayscale: {
         type: Boolean,
         value: false
       }
@@ -374,10 +388,39 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
     }
     const reader = new FileReader();
     reader.onload = (e) => {
-      this.src = e.target.result;
-      this.value = blob;
+      if (this.grayscale) {
+        this.imageToGrayscale(e);
+      } else {
+        this.src = e.target.result;
+        this.value = blob;
+      }
     };
     reader.readAsDataURL(blob);
+  }
+
+  imageToGrayscale(e) {
+    let imgObj = new Image();
+    imgObj.src = e.target.result;
+    imgObj.onload = () => {
+      let canvas = document.createElement('canvas');
+      let canvasContext = canvas.getContext('2d');
+      let imgW = imgObj.width;
+      let imgH = imgObj.height;
+      canvas.width = imgW;
+      canvas.height = imgH;
+      canvasContext.drawImage(imgObj, 0, 0);
+      let imgPixels = canvasContext.getImageData(0, 0, imgW, imgH);
+      let imgPixelsData = imgPixels.data;
+      for (let i = 0; i < imgPixelsData.length; i += 4) {
+        let avg = (imgPixelsData[i] + imgPixelsData[i + 1] + imgPixelsData[i + 2]) / 3;
+        imgPixelsData[i] = avg;
+        imgPixelsData[i + 1] = avg;
+        imgPixelsData[i + 2] = avg;
+      }
+      canvasContext.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
+      this.src = canvas.toDataURL();
+      canvas.toBlob(blob => this.value = blob);
+    }
   }
 
   /**
@@ -443,6 +486,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
       }
     }, 100)
   }
+
   /**
    * Rotate the image.
    */
@@ -453,6 +497,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
     this.$['viewer-img'].style.transform = `rotate(${this.rotateValue}deg)`;
     this.$['viewer-img'].style.transformOrigin = `center`;
   }
+
   /**
    * Scale - the image.
    */
@@ -464,7 +509,8 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
       this.h2Tip.warn(`不能再缩小了哦~`, 1500);
       if (this.interval) clearInterval(this.interval);
       return;
-    };
+    }
+    ;
     imgWidth -= 100;
     imgHeight -= 100;
     this.$['viewer-img'].style.width = `${imgWidth}px`;
@@ -498,7 +544,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
     this.$['viewer-img'].removeEventListener('dragend', this.dragEndEvents);
   }
 
-  dragStartEvents(e){
+  dragStartEvents(e) {
 
   }
 

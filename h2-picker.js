@@ -76,6 +76,11 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         
       }
       
+      :host([readonly]) .tags-input {
+        border: none;
+        padding: 2px 0;
+      }
+      
       .tags-input::-webkit-scrollbar {
         display: none;
       }
@@ -97,6 +102,10 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         cursor: default;
         @apply --h2-picker-tag;
       }
+      
+      :host([readonly]) .tag {
+        margin: 3px 0;
+      }
 
       .tag-name {
         flex: 1;
@@ -110,6 +119,10 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         color: #fff;
         cursor: pointer;
         @apply --h2-select-tag-deleter;
+      }
+      
+      :host([readonly]) .tag-deleter {
+        display: none;
       }
 
       .tag-deleter:hover {
@@ -166,13 +179,7 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
         border-bottom: 1px solid #ddd;
       }
       
-      .collapse-table__cell:last-of-type {
-        padding-right: 30px;
-      }
-      
       .selected-icon {
-        position: absolute;
-        right: 5px;
         color: red;
       }
 
@@ -230,12 +237,17 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
       :host([data-invalid]) .tags-input {
         border-color: var(--h2-ui-color_pink);
       }
+      
       .disabled-icon {
         width: 15px;
         height: 15px;
         color: #999;
         margin-left: 5px;
         padding-bottom: 2px;
+      }
+      
+      :host([readonly]) .mask {
+        background-color: rgba(255, 255, 255 , 0)!important;
       }
     </style>
     <template is="dom-if" if="[[ toBoolean(label) ]]">
@@ -282,13 +294,18 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
                       <iron-icon icon="icons:block" class="disabled-icon"></iron-icon>
                     </template>
                   </template>
+                  <template is="dom-if" if="[[ showSelectedIcon(row,index) ]]">
+                    <iron-icon icon="icons:check" class="selected-icon"></iron-icon>
+                  </template>
                 </td>
               </template>
               <template is="dom-if" if="[[ enableHotkey ]]">
-                <td class="collapse-table__cell table-hotkey">[[_getHotKey(index)]]</td>
-              </template>
-              <template is="dom-if" if="[[row.selected]]">
-                <iron-icon icon="icons:check" class="selected-icon"></iron-icon>
+                <td class="collapse-table__cell table-hotkey">
+                  [[_getHotKey(index)]]
+                  <template is="dom-if" if="[[ row.selected ]]">
+                    <iron-icon icon="icons:check" class="selected-icon"></iron-icon>
+                  </template>
+                </td>
               </template>
             </tr>
           </template>
@@ -1016,6 +1033,10 @@ class H2Picker extends mixinBehaviors([BaseBehavior], PolymerElement) {
 
   __disabledItemsChanged(value) {
     if (value) this.isDisabledItemsFirstOpen = true;
+  }
+
+  showSelectedIcon(row, index) {
+    return !this.enableHotkey && row.selected && index === this.pickerMeta.length - 1;
   }
 }
 
