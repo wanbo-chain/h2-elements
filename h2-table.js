@@ -566,9 +566,19 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     if (this.filterSelectedValue) {
       this.resetFilterClass();
     }
-    //如果展开过，数据变化时关闭掉，避免展示的数据混乱
+    //如果展开过，数据变化时关闭掉并清除内容，避免展示的数据混乱
     const expandRows = Array.from(this.shadowRoot.querySelectorAll('.row__expansion'));
-    if (expandRows.length) expandRows.forEach(fi => fi.classList.add('row__expansion-hidden'));
+    if (expandRows.length) {
+      expandRows.forEach(fi => {
+        fi.classList.add('row__expansion-hidden');
+        if (fi.firstElementChild.hasChildNodes()) {
+          const childNodes = fi.firstElementChild.childNodes;
+          for (let i = childNodes.length - 1; i >= 0; i--) {
+            fi.firstElementChild.removeChild(childNodes[i]);
+          }
+        }
+      });
+    }
   }
 
   resetFilterClass() {
