@@ -406,7 +406,7 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.set('selectedValues', selectedValues);
       this.set('valueLabel', selectedValues.map(itm => itm[this.attrForLabel]).join(this.separator));
       this.set('treeItems', treeItems);
-      if (treeItems[0].length) this.set('currentHeadLevel', treeItems[treeItems.length - 1][0].level);
+      if (treeItems[0].length) treeItems[treeItems.length - 1][0].level > this.headItems[this.headItems.length - 1].level ? this.set('currentHeadLevel', this.headItems[this.headItems.length - 1].level) : this.set('currentHeadLevel', treeItems[treeItems.length - 1][0].level);
       this.$.placeholder.hidden = this.valueLabel;
     }
   }
@@ -469,7 +469,7 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.set('currentHeadLevel', head.level);
   }
 
-  __currentHeadLevelChanged(){
+  __currentHeadLevelChanged() {
     this.refreshStyle();
   }
 
