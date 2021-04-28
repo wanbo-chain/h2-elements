@@ -288,6 +288,17 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
       grayscale: {
         type: Boolean,
         value: false
+      },
+      compress: {
+        type: Boolean,
+        value: false
+      },
+      compressMinSize: {
+        type: String
+      },
+      __byteCompressMinSize: {
+        type: Number,
+        computed: '__parseSizeLimit(compressMinSize)'
       }
     };
   }
@@ -386,6 +397,19 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
       this.h2Tip.error(`上传图片不能超过${this.sizeLimit}`, 3000);
       return;
     }
+
+    if (this.compress && blob.size >= this.__byteCompressMinSize) {
+      this.compression(blob).then((res) => {
+        console.log('图片压缩结果:', res);
+        const {afterSrc, file} = res;
+        this.src = afterSrc;
+        this.value = file;
+      }).catch((err) => {
+        console.log('图片压缩异常:', err);
+      })
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = (e) => {
       if (this.grayscale) {
@@ -396,6 +420,44 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
       }
     };
     reader.readAsDataURL(blob);
+  }
+
+  compression(file) {
+    let quality;
+    const size = file.size;
+    const percent = (size / this.__byteSize).toFixed(1);
+    quality = (1 - (+percent)).toFixed(1);
+    return new Promise((resolve) => {
+      const reader = new FileReader() // 创建 FileReader
+      reader.onload = ({target: {result: src}}) => {
+        const image = new Image() // 创建 img 元素
+        image.onload = async () => {
+          const canvas = document.createElement('canvas') // 创建 canvas 元素
+          canvas.width = image.width
+          canvas.height = image.height
+          canvas.getContext('2d').drawImage(image, 0, 0, image.width, image.height) // 绘制 canvas
+          const canvasURL = canvas.toDataURL('image/jpeg', +quality)
+          const buffer = atob(canvasURL.split(',')[1])
+          let length = buffer.length
+          const bufferArray = new Uint8Array(new ArrayBuffer(length))
+          while (length--) {
+            bufferArray[length] = buffer.charCodeAt(length)
+          }
+          const miniFile = new File([bufferArray], file.name, {type: 'image/jpeg'})
+          resolve({
+            file: miniFile,
+            origin: file,
+            beforeSrc: src,
+            afterSrc: canvasURL,
+            beforeKB: Number((file.size / 1024).toFixed(2)),
+            afterKB: Number((miniFile.size / 1024).toFixed(2)),
+            quality
+          })
+        }
+        image.src = src
+      }
+      reader.readAsDataURL(file)
+    })
   }
 
   imageToGrayscale(e) {
