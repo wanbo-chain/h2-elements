@@ -69,6 +69,16 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
         @apply --h2-button-group-button;
       }
       
+      .trigger-no-top-border-radius {
+        border-top-left-radius: unset;
+        border-top-right-radius: unset;
+      }
+      
+      .trigger-no-bottom-border-radius {
+        border-bottom-left-radius: unset;
+        border-bottom-right-radius: unset;
+      }
+      
       .trigger:hover {
       
       }
@@ -146,13 +156,13 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
     </style>
     
-    <h2-button class="trigger" on-mouseover="toggle" on-mouseout="close" type="[[colorType]]">
+    <h2-button id="trigger" class="trigger" on-mouseover="toggle" on-mouseout="close" type="[[colorType]]">
       <div class="trigger__label">[[ label ]]</div>
       <iron-icon class="trigger__icon" icon="icons:expand-more"></iron-icon>
     </h2-button>
 
     <iron-collapse id="collapse" on-mouseover="toggle" on-mouseout="close" class="dropdown-menu" opened="[[ opened ]]" on-click="_onButtonDropdownClick">
-      <div class="container">
+      <div id="container" class="container">
        <template is="dom-repeat" items="[[ items ]]">
          <div class$="item [[item.type]]" bind-item="[[ item ]]">[[ getValueByKey(item, attrForLabel, 'Unknown') ]]</div>
        </template>
@@ -234,6 +244,7 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
    */
   close() {
     this.opened = false;
+    this.$.trigger.classList.remove('trigger-no-bottom-border-radius', 'trigger-no-top-border-radius');
   }
 
   /**
@@ -244,10 +255,18 @@ class H2ButtonGroup extends mixinBehaviors([BaseBehavior], PolymerElement) {
     const collapseHeight = (this.items || []).length * 30 + 2;
     const totalHeight = top + collapseHeight;
     let _top;
-    if(totalHeight > document.documentElement.clientHeight) {
-      _top = top - collapseHeight - 4;
+    if (totalHeight > document.documentElement.clientHeight) {
+      _top = top - collapseHeight + 1;
+      this.$.container.style.borderBottom = 'none';
+      this.$.container.style.borderBottomLeftRadius = 'unset';
+      this.$.container.style.borderBottomRightRadius = 'unset';
+      this.$.trigger.classList.add('trigger-no-top-border-radius');
     } else {
-      _top = top + this.clientHeight;
+      _top = top + this.clientHeight - 2;
+      this.$.container.style.borderTop = 'none';
+      this.$.container.style.borderTopLeftRadius = 'unset';
+      this.$.container.style.borderTopRightRadius = 'unset';
+      this.$.trigger.classList.add('trigger-no-bottom-border-radius');
     }
     this.$.collapse.style.top = _top + 'px';
     this.$.collapse.style.left = left + 'px';
