@@ -550,11 +550,19 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   clearChildren(parent) {
-    while(parent.firstChild) {
+    while (parent.firstChild) {
       parent.firstChild.remove();
     }
   }
+
+  isDataNotChanged(data) {
+    return JSON.stringify(this.__tableData) === JSON.stringify(data);
+  }
+
   __dataChanged(data = []) {
+    if (this.__tableData && this.isDataNotChanged(data)) {
+      return;
+    }
     this.__tableData = data.slice();
     this.cacheTableData = data.slice();
     this.setThreeLeft();
@@ -711,7 +719,15 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       const parent = this.shadowRoot.querySelector(`#row_ctn_${rowIndex}`);
       if (parent) {
         this.clearChildren(parent);
-        parent.appendChild(fragment);
+        parent.appendChild(document.createElement('td'));
+        const io = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting) {
+            this.clearChildren(parent);
+            parent.appendChild(fragment);
+            io.disconnect();
+          }
+        })
+        io.observe(parent);
       }
       this.setThreeLeft();
     }, 0);
