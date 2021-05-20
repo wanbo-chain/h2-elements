@@ -555,12 +555,12 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     }
   }
 
-  isDataNotChanged(data) {
-    return JSON.stringify(this.__tableData) === JSON.stringify(data);
+  isDataChanged(data) {
+    return JSON.stringify(this.__tableData) !== JSON.stringify(data);
   }
 
   __dataChanged(data = []) {
-    if (this.__tableData && this.isDataNotChanged(data)) {
+    if (this.__tableData && !this.selectable && !this.isDataChanged(data)) {
       return;
     }
     this.__tableData = data.slice();
