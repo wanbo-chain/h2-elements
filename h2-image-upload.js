@@ -215,7 +215,8 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
        */
       value: {
         type: Object,
-        notify: true
+        notify: true,
+        observer: '__valueChanged'
       },
 
       /**
@@ -385,14 +386,20 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
   _chooseFile(e) {
     const file = e.target.files[0];
     file && this.__loadFileData(file);
+    this.dispatchEvent(new CustomEvent('choose', {detail: {value: file}}));
+  }
+
+  __valueChanged(file) {
+    file && this.__loadFileData(file, true);
   }
 
   __readDataTransfer(dataTransfer) {
     const source = [].find.call(dataTransfer.items, item => item.kind === 'file' && item.type.startsWith("image"));
     source && this.__loadFileData(source.getAsFile());
+    this.dispatchEvent(new CustomEvent('choose', {detail: {value: source.getAsFile()}}));
   }
 
-  __loadFileData(blob) {
+  __loadFileData(blob, isFromValueChanged = false) {
     if (this.__byteSize > 0 && blob.size > this.__byteSize) {
       this.h2Tip.error(`上传图片不能超过${this.sizeLimit}`, 3000);
       return;
@@ -403,7 +410,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
         console.log('图片压缩结果:', res);
         const {afterSrc, file} = res;
         this.src = afterSrc;
-        this.value = file;
+        if (!isFromValueChanged) this.value = file;
       }).catch((err) => {
         console.log('图片压缩异常:', err);
       })
@@ -413,10 +420,10 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
     const reader = new FileReader();
     reader.onload = (e) => {
       if (this.grayscale) {
-        this.imageToGrayscale(e);
+        this.imageToGrayscale(e, isFromValueChanged);
       } else {
         this.src = e.target.result;
-        this.value = blob;
+        if (!isFromValueChanged) this.value = blob;
       }
     };
     reader.readAsDataURL(blob);
@@ -460,7 +467,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
     })
   }
 
-  imageToGrayscale(e) {
+  imageToGrayscale(e, isFromValueChanged = false) {
     let imgObj = new Image();
     imgObj.src = e.target.result;
     imgObj.onload = () => {
@@ -481,7 +488,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
       }
       canvasContext.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
       this.src = canvas.toDataURL();
-      canvas.toBlob(blob => this.value = blob);
+      if (!isFromValueChanged) canvas.toBlob(blob => this.value = blob);
     }
   }
 
@@ -492,6 +499,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
     this.src = null;
     this.value = null;
     this.$['file-chooser'].value = '';
+    this.dispatchEvent(new CustomEvent('cancel'));
   }
 
   /**
