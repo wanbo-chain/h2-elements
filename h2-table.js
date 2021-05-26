@@ -560,8 +560,10 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
   }
 
   __dataChanged(data = []) {
-    if (this.__tableData && !this.selectable && !this.isDataChanged(data)) {
-      return;
+    if (this.useIsDataChanged) {
+      if (this.__tableData && !this.isDataChanged(data)) {
+        return;
+      }
     }
     this.__tableData = data.slice();
     this.cacheTableData = data.slice();
@@ -718,20 +720,29 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
     setTimeout(() => {
       const parent = this.shadowRoot.querySelector(`#row_ctn_${rowIndex}`);
       if (parent) {
-        this.clearChildren(parent);
-        parent.appendChild(document.createElement('td'));
-        const io = new IntersectionObserver((entries) => {
-          if (entries[0].isIntersecting) {
-            this.clearChildren(parent);
-            parent.appendChild(fragment);
-            io.disconnect();
-          }
-        })
-        io.observe(parent);
+        if (this.useIntersectionObserver) {
+          this.setIntersectionObserver(parent, fragment);
+        } else {
+          this.clearChildren(parent);
+          parent.appendChild(fragment);
+        }
       }
       this.setThreeLeft();
     }, 0);
 
+  }
+
+  setIntersectionObserver(parent, fragment) {
+    this.clearChildren(parent);
+    parent.appendChild(document.createElement('td'));
+    const io = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        this.clearChildren(parent);
+        parent.appendChild(fragment);
+        io.disconnect();
+      }
+    })
+    io.observe(parent);
   }
 
   setThreeLeft() {
@@ -1075,6 +1086,14 @@ class H2Table extends mixinBehaviors([BaseBehavior], PolymerElement) {
       dblClickColumnIndexs: {
         type: Array,
         value: []
+      },
+      useIsDataChanged: {
+        type: Boolean,
+        value: true
+      },
+      useIntersectionObserver: {
+        type: Boolean,
+        value: true
       }
     };
   }
