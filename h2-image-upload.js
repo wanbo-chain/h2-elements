@@ -215,8 +215,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
        */
       value: {
         type: Object,
-        notify: true,
-        observer: '__valueChanged'
+        notify: true
       },
 
       /**
@@ -389,17 +388,13 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
     this.dispatchEvent(new CustomEvent('choose', {detail: {value: file}}));
   }
 
-  __valueChanged(file) {
-    file && this.__loadFileData(file, true);
-  }
-
   __readDataTransfer(dataTransfer) {
     const source = [].find.call(dataTransfer.items, item => item.kind === 'file' && item.type.startsWith("image"));
     source && this.__loadFileData(source.getAsFile());
     this.dispatchEvent(new CustomEvent('choose', {detail: {value: source.getAsFile()}}));
   }
 
-  __loadFileData(blob, isFromValueChanged = false) {
+  __loadFileData(blob) {
     if (this.__byteSize > 0 && blob.size > this.__byteSize) {
       this.h2Tip.error(`上传图片不能超过${this.sizeLimit}`, 3000);
       return;
@@ -410,7 +405,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
         console.log('图片压缩结果:', res);
         const {afterSrc, file} = res;
         this.src = afterSrc;
-        if (!isFromValueChanged) this.value = file;
+        this.value = file;
       }).catch((err) => {
         console.log('图片压缩异常:', err);
       })
@@ -420,10 +415,10 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
     const reader = new FileReader();
     reader.onload = (e) => {
       if (this.grayscale) {
-        this.imageToGrayscale(e, isFromValueChanged);
+        this.imageToGrayscale(e);
       } else {
         this.src = e.target.result;
-        if (!isFromValueChanged) this.value = blob;
+        this.value = blob;
       }
     };
     reader.readAsDataURL(blob);
@@ -467,7 +462,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
     })
   }
 
-  imageToGrayscale(e, isFromValueChanged = false) {
+  imageToGrayscale(e) {
     let imgObj = new Image();
     imgObj.src = e.target.result;
     imgObj.onload = () => {
@@ -488,7 +483,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
       }
       canvasContext.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
       this.src = canvas.toDataURL();
-      if (!isFromValueChanged) canvas.toBlob(blob => this.value = blob);
+      canvas.toBlob(blob => this.value = blob);
     }
   }
 
