@@ -28,7 +28,7 @@
     "build": "polymer build",
     "lint": "polymer lint",
     "test": "polymer test",
-    "test:integration": "polymer build # test that psk builds without error with the CLI",
+    "test:integration": "polymer build",
     "start:proxy": "polymer serve --proxy-target http://127.0.0.1:8888 --proxy-path dapeng",
     "debug": "npm run start:proxy"
   },
