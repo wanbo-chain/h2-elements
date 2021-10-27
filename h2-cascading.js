@@ -95,7 +95,6 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
       #boxDialog {
         position: absolute!important;
-        height: 206px;
         margin: 0;
         max-width: initial!important;
       }
@@ -108,13 +107,19 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
       
       .view-container {
         flex: 1;
-        height: 206px;
-        min-width: 160px;
+        width: 400px;
+        min-height: 200px;
+        max-height: 300px;
+        overflow-y: auto;
         margin: 0;
-        padding: 8px 0;
+        padding: 10px;
         box-sizing: border-box;
-        border-right: 1px solid #ccc;
         background: #fff;
+        position: relative;
+        top: 36px;
+        left: 0;
+        box-shadow: 0 0 10px 5px #ccc;
+        z-index: 1;
         @apply --h2-view-container;
       }
       
@@ -123,28 +128,28 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
       }
       
       .view-list {
-        height: 190px;
-        overflow-y: auto;
+        display: flex;
+        justify-content: flex-start;
+        max-width: 500px;
+        flex-wrap: wrap;
       }
       .view-item {
         position: relative;
         padding: 0 12px;
         height: 30px;
         line-height: 30px;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
+        background: #eee;
+        border-radius: 5px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        user-select: none;
       }
       .view-item:hover, .view-item-active {
-        color: var(--h2-ui-color_skyblue);
-        font-weight: bold;
+        color: #fff;
+        background: linear-gradient(315deg, #8FCDFF 0%, #2196F3 100%);
       }
-      .chevron-iron {
-        position: absolute;
-        right: 0;
-        height: 30px;
-        line-height: 30px;
-      }
+      
       :host([required]) .cascading__container::before {
         content: "*";
         color: red;
@@ -175,6 +180,74 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
       .cascading__container:hover .caret {
         display: none;
       }
+      
+      .header{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 36px;
+        background: linear-gradient(315deg, #8FCDFF 0%, #2196F3 100%);
+        z-index: 2;
+      }
+      
+      .display-none {
+        display: none;
+      }
+      
+      .head-item {
+        width: 100%;
+        height: 36px;
+        line-height: 36px;
+        text-align: center;
+        color: #fff;
+        cursor: pointer;
+        border-right: 1px solid #fff;
+        user-select: none;
+      }
+      
+      .head-item:before,.head-item:after {
+        content: '';
+        background: #fff;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        border-bottom: 1px solid #fff;
+      }
+      .head-item:before {
+        transform: translateX(-100%);
+      }
+      .head-item:after {
+        transform: translateX(100%);
+      }
+      
+      .head-item:last-of-type {
+        border-right: none;
+      }
+      
+      .head-left-to-right,.head-right-to-left {
+        font-weight: bold;
+        color: var(--h2-ui-color_skyblue);
+        cursor: pointer!important;
+        position:relative;
+      }
+      
+      .head-left-to-right:before,.head-right-to-left:after {
+        transform: translateX(0);
+        opacity: 1;
+        transition: transform .3s;
+      }
+      
+      .head-cant-click {
+        cursor: not-allowed;
+      }
     </style>
     
     <template is="dom-if" if="[[ toBoolean(label) ]]">
@@ -192,17 +265,21 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
     
     <paper-dialog id="boxDialog" no-overlap horizontal-align="auto" vertical-align="auto" on-iron-overlay-closed="__cancelClick">
       <div class="dialog-container">
+        <div class="header">
+          <template is="dom-repeat" items="{{headItems}}" as="head" index-as="headIndex">
+            <div class$="head-item [[optional(head.rightToLeft,'head-right-to-left','')]] [[optional(head.leftToRight,'head-left-to-right','')]] [[optional(head.canClick,'','head-cant-click')]]" on-click="__selectByHead">[[head.name]]</div>
+          </template>
+        </div>
         <template is="dom-repeat" items="{{treeItems}}" as="tree" index-as="treeIndex">
-          <div class="view-container">
-            <div class="view-list">
-              <template is="dom-repeat" items="[[tree]]">
-                <div class$="view-item [[__setViewClass(item.__select)]]" on-click="__viewItemClick">
-                  [[getValueByKey(item, attrForLabel)]]
-                  <iron-icon class="chevron-iron" icon="icons:chevron-right"></iron-icon>
-                </div>
-              </template>
+            <div class$="[[__setViewContainerClass(tree)]]">
+              <div class="view-list">
+                <template is="dom-repeat" items="[[tree]]">
+                  <div class$="view-item [[__setViewClass(item.__select)]]" on-click="__viewItemClick">
+                    [[getValueByKey(item, attrForLabel)]]
+                  </div>
+                </template>
+              </div>
             </div>
-          </div>
         </template>
       </div>
     </paper-dialog>
@@ -281,6 +358,16 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
       readonly: {
         type: Boolean,
         value: false
+      },
+      headItems: Array,
+      currentHeadLevel: {
+        type: Number,
+        value: 1,
+        observer: '__currentHeadLevelChanged'
+      },
+      lastHeadLevel: {
+        type: Number,
+        value: 1
       }
     };
   }
@@ -295,7 +382,7 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
       let treeItems = [].concat(this.treeItems), selectedValues = [];
       value.forEach((item, index) => {
         const findIndex = treeItems[index].findIndex(itm => itm[this.attrForValue] === item);
-        treeItems[index][findIndex].__select = true;
+        treeItems[index][findIndex] = Object.assign({}, treeItems[index][findIndex], {__select: true});
         selectedValues.push(treeItems[index][findIndex]);
         if (treeItems[index][findIndex].children) treeItems.push(treeItems[index][findIndex].children);
       });
@@ -312,13 +399,14 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
       this.value.forEach((item, index) => {
         const findIndex = treeItems[index].findIndex(itm => itm[this.attrForValue] === item);
         if (treeItems[index] && treeItems[index].length && findIndex >= 0) {
-          treeItems[index][findIndex].__select = true;
+          treeItems[index][findIndex] = Object.assign({}, treeItems[index][findIndex], {__select: true});
           selectedValues.push(treeItems[index][findIndex]);
         }
       });
       this.set('selectedValues', selectedValues);
       this.set('valueLabel', selectedValues.map(itm => itm[this.attrForLabel]).join(this.separator));
       this.set('treeItems', treeItems);
+      if (treeItems[0].length) treeItems[treeItems.length - 1][0].level > this.headItems[this.headItems.length - 1].level ? this.set('currentHeadLevel', this.headItems[this.headItems.length - 1].level) : this.set('currentHeadLevel', treeItems[treeItems.length - 1][0].level);
       this.$.placeholder.hidden = this.valueLabel;
     }
   }
@@ -364,6 +452,59 @@ class H2Cascading extends mixinBehaviors([BaseBehavior], PolymerElement) {
     e.stopPropagation();
     this.set('value', []);
     this.set('valueLabel', null);
+  }
+
+  __setViewContainerClass(item) {
+    if (item.length) {
+      if (this.currentHeadLevel == item[0].level) {
+        return 'view-container'
+      } else {
+        return 'display-none';
+      }
+    }
+  }
+
+  __selectByHead({model: {head}}) {
+    if (!this.treeItems.find(fi => fi[0].level == head.level)) return;
+    this.set('currentHeadLevel', head.level);
+  }
+
+  __currentHeadLevelChanged() {
+    this.refreshStyle();
+  }
+
+  refreshStyle() {
+    this.headItems.forEach((fi, index) => {
+      if (fi.level != this.currentHeadLevel) {
+        this.set(`headItems.${index}.rightToLeft`, false);
+        this.set(`headItems.${index}.leftToRight`, false);
+      } else {
+        if (this.lastHeadLevel > this.currentHeadLevel) {
+          this.set(`headItems.${index}.rightToLeft`, true);
+          this.set(`headItems.${index}.leftToRight`, false);
+        } else {
+          this.set(`headItems.${index}.rightToLeft`, false);
+          this.set(`headItems.${index}.leftToRight`, true);
+        }
+        this.lastHeadLevel = this.currentHeadLevel;
+      }
+      if (this.treeItems.filter(fi => fi.length).length) {
+        const treeLevels = this.treeItems && this.treeItems.map(mi => mi[0].level);
+        if (treeLevels.includes(fi.level)) {
+          this.set(`headItems.${index}.canClick`, true);
+        } else {
+          this.set(`headItems.${index}.canClick`, false);
+        }
+      }
+    });
+
+    const cacheItems = this.treeItems;
+    this.set('treeItems', []);
+    cacheItems.forEach(fi => {
+      let arr = [];
+      fi.forEach(ffi => arr.push(ffi));
+      this.push('treeItems', arr);
+    });
   }
 
   /**

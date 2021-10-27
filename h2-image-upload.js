@@ -90,19 +90,21 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
 
       #viewer-dialog {
         display: flex;
-        overflow: hidden;
-        width: 90%;
-        height: 90%;
-        padding: 0;
-      }
-
-      #viewer-img {
-        cursor: zoom-out;
-        display: flex;
-        padding: 0;
-        margin: auto;
+        overflow: auto;
         width: 100%;
         height: 100%;
+        padding: 0;
+        cursor: zoom-out;
+      }
+      
+      #viewer-img {
+        cursor: move;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        right: 0px;
+        margin: 0 auto;
+        padding: 0;
       }
 
       #file-chooser {
@@ -134,6 +136,34 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
         cursor: default;
       }
       
+      .rotate-button,.up-scale-button,.down-scale-button,.close-button {
+        position: fixed;
+        right: 5%;
+        top: 50%;
+        background: linear-gradient(315deg, #8FCDFF 0%, #2196F3 100%);;
+        border-radius: 10px;
+        padding: 15px;
+        transform: translateY(-47px);
+        color: #fff;
+        cursor: pointer;
+        box-shadow: 0 0 5px 2px #ccc;
+      }
+      
+      .close-button {
+        top: 10%;
+      }
+      
+      .up-scale-button {
+        top: 40%;
+      }
+      
+      .down-scale-button {
+        top: 60%;
+      }
+      
+      .up-scale-button:active,.rotate-button:active,.down-scale-button:active {
+        background: var(--h2-ui-red);
+      }
     </style>
 
     <div id="main-container">
@@ -155,11 +185,23 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
       </div>
     </div>
     <paper-dialog id="viewer-dialog" on-click="closeViewZoom">
-      <div id="viewer-img"></div>
+      <img id="viewer-img" src="[[src]]" draggable="true" on-click="onImgClick"></img>
+      <div class="close-button" on-click="closeViewZoom">
+        <iron-icon icon="close"></iron-icon>
+      </div>
+      <div class="up-scale-button" on-click="imgUpScale" on-mousedown="upScaleMouseDown" on-mouseup="onMouseUp">
+        <iron-icon icon="add"></iron-icon>
+      </div>
+      <div class="rotate-button" on-click="imgRotate">
+        <iron-icon icon="cached"></iron-icon>
+      </div>
+      <div class="down-scale-button" on-click="imgDownScale" on-mousedown="downScaleMouseDown" on-mouseup="onMouseUp">
+        <iron-icon icon="remove"></iron-icon>
+      </div>
     </paper-dialog>
 `;
   }
-  
+
   static get properties() {
     return {
       /**
@@ -175,14 +217,14 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
         type: Object,
         notify: true
       },
-      
+
       /**
        * The label of the uploader.
        */
       label: {
         type: String
       },
-      
+
       /**
        * Set to true, if the select is required.
        * @type {boolean}
@@ -201,7 +243,7 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
         type: Boolean,
         value: false
       },
-      
+
       /**
        * The max size/length of image allowed to upload.
        * Support pattern:  /^((?:\d*\.)?\d+)([GgMmKk][Bb]?$)/
@@ -211,12 +253,12 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
       sizeLimit: {
         type: String
       },
-      
+
       __byteSize: {
         type: Number,
         computed: '__parseSizeLimit(sizeLimit)'
       },
-      
+
       /**
        * Bound to input's `accept` attribute.
        * @default 'image/gif, image/jpeg, image/png'
@@ -224,28 +266,61 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
       accept: {
         type: String,
         value: 'image/gif, image/jpeg, image/png'
+      },
+      rotateValue: {
+        type: Number,
+        value: 0
+      },
+      interval: {
+        type: Object,
+        value: () => ({})
+      },
+      /**
+       * Click the picture to follow the mouse movement
+       * **/
+      openFollow: {
+        type: Boolean,
+        value: false
+      },
+      /**
+       * Do you need to turn the picture into grayscale
+       * **/
+      grayscale: {
+        type: Boolean,
+        value: false
+      },
+      compress: {
+        type: Boolean,
+        value: false
+      },
+      compressMinSize: {
+        type: String
+      },
+      __byteCompressMinSize: {
+        type: Number,
+        computed: '__parseSizeLimit(compressMinSize)'
       }
     };
   }
-  
+
   static get is() {
     return "h2-image-upload";
   }
-  
+
   static get observers() {
     return [
       '__srcChanged(src)'
     ]
   }
-  
+
   connectedCallback() {
     super.connectedCallback();
     const ele = this.$['paste-panel'];
-    
+
     const dragHandler = (e) => {
       e.preventDefault();
       e.stopPropagation();
-      
+
       if (this.readonly) return;
       if (e.type === "drop") {
         this.__readDataTransfer(e.dataTransfer);
@@ -253,40 +328,38 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
         this.__readDataTransfer(e.clipboardData);
       }
     };
-    
+
     ele.addEventListener("dragenter", dragHandler, false);
     ele.addEventListener("dragleave", dragHandler, false);
     ele.addEventListener('dragover', dragHandler, false);
     ele.addEventListener('drop', dragHandler, false);
     ele.addEventListener('paste', dragHandler, false);
   }
-  
-  
+
+
   __srcChanged(src) {
     const style = this.$["img__container"].style;
-    const viewerStyle = this.$['viewer-img'].style;
-    
+    const viewer = this.$['viewer-img'];
+
     if (src) {
       this.setAttribute('data-has-src', '');
-      
+
       style.background = `url(${src}) no-repeat center`;
       style.backgroundSize = "contain";
-      viewerStyle.background = `url(${src}) no-repeat center`;
-      viewerStyle.backgroundSize = "contain";
-      
+      viewer.src = src;
     } else {
       this.removeAttribute('data-has-src');
-      
+
       style.background = "none";
-      viewerStyle.background = "none";
+      viewer.src = "";
     }
   }
-  
+
   __parseSizeLimit(sizeLimit) {
     const reg = /^((?:\d*\.)?\d+)([GgMmKk][Bb]?$)/g;
-    
+
     if (!reg.test(sizeLimit)) return 0;
-    
+
     const bits = sizeLimit.replace(reg, (match, size, unit) => {
       switch (unit.toUpperCase()) {
         case 'GB':
@@ -300,38 +373,120 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
           return size * 1024;
       }
     });
-    
+
     return bits | 0;
   }
-  
+
   _triggerChooseFile() {
     const fileChooser = this.$['file-chooser'];
     fileChooser && fileChooser.click();
   }
-  
+
   _chooseFile(e) {
     const file = e.target.files[0];
     file && this.__loadFileData(file);
+    this.dispatchEvent(new CustomEvent('choose', {detail: {value: file}}));
   }
-  
+
   __readDataTransfer(dataTransfer) {
     const source = [].find.call(dataTransfer.items, item => item.kind === 'file' && item.type.startsWith("image"));
     source && this.__loadFileData(source.getAsFile());
+    this.dispatchEvent(new CustomEvent('choose', {detail: {value: source.getAsFile()}}));
   }
-  
+
   __loadFileData(blob) {
     if (this.__byteSize > 0 && blob.size > this.__byteSize) {
       this.h2Tip.error(`上传图片不能超过${this.sizeLimit}`, 3000);
       return;
     }
+
+    if (this.compress && blob.size >= this.__byteCompressMinSize) {
+      this.compression(blob).then((res) => {
+        console.log('图片压缩结果:', res);
+        const {afterSrc, file} = res;
+        this.src = afterSrc;
+        this.value = file;
+      }).catch((err) => {
+        console.log('图片压缩异常:', err);
+      })
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = (e) => {
-      this.src = e.target.result;
-      this.value = blob;
+      if (this.grayscale) {
+        this.imageToGrayscale(e);
+      } else {
+        this.src = e.target.result;
+        this.value = blob;
+      }
     };
     reader.readAsDataURL(blob);
   }
-  
+
+  compression(file) {
+    let quality;
+    const size = file.size;
+    const percent = (size / this.__byteSize).toFixed(1);
+    quality = (1 - (+percent)).toFixed(1);
+    return new Promise((resolve) => {
+      const reader = new FileReader() // 创建 FileReader
+      reader.onload = ({target: {result: src}}) => {
+        const image = new Image() // 创建 img 元素
+        image.onload = async () => {
+          const canvas = document.createElement('canvas') // 创建 canvas 元素
+          canvas.width = image.width
+          canvas.height = image.height
+          canvas.getContext('2d').drawImage(image, 0, 0, image.width, image.height) // 绘制 canvas
+          const canvasURL = canvas.toDataURL('image/jpeg', +quality)
+          const buffer = atob(canvasURL.split(',')[1])
+          let length = buffer.length
+          const bufferArray = new Uint8Array(new ArrayBuffer(length))
+          while (length--) {
+            bufferArray[length] = buffer.charCodeAt(length)
+          }
+          const miniFile = new File([bufferArray], file.name, {type: 'image/jpeg'})
+          resolve({
+            file: miniFile,
+            origin: file,
+            beforeSrc: src,
+            afterSrc: canvasURL,
+            beforeKB: Number((file.size / 1024).toFixed(2)),
+            afterKB: Number((miniFile.size / 1024).toFixed(2)),
+            quality
+          })
+        }
+        image.src = src
+      }
+      reader.readAsDataURL(file)
+    })
+  }
+
+  imageToGrayscale(e) {
+    let imgObj = new Image();
+    imgObj.src = e.target.result;
+    imgObj.onload = () => {
+      let canvas = document.createElement('canvas');
+      let canvasContext = canvas.getContext('2d');
+      let imgW = imgObj.width;
+      let imgH = imgObj.height;
+      canvas.width = imgW;
+      canvas.height = imgH;
+      canvasContext.drawImage(imgObj, 0, 0);
+      let imgPixels = canvasContext.getImageData(0, 0, imgW, imgH);
+      let imgPixelsData = imgPixels.data;
+      for (let i = 0; i < imgPixelsData.length; i += 4) {
+        let avg = (imgPixelsData[i] + imgPixelsData[i + 1] + imgPixelsData[i + 2]) / 3;
+        imgPixelsData[i] = avg;
+        imgPixelsData[i + 1] = avg;
+        imgPixelsData[i + 2] = avg;
+      }
+      canvasContext.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
+      this.src = canvas.toDataURL();
+      canvas.toBlob(blob => this.value = blob);
+    }
+  }
+
   /**
    * Cancel selection of the image.It will clear the `src` and `value`.
    * */
@@ -339,30 +494,156 @@ class H2ImageUpload extends mixinBehaviors([BaseBehavior, TipBehavior], PolymerE
     this.src = null;
     this.value = null;
     this.$['file-chooser'].value = '';
+    this.dispatchEvent(new CustomEvent('cancel'));
   }
-  
+
   /**
    * Open the view zoom
    */
   openViewZoom() {
     if (this.src) {
+      this.resetRotateAndScale();
       this.$['viewer-dialog'].open();
+      this.$['viewer-img'].addEventListener('dragstart', this.dragStartEvents)
+      this.$['viewer-img'].addEventListener('dragend', this.dragEndEvents)
     }
   }
-  
+
   /**
    * Close the view zoom.
    */
   closeViewZoom() {
     this.$['viewer-dialog'].close();
   }
-  
+
   /**
    * Validate, true if the select is set to be required and this.value is a truth-value or else false.
    * @returns {boolean}
    */
   validate() {
     return this.required ? !!this.value : true;
+  }
+
+  /**
+   * Scale + the image.
+   */
+  imgUpScale(e) {
+    e.stopPropagation();
+    let imgWidth = this.$['viewer-img'].width;
+    let imgHeight = this.$['viewer-img'].height;
+    if (imgWidth >= 10000) {
+      this.h2Tip.warn(`不能再放大了哦~`, 1500);
+      if (this.interval) clearInterval(this.interval);
+      return;
+    }
+    imgWidth += 100;
+    imgHeight += 100;
+    this.$['viewer-img'].style.width = `${imgWidth}px`;
+    this.$['viewer-img'].style.height = `${imgHeight}px`;
+  }
+
+  upScaleMouseDown(e) {
+    const start = Date.now();
+    this.interval = setInterval(() => {
+      const end = Date.now();
+      if (end - start > 300) {
+        this.imgUpScale(e);
+      }
+    }, 100)
+  }
+
+  /**
+   * Rotate the image.
+   */
+  imgRotate(e) {
+    e.stopPropagation();
+    if (this.rotateValue == 360) this.rotateValue = 0;
+    this.rotateValue += 90;
+    this.$['viewer-img'].style.transform = `rotate(${this.rotateValue}deg)`;
+    this.$['viewer-img'].style.transformOrigin = `center`;
+  }
+
+  /**
+   * Scale - the image.
+   */
+  imgDownScale(e) {
+    e.stopPropagation();
+    let imgWidth = this.$['viewer-img'].width;
+    let imgHeight = this.$['viewer-img'].height;
+    if (imgWidth <= 100) {
+      this.h2Tip.warn(`不能再缩小了哦~`, 1500);
+      if (this.interval) clearInterval(this.interval);
+      return;
+    }
+    ;
+    imgWidth -= 100;
+    imgHeight -= 100;
+    this.$['viewer-img'].style.width = `${imgWidth}px`;
+    this.$['viewer-img'].style.height = `${imgHeight}px`;
+  }
+
+  downScaleMouseDown(e) {
+    const start = Date.now();
+    this.interval = setInterval(() => {
+      const end = Date.now();
+      if (end - start > 300) {
+        this.imgDownScale(e);
+      }
+    }, 100)
+  }
+
+  onMouseUp(e) {
+    clearInterval(this.interval);
+  }
+
+  resetRotateAndScale() {
+    this.openFollow = false;
+    this.$['viewer-img'].removeEventListener('mousemove', this.followEvents);
+    this.$['viewer-img'].style.transform = `rotate(0deg)`;
+    this.$['viewer-img'].style.width = 'auto';
+    this.$['viewer-img'].style.height = 'auto';
+    this.$['viewer-img'].style.left = '0px';
+    this.$['viewer-img'].style.top = '0px';
+    this.$['viewer-img'].style.right = '0px';
+    this.$['viewer-img'].removeEventListener('dragstart', this.dragStartEvents);
+    this.$['viewer-img'].removeEventListener('dragend', this.dragEndEvents);
+  }
+
+  dragStartEvents(e) {
+
+  }
+
+  dragEndEvents(e) {
+    const target = this;
+    const left = e.clientX - (target.width / 2);
+    const top = e.clientY - (target.height / 2);
+    target.style.left = `${left}px`;
+    target.style.top = `${top}px`;
+    target.style.right = `unset`;
+  }
+
+  onImgClick(e) {
+    e.stopPropagation();
+    this.openFollow = !this.openFollow;
+    if (this.openFollow) {
+      this.$['viewer-img'].addEventListener('mousemove', this.followEvents);
+    } else {
+      this.$['viewer-img'].removeEventListener('mousemove', this.followEvents);
+    }
+  }
+
+  followEvents(e) {
+    const target = this;
+    const left = (+target.style.left.replace('px', '')) + (+e.movementX);
+    const top = (+target.style.top.replace('px', '')) + (+e.movementY);
+    if (+target.style.left.replace('px', '')) {
+      target.style.left = `${left}px`;
+      target.style.top = `${top}px`;
+    } else {
+      target.style.left = `${target.offsetLeft}px`;
+      target.style.top = `${target.offsetTop}px`;
+    }
+    target.style.right = `unset`;
   }
 }
 

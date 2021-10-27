@@ -34,6 +34,7 @@ const template = html`
         left: -1px;
         background-color: rgba(255, 255, 255, 0.5);
         z-index: 10;
+        cursor: not-allowed;
       }
 
       :host([data-invalid]) .prompt-tip__container[data-prompt]:not([data-prompt=""]) {

@@ -21,65 +21,78 @@ class H2TableColumn extends mixinBehaviors([Templatizer], PolymerElement) {
   static get template() {
     return null;
   }
-  
+
   static get properties() {
     return {
       prop: {
         type: String
       },
-  
+
       props: String,
-  
+
       separator: String,
-      
+
       label: {
         type: String
       },
-      
+
       width: {
         type: Number
       },
-      
+
       fixed: {
         type: String,
       },
-      
+
       type: {
         type: String,
         value: 'view'
       },
-      
+
       tmpl: Object,
-      
+
       modelAs: {
         type: String,
         value: 'item'
       },
-      
+
       sortable: {
         type: Boolean,
         value: false
       },
-  
+
+      filterable: {
+        type: Boolean,
+        value: false
+      },
+
+      sortType: {
+        type: String,
+        value: 'string'
+      },
+
+      sortEnum: Array,
+
       frozen: {
         type: Boolean,
         value: false
       },
-      
+
       formatter: Function,
       cellStyle: String,
-      defaultValue: String
+      defaultValue: String,
+      filterEnum: Array
     };
   }
-  
+
   static get is() {
     return "h2-table-column";
   }
-  
+
   constructor() {
     super();
     this.tmpl = this._findTemplate().pop();
-    
+
     if (this.tmpl) {
       // hack for template.__dataHost
       this.tmpl.__dataHost = this.parentElement;
@@ -87,12 +100,12 @@ class H2TableColumn extends mixinBehaviors([Templatizer], PolymerElement) {
       this.templatize(this.tmpl);
     }
   }
-  
+
   _findTemplate() {
     return FlattenedNodesObserver.getFlattenedNodes(this)
-      .filter(node => node.localName === 'template');
+        .filter(node => node.localName === 'template');
   }
-  
+
   stampTemplate(instanceProps, key = this.modelAs) {
     if(this.tmpl) return this.stamp({[key]: instanceProps, "global": this.tmpl.__dataHost.global});
     return null;

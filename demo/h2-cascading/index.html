@@ -47,204 +47,266 @@
         }
       </style>
     </custom-style>
-    <h2-cascading class="h2-cascading" label="地址" id="cascading" attr-for-label="value" attr-for-value="label" separator=">" required></h2-cascading>
+    <h2-cascading class="h2-cascading" label="地址" id="cascading" separator=">" required></h2-cascading>
     <script>
+      cascading.headItems = [{name: "一级", level: 1}, {name: "二级", level: 2}, {name: "三级", level: 3}];
       cascading.items = [{
         value: 'zhinan',
         label: '指南',
+        level: 1,
         children: [{
           value: 'shejiyuanze',
           label: '设计原则',
+          level: 2,
           children: [{
             value: 'yizhi',
-            label: '一致'
+            label: '一致',
+            level: 3
           }, {
             value: 'fankui',
-            label: '反馈'
+            label: '反馈',
+            level: 3
           }, {
             value: 'xiaolv',
-            label: '效率'
+            label: '效率',
+            level: 3
           }, {
             value: 'kekong',
-            label: '可控'
+            label: '可控',
+            level: 3
           }]
         }, {
           value: 'daohang',
           label: '导航',
+          level: 2,
           children: [{
             value: 'cexiangdaohang',
-            label: '侧向导航'
+            label: '侧向导航',
+            level: 3
           }, {
             value: 'dingbudaohang',
-            label: '顶部导航'
+            label: '顶部导航',
+            level: 3
           }]
         }]
       }, {
         value: 'zujian',
         label: '组件',
+        level: 1,
         children: [{
           value: 'basic',
           label: 'Basic',
+          level: 2,
           children: [{
             value: 'layout',
-            label: 'Layout 布局'
+            label: 'Layout 布局',
+            level: 3
           }, {
             value: 'color',
-            label: 'Color 色彩'
+            label: 'Color 色彩',
+            level: 3
           }, {
             value: 'typography',
-            label: 'Typography 字体'
+            label: 'Typography 字体',
+            level: 3
           }, {
             value: 'icon',
-            label: 'Icon 图标'
+            label: 'Icon 图标',
+            level: 3
           }, {
             value: 'button',
-            label: 'Button 按钮'
+            label: 'Button 按钮',
+            level: 3
           }]
         }, {
           value: 'form',
           label: 'Form',
+          level: 2,
           children: [{
             value: 'radio',
-            label: 'Radio 单选框'
+            label: 'Radio 单选框',
+            level: 3
           }, {
             value: 'checkbox',
-            label: 'Checkbox 多选框'
+            label: 'Checkbox 多选框',
+            level: 3
           }, {
             value: 'input',
-            label: 'Input 输入框'
+            label: 'Input 输入框',
+            level: 3
           }, {
             value: 'input-number',
-            label: 'InputNumber 计数器'
+            label: 'InputNumber 计数器',
+            level: 3
           }, {
             value: 'select',
-            label: 'Select 选择器'
+            label: 'Select 选择器',
+            level: 3
           }, {
             value: 'cascader',
-            label: 'Cascader 级联选择器'
+            label: 'Cascader 级联选择器',
+            level: 3
           }, {
             value: 'switch',
-            label: 'Switch 开关'
+            label: 'Switch 开关',
+            level: 3
           }, {
             value: 'slider',
-            label: 'Slider 滑块'
+            label: 'Slider 滑块',
+            level: 3
           }, {
             value: 'time-picker',
-            label: 'TimePicker 时间选择器'
+            label: 'TimePicker 时间选择器',
+            level: 3
           }, {
             value: 'date-picker',
-            label: 'DatePicker 日期选择器'
+            label: 'DatePicker 日期选择器',
+            level: 3
           }, {
             value: 'datetime-picker',
-            label: 'DateTimePicker 日期时间选择器'
+            label: 'DateTimePicker 日期时间选择器',
+            level: 3
           }, {
             value: 'upload',
-            label: 'Upload 上传'
+            label: 'Upload 上传',
+            level: 3
           }, {
             value: 'rate',
-            label: 'Rate 评分'
+            label: 'Rate 评分',
+            level: 3
           }, {
             value: 'form',
-            label: 'Form 表单'
+            label: 'Form 表单',
+            level: 3
           }]
         }, {
           value: 'data',
           label: 'Data',
+          level: 2,
           children: [{
             value: 'table',
-            label: 'Table 表格'
+            label: 'Table 表格',
+            level: 3
           }, {
             value: 'tag',
-            label: 'Tag 标签'
+            label: 'Tag 标签',
+            level: 3
           }, {
             value: 'progress',
-            label: 'Progress 进度条'
+            label: 'Progress 进度条',
+            level: 3
           }, {
             value: 'tree',
-            label: 'Tree 树形控件'
+            label: 'Tree 树形控件',
+            level: 3
           }, {
             value: 'pagination',
-            label: 'Pagination 分页'
+            label: 'Pagination 分页',
+            level: 3
           }, {
             value: 'badge',
-            label: 'Badge 标记'
+            label: 'Badge 标记',
+            level: 3
           }]
         }, {
           value: 'notice',
           label: 'Notice',
+          level: 2,
           children: [{
             value: 'alert',
-            label: 'Alert 警告'
+            label: 'Alert 警告',
+            level: 3
           }, {
             value: 'loading',
-            label: 'Loading 加载'
+            label: 'Loading 加载',
+            level: 3
           }, {
             value: 'message',
-            label: 'Message 消息提示'
+            label: 'Message 消息提示',
+            level: 3
           }, {
             value: 'message-box',
-            label: 'MessageBox 弹框'
+            label: 'MessageBox 弹框',
+            level: 3
           }, {
             value: 'notification',
-            label: 'Notification 通知'
+            label: 'Notification 通知',
+            level: 3
           }]
         }, {
           value: 'navigation',
           label: 'Navigation',
+          level: 2,
           children: [{
             value: 'menu',
-            label: 'NavMenu 导航菜单'
+            label: 'NavMenu 导航菜单',
+            level: 3
           }, {
             value: 'tabs',
-            label: 'Tabs 标签页'
+            label: 'Tabs 标签页',
+            level: 3
           }, {
             value: 'breadcrumb',
-            label: 'Breadcrumb 面包屑'
+            label: 'Breadcrumb 面包屑',
+            level: 3
           }, {
             value: 'dropdown',
-            label: 'Dropdown 下拉菜单'
+            label: 'Dropdown 下拉菜单',
+            level: 3
           }, {
             value: 'steps',
-            label: 'Steps 步骤条'
+            label: 'Steps 步骤条',
+            level: 3
           }]
         }, {
           value: 'others',
           label: 'Others',
+          level: 2,
           children: [{
             value: 'dialog',
-            label: 'Dialog 对话框'
+            label: 'Dialog 对话框',
+            level: 3
           }, {
             value: 'tooltip',
-            label: 'Tooltip 文字提示'
+            label: 'Tooltip 文字提示',
+            level: 3
           }, {
             value: 'popover',
-            label: 'Popover 弹出框'
+            label: 'Popover 弹出框',
+            level: 3
           }, {
             value: 'card',
-            label: 'Card 卡片'
+            label: 'Card 卡片',
+            level: 3
           }, {
             value: 'carousel',
-            label: 'Carousel 走马灯'
+            label: 'Carousel 走马灯',
+            level: 3
           }, {
             value: 'collapse',
-            label: 'Collapse 折叠面板'
+            label: 'Collapse 折叠面板',
+            level: 3
           }]
         }]
       }, {
         value: 'ziyuan',
         label: '资源',
+        level: 1,
         children: [{
           value: 'axure',
-          label: 'Axure Components'
+          label: 'Axure Components',
+          level: 2
         }, {
           value: 'sketch',
-          label: 'Sketch Templates'
+          label: 'Sketch Templates',
+          level: 2
         }, {
           value: 'jiaohu',
-          label: '组件交互文档'
+          label: '组件交互文档',
+          level: 2
         }]
       }];
-      cascading.value = ["指南", "设计原则", "一致"];
+      // cascading.value = ["指南", "设计原则", "一致"];
     </script>
   </template>
 </demo-snippet>
@@ -262,34 +324,45 @@
         }
       </style>
     </custom-style>
-    <h2-cascading class="h2-cascading" label="地址" id="cascading1"></h2-cascading>
+    <h2-cascading class="h2-cascading" label="地址" lazy id="cascading1"></h2-cascading>
     <script>
       let items = [{
         value: 'beijing',
-        label: '北京'
+        label: '北京',
+        level: 1
       }, {
         value: 'shanghai',
-        label: '上海'
+        label: '上海',
+        level: 1
       }, {
         value: 'hubei',
-        label: '湖北'
+        label: '湖北',
+        level: 1
       }];
       cascading1.treeItems = [items];
+      cascading1.headItems = [{name: '1级', level: 1}];
       cascading1.addEventListener('value-changed', ({detail: {value}}) => {
         setTimeout(() => {
           const treeItems = [].concat(cascading1.treeItems);
+          const headItems = [].concat(cascading1.headItems);
           if (value.length) {
             treeItems.push([
               {
                 value: 'dongcheng',
-                label: '东城'
+                label: '东城',
+                level: `${headItems.length + 1}`
               },
               {
                 value: 'xicheng',
-                label: '西城'
+                label: '西城',
+                level: `${headItems.length + 1}`
               }
             ]);
             cascading1.treeItems = treeItems;
+            headItems.push({
+              name: `${headItems.length + 1}级`, level: `${headItems.length + 1}`, active: true
+            })
+            cascading1.headItems = headItems;
           }
         }, 1000)
       })

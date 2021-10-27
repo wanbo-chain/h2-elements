@@ -24,7 +24,7 @@ class H2Tree extends mixinBehaviors([BaseBehavior], PolymerElement) {
       <h2-input placeholder="输入关键字进行过滤" value="{{keyword}}"></h2-input>
     </template>
     <template is="dom-repeat" items="[[items]]">
-        <h2-tree-node accordion="{{accordion}}" on-tree-node-toggle="onTreeNodeToggle" keyword="{{keyword}}" default-open="[[defaultOpen]]" show-check-box="[[showCheckBox]]" item="[[item]]" node-selected-item="{{nodeSelectedItem}}" attr-for-label="[[attrForLabel]]"></h2-tree-node>
+        <h2-tree-node accordion="{{accordion}}" on-tree-node-toggle="onTreeNodeToggle" keyword="{{keyword}}" default-open="[[defaultOpen]]" show-check-box="[[showCheckBox]]" item="[[item]]" node-selected-item="{{nodeSelectedItem}}" attr-for-label="[[attrForLabel]]" on-action-click="onActionClick" on-title-click="onTitleClick"></h2-tree-node>
     </template>
 `;
   }
@@ -190,6 +190,14 @@ class H2Tree extends mixinBehaviors([BaseBehavior], PolymerElement) {
         return Object.assign({}, mi);
       }))
     }
+  }
+
+  onActionClick({detail: {item, actionType}}) {
+    this.dispatchEvent(new CustomEvent('action-click', {detail: {item, actionType}}));
+  }
+
+  onTitleClick({detail: {item}}) {
+    this.dispatchEvent(new CustomEvent('title-click', {detail: {item}}));
   }
 
 }
