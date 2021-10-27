@@ -167,7 +167,6 @@ class H2Tree extends mixinBehaviors([BaseBehavior], PolymerElement) {
     this.value = this.selectedItem.map(mi => mi[this.attrForValue]);
   }
 
-  //selectedItem去重
   duplicate(arr) {
     if (arr.length == 0) {
       return [];
