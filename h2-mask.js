@@ -17,11 +17,6 @@ The following custom properties and mixins are available for styling:
 |`--h2-mask-label` | Mixin applied to the label of mask | {}
 
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
 
 import {html, PolymerElement} from "@polymer/polymer";
 import {mixinBehaviors} from "@polymer/polymer/lib/legacy/class";
@@ -346,6 +341,28 @@ class H2Mask extends mixinBehaviors([BaseBehavior], PolymerElement) {
     }
   }
 
+  /**
+   * 提交操作
+   * @private
+   */
+  _submit(e) {
+    e.stopPropagation();
+    this.__getValueOfSlottedElement();
+    this.__updateViewer();
+    this._displayEditField(false);
+  }
+
+  /**
+   * 取消操作
+   * @private
+   */
+  _cancel(e) {
+    e.stopPropagation();
+    this.__resetValueOfSlottedElement();
+    this.__updateViewer();
+    this._displayEditField(false);
+  }
+  
   __initValueOfSlottedElement() {
     const {value, selectedValues} = this._slotNode;
     
@@ -377,28 +394,6 @@ class H2Mask extends mixinBehaviors([BaseBehavior], PolymerElement) {
     }
     
     this._viewValue = _viewValue || this._valueObj.value || '无';
-  }
-
-  /**
-   * 提交操作
-   * @private
-   */
-  _submit(e) {
-    e.stopPropagation();
-    this.__getValueOfSlottedElement();
-    this.__updateViewer();
-    this._displayEditField(false);
-  }
-
-  /**
-   * 取消操作
-   * @private
-   */
-  _cancel(e) {
-    e.stopPropagation();
-    this.__resetValueOfSlottedElement();
-    this.__updateViewer();
-    this._displayEditField(false);
   }
 }
 
