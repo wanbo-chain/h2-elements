@@ -64,7 +64,8 @@ document.body.appendChild($_documentContainer.content);
         btnGrp2.items = [
           {name: "测试1", value: "1"},
           {name: "测试2", value: "2"},
-          {name: "测试3", value: "3"}
+          {name: "测试3", value: "3"},
+          {name: "测试4", value: "4"}
         ];
         btnGrp2.addEventListener('item-click', ({detail:{bindItem, target}}) => {
           console.log(bindItem, target);
@@ -80,6 +81,7 @@ document.body.appendChild($_documentContainer.content);
         <div bind-item="1">测试1</div>
         <div bind-item="2">测试2</div>
         <div bind-item="3">测试3</div>
+        <div bind-item="4">测试4</div>
       </h2-button-group>
       <script>
         btnGrp3.onItemClick = ({target, bindItem}) => {
