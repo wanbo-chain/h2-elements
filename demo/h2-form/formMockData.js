@@ -15,3 +15,6 @@ MockDataPool.when("POST", "/test.do")
 
 MockDataPool.when("GET", "/test3.do")
     .responseWith({status: 200, body: "表单保存成功！"});
+
+MockDataPool.when("GET", "/test4.do")
+    .responseWith({status: 200, body: "表单保存成功！"});
