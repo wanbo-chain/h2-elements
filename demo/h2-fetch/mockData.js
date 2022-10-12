@@ -9,6 +9,10 @@ MockDataPool.when("POST", "/path/to/index.do")
   .withExpectedHeader("Cache-Control", "no-cache")
   .responseWith({status: 200, body: JSON.stringify({a: 1, b: 2, c: 3})});
 
+MockDataPool.when("POST", "/path/to/index1.do")
+  .withExpectedHeader("Cache-Control", "no-cache")
+  .responseWith({status: 200, body: JSON.stringify({a: 1, b: 2, c: 3, d: 4})});
+
 MockDataPool.when("POST", "/path/to/index.do")
   .withExpectedHeader("test-header", "no-value")
   .responseWith({status: 200, body: "Fuck the world if you are rick, otherwise fuck yourself!"});
