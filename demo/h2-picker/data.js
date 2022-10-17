@@ -18,6 +18,8 @@ const companies = [
     {"id": 14, "label": "唯品会", "business": "电商"},
     {"id": 15, "label": "腾讯", "business": "游戏"},
     {"id": 16, "label": "京东", "business": "电商"},
-    {"id": 17, "label": "淘宝", "business": "电商"}
+    {"id": 17, "label": "淘宝", "business": "电商"},
+    {"id": 18, "label": "拼多多", "business": "电商"},
+    {"id": 19, "label": "美团", "business": "电商"}
 ];
 export {banks, companies};
