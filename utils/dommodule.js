@@ -59,9 +59,6 @@ console.log(`Start creating component[${component}], path[${absoluteTargetPath}]
 const template = fs.readFileSync('dom-tmpl.html', 'utf8');
 const componentCode = template.replace(/\$\{1\}/g, component).replace(/\$\{2\}/g, dash2Camel(upperFirst(component)));
 
-// console.log('============================================');
-// console.log(componentCode);
-// console.log('============================================');
 
 const collectPath = fixPath(absoluteTargetPath);
 const fileTo = `${collectPath}${component}.html`;
