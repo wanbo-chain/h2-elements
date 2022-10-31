@@ -1,9 +1,3 @@
-/*
-
-```html
-
-```
-*/
 
 import {html, PolymerElement} from "@polymer/polymer";
 import {Templatizer} from '@polymer/polymer/lib/legacy/templatizer-behavior.js';
