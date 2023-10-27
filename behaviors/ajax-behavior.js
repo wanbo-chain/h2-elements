@@ -1,6 +1,5 @@
 import {BaseBehavior} from "./base-behavior";
-/**
- */
+
 const AjaxBehaviorImpl = {
   /**
    * GET 请求
