@@ -1,7 +1,6 @@
-/*
-提供公共的格式化方法
-*/
+
 /**
+ * 提供公共的格式化方法
  * @polymerBehavior
  */
 export const FormatBehavior = {
