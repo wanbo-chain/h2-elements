@@ -16,23 +16,24 @@
   <script type="module">
     const $_documentContainer = document.createElement('template');
     
-    $_documentContainer.innerHTML = `<custom-style>
-    <style is="custom-style" include="demo-pages-shared-styles">
-      .centered {
-        min-width: 800px;
-      }
-
-      demo-snippet {
-        --demo-snippet-code: {
-          max-height: 500px;
+    $_documentContainer.innerHTML = `
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+        .centered {
+          min-width: 800px;
         }
-      }
-
-      h2-input {
-        margin-bottom: 10px;
-      }
-    </style>
-  </custom-style>`;
+  
+        demo-snippet {
+          --demo-snippet-code: {
+            max-height: 500px;
+          }
+        }
+  
+        h2-input {
+          margin-bottom: 10px;
+        }
+      </style>
+    </custom-style>`;
     
     document.body.appendChild($_documentContainer.content);
   </script>
