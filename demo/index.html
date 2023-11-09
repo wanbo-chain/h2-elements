@@ -36,17 +36,18 @@
   <script type="module">
     const $_documentContainer = document.createElement('template');
 
-    $_documentContainer.innerHTML = `<custom-style>
-    <style is="custom-style" include="demo-pages-shared-styles">
-      demo-snippet {
-      width: 800px;
-      margin: 0 auto;
-        --demo-snippet-code: {
-          max-height: 1500px;
+    $_documentContainer.innerHTML = `
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+        demo-snippet {
+        width: 800px;
+        margin: 0 auto;
+          --demo-snippet-code: {
+            max-height: 1500px;
+          }
         }
-      }
-    </style>
-  </custom-style>`;
+      </style>
+    </custom-style>`;
 
     document.body.appendChild($_documentContainer.content);
   </script>
