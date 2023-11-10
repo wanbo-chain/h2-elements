@@ -42,95 +42,95 @@
 </script>
 </head>
 <body>
-<div class="vertical-section-container centered">
-  <h3>Basic h2-button-group demo</h3>
-  <demo-snippet>
-    <template>
-      <h2-button-group id="btnGrp" label="测试"></h2-button-group>
-      <script>
-        btnGrp.items = [
-          {label: "测试1", value: "1"},
-          {label: "测试2", value: "2"},
-          {label: "测试3", value: "3"}
-        ]
-      </script>
-    </template>
-  </demo-snippet>
-
-  <h3>Bind click handler</h3>
-  <demo-snippet>
-    <template>
-      <h2-button-group id="btnGrp2" label="测试" attr-for-label="name"></h2-button-group>
-      <script>
-        btnGrp2.items = [
-          {name: "测试1", value: "1"},
-          {name: "测试2", value: "2"},
-          {name: "测试3", value: "3"},
-          {name: "测试4", value: "4"}
-        ];
-        btnGrp2.addEventListener('item-click', ({detail:{bindItem, target}}) => {
-          console.log(bindItem, target);
-        })
-      </script>
-    </template>
-  </demo-snippet>
-
-  <h3>Append Light Dom</h3>
-  <demo-snippet>
-    <template>
-      <h2-button-group id="btnGrp3" label="测试">
-        <div bind-item="1">测试1</div>
-        <div bind-item="2">测试2</div>
-        <div bind-item="3">测试3</div>
-        <div bind-item="4">测试4</div>
-      </h2-button-group>
-      <script>
-        btnGrp3.onItemClick = ({target, bindItem}) => {
-          console.log(target, bindItem);
-        }
-      </script>
-    </template>
-  </demo-snippet>
-
-  <h3>Custom style</h3>
-  <demo-snippet>
-    <template>
-      <custom-style>
-        <style>
-          #btnGrp4 {
-            --h2-button-group-button: {
-              background: var(--h2-ui-bg);
-              color: white;
-              font-size: 18px;
-            };
-            --h2-button-group-dropdown: {
-              background: #000;
+  <div class="vertical-section-container centered">
+    <h3>Basic h2-button-group demo</h3>
+    <demo-snippet>
+      <template>
+        <h2-button-group id="btnGrp" label="测试"></h2-button-group>
+        <script>
+          btnGrp.items = [
+            {label: "测试1", value: "1"},
+            {label: "测试2", value: "2"},
+            {label: "测试3", value: "3"}
+          ]
+        </script>
+      </template>
+    </demo-snippet>
+  
+    <h3>Bind click handler</h3>
+    <demo-snippet>
+      <template>
+        <h2-button-group id="btnGrp2" label="测试" attr-for-label="name"></h2-button-group>
+        <script>
+          btnGrp2.items = [
+            {name: "测试1", value: "1"},
+            {name: "测试2", value: "2"},
+            {name: "测试3", value: "3"},
+            {name: "测试4", value: "4"}
+          ];
+          btnGrp2.addEventListener('item-click', ({detail:{bindItem, target}}) => {
+            console.log(bindItem, target);
+          })
+        </script>
+      </template>
+    </demo-snippet>
+  
+    <h3>Append Light Dom</h3>
+    <demo-snippet>
+      <template>
+        <h2-button-group id="btnGrp3" label="测试">
+          <div bind-item="1">测试1</div>
+          <div bind-item="2">测试2</div>
+          <div bind-item="3">测试3</div>
+          <div bind-item="4">测试4</div>
+        </h2-button-group>
+        <script>
+          btnGrp3.onItemClick = ({target, bindItem}) => {
+            console.log(target, bindItem);
+          }
+        </script>
+      </template>
+    </demo-snippet>
+  
+    <h3>Custom style</h3>
+    <demo-snippet>
+      <template>
+        <custom-style>
+          <style>
+            #btnGrp4 {
+              --h2-button-group-button: {
+                background: var(--h2-ui-bg);
+                color: white;
+                font-size: 18px;
+              };
+              --h2-button-group-dropdown: {
+                background: #000;
+              }
             }
-          }
-
-          #btnGrp4 > .btn {
-            line-height: 40px;
-            color: white;
-            background: var(--h2-ui-bg);
-          }
-          #btnGrp4 > .btn:hover {
-            background: var(--h2-ui-color_lightblue);
-            /*color: black;*/
-          }
-
-        </style>
-      </custom-style>
-      <h2-button-group id="btnGrp4" label="测试">
-        <div class="btn">按钮1</div>
-        <div class="btn">按钮2</div>
-        <div class="btn">按钮3</div>
-      </h2-button-group>
-      <script>
-        document.querySelectorAll('.btn')
-          .forEach(btn => btn.onclick = console.log);
-      </script>
-    </template>
-  </demo-snippet>
-</div>
-</body>
+  
+            #btnGrp4 > .btn {
+              line-height: 40px;
+              color: white;
+              background: var(--h2-ui-bg);
+            }
+            #btnGrp4 > .btn:hover {
+              background: var(--h2-ui-color_lightblue);
+              /*color: black;*/
+            }
+  
+          </style>
+        </custom-style>
+        <h2-button-group id="btnGrp4" label="测试">
+          <div class="btn">按钮1</div>
+          <div class="btn">按钮2</div>
+          <div class="btn">按钮3</div>
+        </h2-button-group>
+        <script>
+          document.querySelectorAll('.btn')
+            .forEach(btn => btn.onclick = console.log);
+        </script>
+      </template>
+    </demo-snippet>
+    </div>
+  </body>
 </html>
