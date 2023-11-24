@@ -1,382 +1,382 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-
-  <title>h2-cascading demo</title>
-
-  <script type="module">
-    import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js';
-    import '../../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
-    import '../../node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
-    import '../../h2-cascading'
-  </script>
-
-  <script type="module">
-    const $_documentContainer = document.createElement('template');
-
-    $_documentContainer.innerHTML = `
-    <custom-style>
-      <style is="custom-style" include="demo-pages-shared-styles">
-        .centered {
-          min-width: 800px;
-        }
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
   
-        demo-snippet {
-          --demo-snippet-code: {
-            max-height: 500px;
+    <title>h2-cascading demo</title>
+  
+    <script type="module">
+      import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js';
+      import '../../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+      import '../../node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
+      import '../../h2-cascading'
+    </script>
+  
+    <script type="module">
+      const $_documentContainer = document.createElement('template');
+  
+      $_documentContainer.innerHTML = `
+      <custom-style>
+        <style is="custom-style" include="demo-pages-shared-styles">
+          .centered {
+            min-width: 800px;
           }
-        }
-      </style>
-    </custom-style>`;
-
-    document.body.appendChild($_documentContainer.content);
-  </script>
-</head>
-<body>
-<h3>基本用法</h3>
-<demo-snippet>
-  <template>
-    <custom-style>
-      <style is="custom-style">
-        .h2-cascading {
-          width: 300px;
-          --h2-label: {
-            /*width: 120px;*/
+    
+          demo-snippet {
+            --demo-snippet-code: {
+              max-height: 500px;
+            }
           }
-        }
-      </style>
-    </custom-style>
-    <h2-cascading class="h2-cascading" label="地址" id="cascading" separator=">" required></h2-cascading>
-    <script>
-      cascading.headItems = [
-        {name: "一级", level: 1}, 
-        {name: "二级", level: 2}, 
-        {name: "三级", level: 3}
-      ];
-      cascading.items = [{
-        value: 'zhinan',
-        label: '指南',
-        level: 1,
-        children: [{
-          value: 'shejiyuanze',
-          label: '设计原则',
-          level: 2,
+        </style>
+      </custom-style>`;
+  
+      document.body.appendChild($_documentContainer.content);
+    </script>
+  </head>
+  <body>
+  <h3>基本用法</h3>
+  <demo-snippet>
+    <template>
+      <custom-style>
+        <style is="custom-style">
+          .h2-cascading {
+            width: 300px;
+            --h2-label: {
+              /*width: 120px;*/
+            }
+          }
+        </style>
+      </custom-style>
+      <h2-cascading class="h2-cascading" label="地址" id="cascading" separator=">" required></h2-cascading>
+      <script>
+        cascading.headItems = [
+          {name: "一级", level: 1}, 
+          {name: "二级", level: 2}, 
+          {name: "三级", level: 3}
+        ];
+        cascading.items = [{
+          value: 'zhinan',
+          label: '指南',
+          level: 1,
           children: [{
-            value: 'yizhi',
-            label: '一致',
-            level: 3
+            value: 'shejiyuanze',
+            label: '设计原则',
+            level: 2,
+            children: [{
+              value: 'yizhi',
+              label: '一致',
+              level: 3
+            }, {
+              value: 'fankui',
+              label: '反馈',
+              level: 3
+            }, {
+              value: 'xiaolv',
+              label: '效率',
+              level: 3
+            }, {
+              value: 'kekong',
+              label: '可控',
+              level: 3
+            }]
           }, {
-            value: 'fankui',
-            label: '反馈',
-            level: 3
-          }, {
-            value: 'xiaolv',
-            label: '效率',
-            level: 3
-          }, {
-            value: 'kekong',
-            label: '可控',
-            level: 3
+            value: 'daohang',
+            label: '导航',
+            level: 2,
+            children: [{
+              value: 'cexiangdaohang',
+              label: '侧向导航',
+              level: 3
+            }, {
+              value: 'dingbudaohang',
+              label: '顶部导航',
+              level: 3
+            }]
           }]
         }, {
-          value: 'daohang',
-          label: '导航',
-          level: 2,
+          value: 'zujian',
+          label: '组件',
+          level: 1,
           children: [{
-            value: 'cexiangdaohang',
-            label: '侧向导航',
-            level: 3
-          }, {
-            value: 'dingbudaohang',
-            label: '顶部导航',
-            level: 3
-          }]
-        }]
-      }, {
-        value: 'zujian',
-        label: '组件',
-        level: 1,
-        children: [{
-          value: 'basic',
-          label: 'Basic',
-          level: 2,
-          children: [{
-            value: 'layout',
-            label: 'Layout 布局',
-            level: 3
-          }, {
-            value: 'color',
-            label: 'Color 色彩',
-            level: 3
-          }, {
-            value: 'typography',
-            label: 'Typography 字体',
-            level: 3
-          }, {
-            value: 'icon',
-            label: 'Icon 图标',
-            level: 3
-          }, {
-            value: 'button',
-            label: 'Button 按钮',
-            level: 3
-          }]
-        }, {
-          value: 'form',
-          label: 'Form',
-          level: 2,
-          children: [{
-            value: 'radio',
-            label: 'Radio 单选框',
-            level: 3
-          }, {
-            value: 'checkbox',
-            label: 'Checkbox 多选框',
-            level: 3
-          }, {
-            value: 'input',
-            label: 'Input 输入框',
-            level: 3
-          }, {
-            value: 'input-number',
-            label: 'InputNumber 计数器',
-            level: 3
-          }, {
-            value: 'select',
-            label: 'Select 选择器',
-            level: 3
-          }, {
-            value: 'cascader',
-            label: 'Cascader 级联选择器',
-            level: 3
-          }, {
-            value: 'switch',
-            label: 'Switch 开关',
-            level: 3
-          }, {
-            value: 'slider',
-            label: 'Slider 滑块',
-            level: 3
-          }, {
-            value: 'time-picker',
-            label: 'TimePicker 时间选择器',
-            level: 3
-          }, {
-            value: 'date-picker',
-            label: 'DatePicker 日期选择器',
-            level: 3
-          }, {
-            value: 'datetime-picker',
-            label: 'DateTimePicker 日期时间选择器',
-            level: 3
-          }, {
-            value: 'upload',
-            label: 'Upload 上传',
-            level: 3
-          }, {
-            value: 'rate',
-            label: 'Rate 评分',
-            level: 3
+            value: 'basic',
+            label: 'Basic',
+            level: 2,
+            children: [{
+              value: 'layout',
+              label: 'Layout 布局',
+              level: 3
+            }, {
+              value: 'color',
+              label: 'Color 色彩',
+              level: 3
+            }, {
+              value: 'typography',
+              label: 'Typography 字体',
+              level: 3
+            }, {
+              value: 'icon',
+              label: 'Icon 图标',
+              level: 3
+            }, {
+              value: 'button',
+              label: 'Button 按钮',
+              level: 3
+            }]
           }, {
             value: 'form',
-            label: 'Form 表单',
-            level: 3
+            label: 'Form',
+            level: 2,
+            children: [{
+              value: 'radio',
+              label: 'Radio 单选框',
+              level: 3
+            }, {
+              value: 'checkbox',
+              label: 'Checkbox 多选框',
+              level: 3
+            }, {
+              value: 'input',
+              label: 'Input 输入框',
+              level: 3
+            }, {
+              value: 'input-number',
+              label: 'InputNumber 计数器',
+              level: 3
+            }, {
+              value: 'select',
+              label: 'Select 选择器',
+              level: 3
+            }, {
+              value: 'cascader',
+              label: 'Cascader 级联选择器',
+              level: 3
+            }, {
+              value: 'switch',
+              label: 'Switch 开关',
+              level: 3
+            }, {
+              value: 'slider',
+              label: 'Slider 滑块',
+              level: 3
+            }, {
+              value: 'time-picker',
+              label: 'TimePicker 时间选择器',
+              level: 3
+            }, {
+              value: 'date-picker',
+              label: 'DatePicker 日期选择器',
+              level: 3
+            }, {
+              value: 'datetime-picker',
+              label: 'DateTimePicker 日期时间选择器',
+              level: 3
+            }, {
+              value: 'upload',
+              label: 'Upload 上传',
+              level: 3
+            }, {
+              value: 'rate',
+              label: 'Rate 评分',
+              level: 3
+            }, {
+              value: 'form',
+              label: 'Form 表单',
+              level: 3
+            }]
+          }, {
+            value: 'data',
+            label: 'Data',
+            level: 2,
+            children: [{
+              value: 'table',
+              label: 'Table 表格',
+              level: 3
+            }, {
+              value: 'tag',
+              label: 'Tag 标签',
+              level: 3
+            }, {
+              value: 'progress',
+              label: 'Progress 进度条',
+              level: 3
+            }, {
+              value: 'tree',
+              label: 'Tree 树形控件',
+              level: 3
+            }, {
+              value: 'pagination',
+              label: 'Pagination 分页',
+              level: 3
+            }, {
+              value: 'badge',
+              label: 'Badge 标记',
+              level: 3
+            }]
+          }, {
+            value: 'notice',
+            label: 'Notice',
+            level: 2,
+            children: [{
+              value: 'alert',
+              label: 'Alert 警告',
+              level: 3
+            }, {
+              value: 'loading',
+              label: 'Loading 加载',
+              level: 3
+            }, {
+              value: 'message',
+              label: 'Message 消息提示',
+              level: 3
+            }, {
+              value: 'message-box',
+              label: 'MessageBox 弹框',
+              level: 3
+            }, {
+              value: 'notification',
+              label: 'Notification 通知',
+              level: 3
+            }]
+          }, {
+            value: 'navigation',
+            label: 'Navigation',
+            level: 2,
+            children: [{
+              value: 'menu',
+              label: 'NavMenu 导航菜单',
+              level: 3
+            }, {
+              value: 'tabs',
+              label: 'Tabs 标签页',
+              level: 3
+            }, {
+              value: 'breadcrumb',
+              label: 'Breadcrumb 面包屑',
+              level: 3
+            }, {
+              value: 'dropdown',
+              label: 'Dropdown 下拉菜单',
+              level: 3
+            }, {
+              value: 'steps',
+              label: 'Steps 步骤条',
+              level: 3
+            }]
+          }, {
+            value: 'others',
+            label: 'Others',
+            level: 2,
+            children: [{
+              value: 'dialog',
+              label: 'Dialog 对话框',
+              level: 3
+            }, {
+              value: 'tooltip',
+              label: 'Tooltip 文字提示',
+              level: 3
+            }, {
+              value: 'popover',
+              label: 'Popover 弹出框',
+              level: 3
+            }, {
+              value: 'card',
+              label: 'Card 卡片',
+              level: 3
+            }, {
+              value: 'carousel',
+              label: 'Carousel 走马灯',
+              level: 3
+            }, {
+              value: 'collapse',
+              label: 'Collapse 折叠面板',
+              level: 3
+            }]
           }]
         }, {
-          value: 'data',
-          label: 'Data',
-          level: 2,
+          value: 'ziyuan',
+          label: '资源',
+          level: 1,
           children: [{
-            value: 'table',
-            label: 'Table 表格',
-            level: 3
+            value: 'axure',
+            label: 'Axure Components',
+            level: 2
           }, {
-            value: 'tag',
-            label: 'Tag 标签',
-            level: 3
+            value: 'sketch',
+            label: 'Sketch Templates',
+            level: 2
           }, {
-            value: 'progress',
-            label: 'Progress 进度条',
-            level: 3
-          }, {
-            value: 'tree',
-            label: 'Tree 树形控件',
-            level: 3
-          }, {
-            value: 'pagination',
-            label: 'Pagination 分页',
-            level: 3
-          }, {
-            value: 'badge',
-            label: 'Badge 标记',
-            level: 3
+            value: 'jiaohu',
+            label: '组件交互文档',
+            level: 2
           }]
-        }, {
-          value: 'notice',
-          label: 'Notice',
-          level: 2,
-          children: [{
-            value: 'alert',
-            label: 'Alert 警告',
-            level: 3
-          }, {
-            value: 'loading',
-            label: 'Loading 加载',
-            level: 3
-          }, {
-            value: 'message',
-            label: 'Message 消息提示',
-            level: 3
-          }, {
-            value: 'message-box',
-            label: 'MessageBox 弹框',
-            level: 3
-          }, {
-            value: 'notification',
-            label: 'Notification 通知',
-            level: 3
-          }]
-        }, {
-          value: 'navigation',
-          label: 'Navigation',
-          level: 2,
-          children: [{
-            value: 'menu',
-            label: 'NavMenu 导航菜单',
-            level: 3
-          }, {
-            value: 'tabs',
-            label: 'Tabs 标签页',
-            level: 3
-          }, {
-            value: 'breadcrumb',
-            label: 'Breadcrumb 面包屑',
-            level: 3
-          }, {
-            value: 'dropdown',
-            label: 'Dropdown 下拉菜单',
-            level: 3
-          }, {
-            value: 'steps',
-            label: 'Steps 步骤条',
-            level: 3
-          }]
-        }, {
-          value: 'others',
-          label: 'Others',
-          level: 2,
-          children: [{
-            value: 'dialog',
-            label: 'Dialog 对话框',
-            level: 3
-          }, {
-            value: 'tooltip',
-            label: 'Tooltip 文字提示',
-            level: 3
-          }, {
-            value: 'popover',
-            label: 'Popover 弹出框',
-            level: 3
-          }, {
-            value: 'card',
-            label: 'Card 卡片',
-            level: 3
-          }, {
-            value: 'carousel',
-            label: 'Carousel 走马灯',
-            level: 3
-          }, {
-            value: 'collapse',
-            label: 'Collapse 折叠面板',
-            level: 3
-          }]
-        }]
-      }, {
-        value: 'ziyuan',
-        label: '资源',
-        level: 1,
-        children: [{
-          value: 'axure',
-          label: 'Axure Components',
-          level: 2
-        }, {
-          value: 'sketch',
-          label: 'Sketch Templates',
-          level: 2
-        }, {
-          value: 'jiaohu',
-          label: '组件交互文档',
-          level: 2
-        }]
-      }];
-
-    </script>
-  </template>
-</demo-snippet>
-
-<h3>动态获取</h3>
-<demo-snippet>
-  <template>
-    <custom-style>
-      <style is="custom-style">
-        .h2-cascading {
-          width: 300px;
-          --h2-label: {
-            /*width: 120px;*/
+        }];
+  
+      </script>
+    </template>
+  </demo-snippet>
+  
+  <h3>动态获取</h3>
+  <demo-snippet>
+    <template>
+      <custom-style>
+        <style is="custom-style">
+          .h2-cascading {
+            width: 300px;
+            --h2-label: {
+              /*width: 120px;*/
+            }
           }
-        }
-      </style>
-    </custom-style>
-    <h2-cascading class="h2-cascading" label="地址" lazy id="cascading1"></h2-cascading>
-    <script>
-      let items = [{
-        value: 'beijing',
-        label: '北京',
-        level: 1
-      }, {
-        value: 'shanghai',
-        label: '上海',
-        level: 1
-      }, {
-        value: 'hubei',
-        label: '湖北',
-        level: 1
-      }, {
-        value: 'guangdong',
-        label: '广东',
-        level: 1
-      }];
-      cascading1.treeItems = [items];
-      cascading1.headItems = [{name: '1级', level: 1}];
-      cascading1.addEventListener('value-changed', ({detail: {value}}) => {
-        setTimeout(() => {
-          const treeItems = [].concat(cascading1.treeItems);
-          const headItems = [].concat(cascading1.headItems);
-          if (value.length) {
-            treeItems.push([
-              {
-                value: 'dongcheng',
-                label: '东城',
-                level: `${headItems.length + 1}`
-              },
-              {
-                value: 'xicheng',
-                label: '西城',
-                level: `${headItems.length + 1}`
-              }
-            ]);
-            cascading1.treeItems = treeItems;
-            headItems.push({
-              name: `${headItems.length + 1}级`, level: `${headItems.length + 1}`, active: true
-            })
-            cascading1.headItems = headItems;
-          }
-        }, 900)
-      })
-    </script>
-  </template>
-</demo-snippet>
-</body>
+        </style>
+      </custom-style>
+      <h2-cascading class="h2-cascading" label="地址" lazy id="cascading1"></h2-cascading>
+      <script>
+        let items = [{
+          value: 'beijing',
+          label: '北京',
+          level: 1
+        }, {
+          value: 'shanghai',
+          label: '上海',
+          level: 1
+        }, {
+          value: 'hubei',
+          label: '湖北',
+          level: 1
+        }, {
+          value: 'guangdong',
+          label: '广东',
+          level: 1
+        }];
+        cascading1.treeItems = [items];
+        cascading1.headItems = [{name: '1级', level: 1}];
+        cascading1.addEventListener('value-changed', ({detail: {value}}) => {
+          setTimeout(() => {
+            const treeItems = [].concat(cascading1.treeItems);
+            const headItems = [].concat(cascading1.headItems);
+            if (value.length) {
+              treeItems.push([
+                {
+                  value: 'dongcheng',
+                  label: '东城',
+                  level: `${headItems.length + 1}`
+                },
+                {
+                  value: 'xicheng',
+                  label: '西城',
+                  level: `${headItems.length + 1}`
+                }
+              ]);
+              cascading1.treeItems = treeItems;
+              headItems.push({
+                name: `${headItems.length + 1}级`, level: `${headItems.length + 1}`, active: true
+              })
+              cascading1.headItems = headItems;
+            }
+          }, 900)
+        })
+      </script>
+    </template>
+  </demo-snippet>
+  </body>
 </html>
