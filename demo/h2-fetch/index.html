@@ -1,189 +1,189 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
-
-  <title>h2-fetch demo</title>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
   
-  <script type="text/javascript" src="../../utils/mock_setup.js"></script>
+    <title>h2-fetch demo</title>
+    
+    <script type="text/javascript" src="../../utils/mock_setup.js"></script>
+    
+    <script type="module">
+      import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader';
+      import '../../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+      import '../../node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
+      import '../../h2-fetch';
+      import '../../h2-button';
+      if(!window.location.href.endsWith("?mock=mockData.js")) {
+        window.location.href = window.location.href + "?mock=mockData.js";
+      }
+    </script>
   
   <script type="module">
-    import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader';
-    import '../../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
-    import '../../node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
-    import '../../h2-fetch';
-    import '../../h2-button';
-    if(!window.location.href.endsWith("?mock=mockData.js")) {
-      window.location.href = window.location.href + "?mock=mockData.js";
-    }
-  </script>
-
-<script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `
-  <custom-style>
-    <style is="custom-style" include="demo-pages-shared-styles">
-      .centered {
-        min-width: 800px;
-      }
-
-      demo-snippet {
-        --demo-snippet-code: {
-          max-height: 500px;
+  const $_documentContainer = document.createElement('template');
+  
+  $_documentContainer.innerHTML = `
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+        .centered {
+          min-width: 800px;
         }
-      }
-    </style>
-  </custom-style>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>
-</head>
-<body>
-<div class="vertical-section-container centered">
-  <h3>Basic h2-fetch demo</h3>
-  <demo-snippet>
-    <template>
-      <div id="responseDiv"></div>
-      <h2-fetch id="fetchDemo" handle-response-as="json" response-body="{{responseBody}}"></h2-fetch>
-      <script>
-        fetchDemo.request = {
-          url: "/path/to/index.do",
-          method: "POST",
-          headers: {
-            "content-type": "application/json;charset=utf-8",
-            "Cache-Control": "no-cache"
+  
+        demo-snippet {
+          --demo-snippet-code: {
+            max-height: 500px;
           }
-        };
-        fetchDemo.addEventListener("response-body-changed", (e) => {
-          responseDiv.innerHTML = JSON.stringify(e.detail.value);
-        });
-      </script>
-    </template>
-    
-  </demo-snippet>
-  <h3>Basic h2-fetch demo</h3>
-  <demo-snippet>
-
-    <template>
-      <div id="responseDiv1"></div>
-      <h2-fetch id="fetchDemo1" handle-response-as="json"></h2-fetch>
-      <script>
-        fetchDemo1.request = {
-          url: "/path/to/index.do",
-          method: "POST",
-          headers: {
-            "Cache-Control": "no-cache"
-          }
-        };
-        fetchDemo1.addEventListener("response-body-changed", (e) => {
-          responseDiv1.innerHTML = JSON.stringify(e.detail.value);
-        });
-      </script>
-    </template>
-  </demo-snippet>
-
-  <h3>Basic h2-fetch demo</h3>
-  <demo-snippet>
-
-    <template>
-      <div id="responseDiv2"></div>
-      <h2-fetch id="fetchDemo2" handle-response-as="text"></h2-fetch>
-      <script>
-        fetchDemo2.request = {
-          url: "/path/to/index.do",
-          method: "POST",
-          headers: {
-            "test-header": "no-value"
-          }
-        };
-        fetchDemo2.addEventListener("response-body-changed", (e) => {
-          responseDiv2.innerHTML = JSON.stringify(e.detail.value);
-        });
-      </script>
-    </template>
-  </demo-snippet>
-
-  <h3>Basic h2-fetch demo</h3>
-  <demo-snippet>
-
-    <template>
-      <div id="responseDiv3"></div>
-      <div id="responseDiv3_1"></div>
-      <h2-fetch id="fetchDemo3" handle-response-as="text" loading></h2-fetch>
-      <script>
-        fetchDemo3.request = {
-          url: "/api/getStr",
-          method: "GET",
-        };
-        fetchDemo3.addEventListener("response-body-changed", (e) => {
-          responseDiv3_1.innerHTML = JSON.stringify(e.detail.value);
-        });
-        fetchDemo3.addEventListener("response-changed", (e) => {
-          const {type, status, statusText} = e.detail.value;
-          responseDiv3.innerHTML = `${type} ${status} ${statusText}`;
-        });
-      </script>
-    </template>
-  </demo-snippet>
-
-  <h3>Basic h2-fetch demo123</h3>
-  <demo-snippet>
-
-    <template>
-      <div id="responseDiv4_1"></div>
-      <div id="responseDiv4_1_err"></div>
-      <script type="module">
-
-        import { H2Fetch } from "../../h2-fetch.js";
-        
-        const request = {
-          url: "/path/to/index.do",
-          method: "POST",
-          headers: {
-            "Cache-Control": "no-cache"
-          }
-        };
-
-        new H2Fetch().fetchIt(request)
-          .then(res => res.json())
-          .then(data => responseDiv4_1.innerHTML = JSON.stringify(data))
-          .catch(err => responseDiv4_1_err.innerHTML = err);
-
-      </script>
-    </template>
-  </demo-snippet>
-
-  <h3>Basic h2-fetch demo</h3>
-  <demo-snippet>
-
-    <template>
-      <div id="responseDiv4_2"></div>
-      <div id="responseDiv4_2_err"></div>
-      <h2-button id="btn">取消</h2-button>
-      <script type="module">
-
-        import {H2Fetch} from "../../h2-fetch.js";
-
-        const request = {
-          url: "/api/getStr"
-        };
-
-        const a  = new H2Fetch();
-        a.fetchIt(request, {loading: true})
-            .then(res => res.text())
-            .then(data => responseDiv4_2.innerHTML = JSON.stringify(data))
-            .catch(err => responseDiv4_2_err.innerHTML = err);
-        
-        setTimeout(() => {
-          a.abort();
-        }, 1000)
-      </script>
-    </template>
-  </demo-snippet>
-</div>
-
-</body>
+        }
+      </style>
+    </custom-style>`;
+  
+  document.body.appendChild($_documentContainer.content);
+  </script>
+  </head>
+  <body>
+  <div class="vertical-section-container centered">
+    <h3>Basic h2-fetch demo</h3>
+    <demo-snippet>
+      <template>
+        <div id="responseDiv"></div>
+        <h2-fetch id="fetchDemo" handle-response-as="json" response-body="{{responseBody}}"></h2-fetch>
+        <script>
+          fetchDemo.request = {
+            url: "/path/to/index.do",
+            method: "POST",
+            headers: {
+              "content-type": "application/json;charset=utf-8",
+              "Cache-Control": "no-cache"
+            }
+          };
+          fetchDemo.addEventListener("response-body-changed", (e) => {
+            responseDiv.innerHTML = JSON.stringify(e.detail.value);
+          });
+        </script>
+      </template>
+      
+    </demo-snippet>
+    <h3>Basic h2-fetch demo</h3>
+    <demo-snippet>
+  
+      <template>
+        <div id="responseDiv1"></div>
+        <h2-fetch id="fetchDemo1" handle-response-as="json"></h2-fetch>
+        <script>
+          fetchDemo1.request = {
+            url: "/path/to/index.do",
+            method: "POST",
+            headers: {
+              "Cache-Control": "no-cache"
+            }
+          };
+          fetchDemo1.addEventListener("response-body-changed", (e) => {
+            responseDiv1.innerHTML = JSON.stringify(e.detail.value);
+          });
+        </script>
+      </template>
+    </demo-snippet>
+  
+    <h3>Basic h2-fetch demo</h3>
+    <demo-snippet>
+  
+      <template>
+        <div id="responseDiv2"></div>
+        <h2-fetch id="fetchDemo2" handle-response-as="text"></h2-fetch>
+        <script>
+          fetchDemo2.request = {
+            url: "/path/to/index.do",
+            method: "POST",
+            headers: {
+              "test-header": "no-value"
+            }
+          };
+          fetchDemo2.addEventListener("response-body-changed", (e) => {
+            responseDiv2.innerHTML = JSON.stringify(e.detail.value);
+          });
+        </script>
+      </template>
+    </demo-snippet>
+  
+    <h3>Basic h2-fetch demo</h3>
+    <demo-snippet>
+  
+      <template>
+        <div id="responseDiv3"></div>
+        <div id="responseDiv3_1"></div>
+        <h2-fetch id="fetchDemo3" handle-response-as="text" loading></h2-fetch>
+        <script>
+          fetchDemo3.request = {
+            url: "/api/getStr",
+            method: "GET",
+          };
+          fetchDemo3.addEventListener("response-body-changed", (e) => {
+            responseDiv3_1.innerHTML = JSON.stringify(e.detail.value);
+          });
+          fetchDemo3.addEventListener("response-changed", (e) => {
+            const {type, status, statusText} = e.detail.value;
+            responseDiv3.innerHTML = `${type} ${status} ${statusText}`;
+          });
+        </script>
+      </template>
+    </demo-snippet>
+  
+    <h3>Basic h2-fetch demo123</h3>
+    <demo-snippet>
+  
+      <template>
+        <div id="responseDiv4_1"></div>
+        <div id="responseDiv4_1_err"></div>
+        <script type="module">
+  
+          import { H2Fetch } from "../../h2-fetch.js";
+          
+          const request = {
+            url: "/path/to/index.do",
+            method: "POST",
+            headers: {
+              "Cache-Control": "no-cache"
+            }
+          };
+  
+          new H2Fetch().fetchIt(request)
+            .then(res => res.json())
+            .then(data => responseDiv4_1.innerHTML = JSON.stringify(data))
+            .catch(err => responseDiv4_1_err.innerHTML = err);
+  
+        </script>
+      </template>
+    </demo-snippet>
+  
+    <h3>Basic h2-fetch demo</h3>
+    <demo-snippet>
+  
+      <template>
+        <div id="responseDiv4_2"></div>
+        <div id="responseDiv4_2_err"></div>
+        <h2-button id="btn">取消</h2-button>
+        <script type="module">
+  
+          import {H2Fetch} from "../../h2-fetch.js";
+  
+          const request = {
+            url: "/api/getStr"
+          };
+  
+          const a  = new H2Fetch();
+          a.fetchIt(request, {loading: true})
+              .then(res => res.text())
+              .then(data => responseDiv4_2.innerHTML = JSON.stringify(data))
+              .catch(err => responseDiv4_2_err.innerHTML = err);
+          
+          setTimeout(() => {
+            a.abort();
+          }, 1000)
+        </script>
+      </template>
+    </demo-snippet>
+  </div>
+  
+  </body>
 </html>
